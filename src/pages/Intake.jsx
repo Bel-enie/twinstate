@@ -128,7 +128,7 @@ export default function Intake() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search e.g. paracetamol, energy drink, ibuprofen…"
                 aria-label="Search substances to add"
-                className="input-glass w-full rounded-[14px] px-4 py-3 text-sm outline-none"
+                className="input-glass w-full rounded-[10px] px-4 py-3 text-sm outline-none"
               />
               {(query || results.length > 0) && (
                 <div className="card-pearl mt-2 overflow-hidden rounded-[18px]">
@@ -181,7 +181,7 @@ export default function Intake() {
             {/* chosen items */}
             <div className="mt-4 space-y-2">
               {items.length === 0 && (
-                <p className="card-inset rounded-[14px] px-4 py-3 text-sm text-slate-soft">
+                <p className="card-inset rounded-[10px] px-4 py-3 text-sm text-slate-soft">
                   Nothing added yet. Add at least one to build your twin.
                 </p>
               )}
@@ -266,7 +266,7 @@ export default function Intake() {
               rows={2}
               placeholder="Anything else? (free text, optional)"
               aria-label="Anything else (optional)"
-              className="input-glass mt-3 w-full rounded-[14px] px-4 py-3 text-sm outline-none"
+              className="input-glass mt-3 w-full rounded-[10px] px-4 py-3 text-sm outline-none"
             />
           </Card>
 

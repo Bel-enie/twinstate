@@ -13,6 +13,11 @@
     /* Commit to the light palette so OS/browser dark mode can't invert it.
        Dark areas (the landing hero card, footer) are painted explicitly. */
     color-scheme: only light;
+
+    /* One edge language for the whole app. Every panel corner and every
+       separating line resolves to these two values, so nothing drifts. */
+    --panel-r: 12px;
+    --panel-line: rgb(31 44 96 / 0.1);
   }
 
   /* Some mobile browsers (Chrome's "auto dark theme", Samsung Internet, Opera)
@@ -178,6 +183,48 @@
   }
 
   /* Secondary: a quiet pearl surface with a subtle border and edge highlight. */
+  /* ── Flat buttons: the app's control language ──────────────────────────
+     .btn-specular / .btn-glass are built to separate from the landing page's
+     WebGL ribbon field by value, with a halo and a gradient face. On the
+     app's flat white panels that halo reads as noise, so product controls
+     use solid fills and the same hairline as the panels around them. */
+  .btn-solid {
+    background: #24356f;
+    color: #fff;
+    border: 1px solid #24356f;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .btn-solid:hover:not(:disabled) {
+    background: #1b2a5c;
+    border-color: #1b2a5c;
+  }
+  .btn-solid:active:not(:disabled) {
+    background: #16224c;
+  }
+  .btn-solid:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(82, 120, 237, 0.32);
+  }
+  .btn-solid:disabled {
+    background: #9aa3bd;
+    border-color: #9aa3bd;
+  }
+
+  .btn-outline {
+    background: #fff;
+    color: #1f2430;
+    border: 1px solid var(--panel-line);
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .btn-outline:hover:not(:disabled) {
+    background: #f4f6fa;
+    border-color: rgb(31 44 96 / 0.2);
+  }
+  .btn-outline:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(82, 120, 237, 0.28);
+  }
+
   .btn-glass {
     position: relative;
     color: #1f2430;
@@ -310,6 +357,41 @@
     background: rgba(241, 243, 248, 0.6);
     border: 1px solid rgba(31, 36, 48, 0.06);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+
+
+  /* ── Panel system: one edge language for the app ───────────────────────
+     Every app surface is a flat white plane on the neutral ground, separated
+     by a hairline border rather than by a shadow, and cornered at exactly one
+     radius (--panel-r). The dashboard used to mix six radii (16/22/24/36px,
+     2xl, 3xl, full) and leaned on tinted fills and drop shadows to tell
+     panels apart, which read as loose. Structure does that job here. */
+  .panel {
+    background: #fff;
+    border: 1px solid var(--panel-line);
+    border-radius: var(--panel-r);
+  }
+  /* The eyebrow + title block that opens a panel, closed by a hairline. */
+  .panel-head {
+    padding: 1rem 1.25rem 0.9rem;
+    border-bottom: 1px solid var(--panel-line);
+  }
+  .panel-body {
+    padding: 1.25rem;
+  }
+  /* Small uppercase mono label above a panel title. */
+  .panel-eyebrow {
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgb(100 116 139 / 0.95);
+  }
+  /* Rows inside a panel body, divided by the same hairline as everything
+     else so a list never needs its own card per item. */
+  .panel-rows > * + * {
+    border-top: 1px solid var(--panel-line);
   }
 
   .input-glass {

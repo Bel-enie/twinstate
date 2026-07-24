@@ -64,30 +64,28 @@ export default function HealthChat() {
   return (
     <Card className="flex flex-col overflow-hidden">
       {/* header */}
-      <div className="flex items-center justify-between border-b border-ink/5 px-5 py-3">
-        <div className="flex items-center gap-2">
-          <span className="grid h-7 w-7 place-items-center rounded-xl bg-brand-500 text-xs font-bold text-white">
-            💬
-          </span>
-          <div>
-            <h2 className="text-sm font-bold leading-none">Ask about your health</h2>
-            <p className="mt-0.5 text-[11px] text-slate-soft">
-              Grounded in your twin · {chat.isAI ? 'AI assistant' : 'offline helper'}
-            </p>
-          </div>
+      <div className="panel-head flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="panel-eyebrow">Grounded assistant</p>
+          <h2 className="mt-1.5 text-[17px] font-bold leading-tight tracking-tight text-ink">
+            Ask about your health
+          </h2>
+          <p className="mt-1 text-[13px] leading-relaxed text-slate-soft">
+            Answered from your twin · {chat.isAI ? 'AI assistant' : 'offline helper'}
+          </p>
         </div>
-        <Link to="/faq" className="text-xs font-semibold text-brand-600 hover:underline">
+        <Link to="/faq" className="shrink-0 text-xs font-semibold text-brand-600 hover:underline">
           FAQ →
         </Link>
       </div>
 
       {/* messages */}
-      <div className="flex max-h-[380px] min-h-[220px] flex-col gap-3 overflow-y-auto px-5 py-4">
+      <div className="flex max-h-[380px] flex-col gap-3 overflow-y-auto px-5 py-4">
         {messages.map((m, i) => (
           <Message key={i} m={m} />
         ))}
         {busy && (
-          <div className="flex items-center gap-1.5 self-start rounded-[16px] bg-shell px-4 py-3">
+          <div className="flex items-center gap-1.5 self-start rounded-[10px] bg-shell px-4 py-3">
             <Dot /> <Dot d="150" /> <Dot d="300" />
           </div>
         )}
@@ -123,12 +121,12 @@ export default function HealthChat() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about a med, symptom, or anything health…"
           aria-label="Ask a health question"
-          className="input-glass flex-1 rounded-[14px] px-4 py-3 text-sm outline-none"
+          className="input-glass flex-1 rounded-[10px] px-4 py-3 text-sm outline-none"
         />
         <button
           type="submit"
           disabled={busy || !input.trim()}
-          className="btn-specular grid h-11 w-11 shrink-0 place-items-center rounded-[14px] transition"
+          className="btn-solid grid h-11 w-11 shrink-0 place-items-center rounded-[10px] transition"
           aria-label="Send"
         >
           ↑
@@ -141,7 +139,7 @@ export default function HealthChat() {
 function Message({ m }) {
   if (m.role === 'user') {
     return (
-      <div className="max-w-[85%] self-end rounded-2xl rounded-br-md bg-brand-600 px-4 py-2.5 text-sm text-white">
+      <div className="max-w-[85%] self-end rounded-[10px] rounded-br-[3px] bg-brand-600 px-4 py-2.5 text-sm text-white">
         {m.text}
       </div>
     )
@@ -155,7 +153,7 @@ function Message({ m }) {
         </div>
       )}
       <div
-        className={`rounded-2xl rounded-bl-md px-4 py-3 text-sm ${
+        className={`rounded-[10px] rounded-bl-[3px] px-4 py-3 text-sm ${
           urgent ? 'bg-rose-50 text-rose-900' : 'bg-shell text-ink/90'
         }`}
       >

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import Card from '../ui/Card.jsx'
+import Panel from '../ui/Panel.jsx'
 import { useTwin } from '../../context/TwinContext.jsx'
 import { holon } from '../../services/index.js'
 
@@ -106,13 +106,8 @@ export default function LogDose() {
   const count = queue.length
 
   return (
-    <Card className="p-4">
-      <div className="flex items-center gap-2">
-        <span className="grid h-6 w-6 place-items-center rounded-lg bg-ink text-xs text-white">＋</span>
-        <h3 className="text-sm font-bold">Log a dose taken today</h3>
-      </div>
-
-      <div className="mt-3 flex flex-wrap items-end gap-2">
+    <Panel eyebrow="Local recorder" title="Log a dose taken today">
+      <div className="flex flex-wrap items-end gap-2">
         <label className="min-w-[9rem] flex-1">
           <span className="mb-1 block text-[11px] font-semibold text-slate-soft">Substance</span>
           <select
@@ -145,7 +140,7 @@ export default function LogDose() {
         <button
           onClick={addToQueue}
           disabled={!selected}
-          className="btn-glass rounded-[14px] px-4 py-2 text-sm font-semibold transition disabled:opacity-40"
+          className="btn-outline rounded-[10px] px-4 py-2 text-sm font-semibold transition disabled:opacity-40"
         >
           + Add
         </button>
@@ -153,7 +148,7 @@ export default function LogDose() {
         <button
           onClick={logAll}
           disabled={!selected && !count}
-          className="btn-specular rounded-[14px] px-4 py-2 text-sm font-semibold transition"
+          className="btn-solid rounded-[10px] px-4 py-2 text-sm font-semibold transition"
         >
           {count ? `Log ${count} dose${count > 1 ? 's' : ''}` : 'Log dose'}
         </button>
@@ -172,7 +167,7 @@ export default function LogDose() {
         <button
           onClick={addCustom}
           disabled={!customName.trim() || resolving}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-brand-500 px-3 py-1.5 text-sm font-semibold text-brand-600 transition hover:bg-brand-50 disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 rounded-[10px] border border-brand-500 px-3 py-1.5 text-sm font-semibold text-brand-600 transition hover:bg-brand-50 disabled:opacity-40"
         >
           {resolving ? (
             <span className="h-3 w-3 animate-spin rounded-full border-2 border-brand-500/40 border-t-brand-500" />
@@ -208,10 +203,10 @@ export default function LogDose() {
       )}
 
       {flash && (
-        <p className="mt-2 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800">
+        <p className="mt-2 rounded-[10px] bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800">
           ✓ {flash}
         </p>
       )}
-    </Card>
+    </Panel>
   )
 }

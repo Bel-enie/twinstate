@@ -46,7 +46,7 @@ export default function InteractionDetail() {
 
       <div className="grid gap-5 md:grid-cols-[300px_minmax(0,1fr)]">
         {/* focused organ */}
-        <div className="stage-backdrop flex flex-col items-center justify-center rounded-3xl p-4 shadow-soft">
+        <div className="stage-backdrop flex flex-col items-center justify-center rounded-[12px] p-4">
           <div className="h-64 w-full max-w-[220px]">
             <AnatomyModel organRisk={organRisk} selected={flag.organ} />
           </div>
@@ -82,7 +82,7 @@ export default function InteractionDetail() {
           </Card>
 
           {/* Safer alternative */}
-          <div className="rounded-3xl border border-emerald-100 bg-emerald-50 p-5">
+          <div className="rounded-[12px] border border-emerald-100 bg-emerald-50 p-5">
             <h2 className="flex items-center gap-2 text-sm font-bold text-emerald-800">
               <span>✓</span> A safer alternative
             </h2>

@@ -142,7 +142,7 @@ export default function FAQPage() {
           ))}
         </div>
 
-        <div className="mt-6 rounded-3xl border border-brand-100 bg-brand-50/60 p-5 text-center">
+        <div className="mt-6 rounded-[12px] border border-brand-100 bg-brand-50/60 p-5 text-center">
           <p className="text-sm font-semibold">Still wondering about something specific to you?</p>
           <p className="mt-1 text-sm text-slate-soft">
             Ask the health helper right on your twin — it grounds answers in what you've logged.

@@ -12,10 +12,10 @@ export default function FlagCard({ flag, active, onHover, onLeave }) {
       onMouseLeave={onLeave}
       onFocus={onHover}
       onClick={() => navigate(`/interaction/${flag.id}`)}
-      className={`w-full rounded-2xl border p-4 text-left transition-all ${
-        active ? 'border-brand-300 bg-white shadow-soft' : 'border-ink/5 bg-white/70 hover:bg-white'
+      className={`w-full border p-4 text-left transition-colors ${
+        active ? 'border-brand-300 bg-brand-50/40' : 'border-[color:var(--panel-line)] bg-white hover:bg-shell/60'
       }`}
-      style={active ? { boxShadow: `0 0 0 3px ${r.glow}` } : undefined}
+      style={{ borderRadius: 'var(--panel-r)' }}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
@@ -27,7 +27,7 @@ export default function FlagCard({ flag, active, onHover, onLeave }) {
       <p className="mt-2 line-clamp-2 text-sm text-slate-soft">{flag.reason}</p>
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
         {flag.substances.map((s) => (
-          <span key={s.id} className="rounded-full bg-shell px-2 py-0.5 text-[11px] font-medium">
+          <span key={s.id} className="rounded-[6px] border border-[color:var(--panel-line)] bg-shell/70 px-2 py-0.5 text-[11px] font-medium">
             {s.label.split(' (')[0]}
           </span>
         ))}

@@ -58,7 +58,7 @@ export default function Recommendation() {
 
         {/* Headline action */}
         <div
-          className="rounded-3xl border p-6 shadow-soft"
+          className="rounded-[12px] border p-6 shadow-soft"
           style={{ background: meta.bg, borderColor: meta.color }}
         >
           <div className="flex items-center gap-2 text-sm font-bold" style={{ color: meta.color }}>
@@ -123,7 +123,7 @@ export default function Recommendation() {
             return (
               <div
                 key={l.key}
-                className={`rounded-2xl border p-3 text-center transition ${
+                className={`rounded-[10px] border p-3 text-center transition ${
                   isCurrent ? 'shadow-soft' : ''
                 }`}
                 style={{
@@ -159,7 +159,7 @@ export default function Recommendation() {
 
         {/* Emergency note for high risk */}
         {rec?.level === 'seek_care' && (
-          <p className="mt-4 rounded-2xl bg-rose-50 p-4 text-sm text-rose-800">
+          <p className="mt-4 rounded-[10px] bg-rose-50 p-4 text-sm text-rose-800">
             If you feel very unwell — chest pain, trouble breathing, confusion, or you can't keep
             fluids down — treat it as an emergency and get help immediately.
           </p>

@@ -80,7 +80,7 @@ export default function WhatIf() {
           </div>
         </div>
 
-        <div className="flex rounded-[14px] bg-shell p-1">
+        <div className="flex rounded-[10px] bg-shell p-1">
           <button
             onClick={() => setPath('continue')}
             className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
@@ -106,7 +106,7 @@ export default function WhatIf() {
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_380px]">
         {/* Projected twin */}
-        <div className="stage-backdrop relative flex flex-col rounded-3xl p-4 shadow-soft">
+        <div className="stage-backdrop relative flex flex-col rounded-[12px] p-4">
           <p className="text-sm font-semibold text-white/80">
             {who.Possessive} twin in {weeks} week{weeks > 1 ? 's' : ''} ·{' '}
             <span style={{ color: path === 'safer' ? '#3FB8A0' : '#EF8354' }}>
@@ -137,7 +137,7 @@ export default function WhatIf() {
         {/* Narrative + per-organ compare */}
         <div className="space-y-4">
           <div
-            className="rounded-3xl border p-4"
+            className="rounded-[12px] border p-4"
             style={{
               borderColor: path === 'safer' ? '#bfe8df' : '#f7d6c6',
               background: path === 'safer' ? 'rgba(63,184,160,0.08)' : 'rgba(239,131,84,0.08)',

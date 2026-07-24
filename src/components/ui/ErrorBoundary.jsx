@@ -29,15 +29,15 @@ export default class ErrorBoundary extends Component {
 
     return (
       <div className="flex min-h-screen items-center justify-center bg-shell p-6">
-        <div className="w-full max-w-md rounded-3xl bg-cream p-6 text-center shadow-shell">
-          <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-risk-caution/15 text-2xl">
+        <div className="w-full max-w-md rounded-[12px] bg-cream p-6 text-center shadow-shell">
+          <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-[10px] bg-risk-caution/15 text-2xl">
             ⚠️
           </div>
           <h1 className="text-lg font-extrabold">Something went wrong on this screen</h1>
           <p className="mt-2 text-sm text-slate-soft">
             Your logged data is safe. You can reload and pick up where you left off.
           </p>
-          <div className="mt-4 rounded-2xl border border-risk-urgent/30 bg-risk-urgent/5 p-3 text-left text-xs text-ink/80">
+          <div className="mt-4 rounded-[10px] border border-risk-urgent/30 bg-risk-urgent/5 p-3 text-left text-xs text-ink/80">
             <span className="font-bold">Medical emergency?</span> Don’t wait on an app — call your
             local emergency number or go to the nearest emergency department.
           </div>

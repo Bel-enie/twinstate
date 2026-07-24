@@ -1,10 +1,21 @@
 import { RISK } from '../../utils/risk.js'
 
-export default function RiskLegend({ className = '' }) {
+/**
+ * `tone` exists because this legend sits on two different grounds: the dark
+ * stage-backdrop used on What-If and Interaction detail, and the white panel
+ * on the dashboard. Defaulting to light keeps every existing dark-stage caller
+ * unchanged.
+ */
+const TONE = {
+  light: 'text-white/70',
+  dark: 'text-slate-soft',
+}
+
+export default function RiskLegend({ className = '', tone = 'light' }) {
   return (
     <div className={`flex flex-wrap items-center gap-x-4 gap-y-1 ${className}`}>
       {Object.values(RISK).map((r) => (
-        <span key={r.key} className="flex items-center gap-1.5 text-xs text-white/70">
+        <span key={r.key} className={`flex items-center gap-1.5 text-xs ${TONE[tone] || TONE.light}`}>
           <span className="h-2 w-2 rounded-full" style={{ background: r.hex }} />
           {r.label}
         </span>
