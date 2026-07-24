@@ -16,6 +16,10 @@ const HealthTwin = lazy(() => import('./HealthTwin.jsx'))
 let webglSupport = null
 function supportsWebGL() {
   if (webglSupport !== null) return webglSupport
+  if (/[?&]nogl=1/.test(window.location.search)) {
+    webglSupport = false
+    return false
+  }
   try {
     const c = document.createElement('canvas')
     webglSupport = Boolean(c.getContext('webgl2') || c.getContext('webgl'))

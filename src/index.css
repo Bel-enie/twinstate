@@ -12,7 +12,7 @@
   :root {
     /* Commit to the light palette so OS/browser dark mode can't invert it.
        Dark areas (the landing hero card, footer) are painted explicitly. */
-    color-scheme: light;
+    color-scheme: only light;
   }
 
   html {
@@ -71,82 +71,137 @@
     );
   }
 
-  /* ── Liquid-glass surfaces (landing page) ────────────────────────────── */
-  /* Radius system: buttons/inputs 14px · pills 999px · product cards 22px ·
-     large cards 28px. Depth comes from a lit top edge + a soft drop shadow. */
+  /* ── Material system (landing page) ──────────────────────────────────── */
+  /* Radius: buttons/inputs 14–16px · pills 999px · product cards 22px · large
+     cards 28px. Buttons are satin glass: a blue vertical gradient, a narrow
+     white highlight on the upper inner edge, a darker lower edge, a soft blue
+     shadow, and a broad reflection that follows the pointer (--px/--py, set by
+     specular.js). Both highlight layers sit UNDER the label. */
 
   .btn-specular {
     position: relative;
-    overflow: hidden;
+    isolation: isolate;
     color: #fff;
-    background: linear-gradient(180deg, #567eff 0%, #3a62e8 100%);
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: linear-gradient(180deg, #6389f4 0%, #5278ed 46%, #3f63d8 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow:
-      0 8px 24px rgba(48, 88, 210, 0.22),
-      inset 0 1px 0 rgba(255, 255, 255, 0.55),
-      inset 0 -1px 0 rgba(20, 40, 120, 0.16);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      0 8px 22px rgba(82, 120, 237, 0.26),
+      0 1px 2px rgba(31, 44, 96, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -1px 0 rgba(20, 40, 120, 0.22);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
   }
   .btn-specular::before {
     content: '';
     position: absolute;
     inset: 1px;
+    z-index: -1;
     border-radius: inherit;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0) 45%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.06) 42%, rgba(255, 255, 255, 0) 60%);
+    pointer-events: none;
+  }
+  .btn-specular::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(
+      130% 80% at var(--px, 50%) var(--py, -10%),
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0.1) 32%,
+      rgba(255, 255, 255, 0) 62%
+    );
     pointer-events: none;
   }
   .btn-specular:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow:
-      0 12px 30px rgba(48, 88, 210, 0.28),
-      inset 0 1px 0 rgba(255, 255, 255, 0.7),
-      inset 0 -1px 0 rgba(20, 40, 120, 0.18);
+      0 12px 28px rgba(82, 120, 237, 0.32),
+      0 1px 2px rgba(31, 44, 96, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.62),
+      inset 0 -1px 0 rgba(20, 40, 120, 0.24);
   }
   .btn-specular:active:not(:disabled) {
-    transform: translateY(0);
+    transform: translateY(0.5px);
+    filter: brightness(0.97);
+    box-shadow:
+      0 4px 12px rgba(82, 120, 237, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(20, 40, 120, 0.22);
+  }
+  .btn-specular:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px #fff,
+      0 0 0 5px rgba(82, 120, 237, 0.55),
+      0 8px 22px rgba(82, 120, 237, 0.26),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
   }
   .btn-specular:disabled {
     opacity: 0.45;
+    transform: none;
   }
 
+  /* Secondary: a quiet pearl surface with a subtle border and edge highlight. */
   .btn-glass {
     position: relative;
     color: #1f2430;
-    background: rgba(255, 255, 255, 0.58);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(244, 246, 251, 0.66));
+    border: 1px solid rgba(255, 255, 255, 0.85);
     box-shadow:
-      0 6px 20px rgba(30, 40, 70, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.9),
-      0 0 0 1px rgba(31, 36, 48, 0.06);
-    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      0 6px 18px rgba(30, 40, 70, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      0 0 0 1px rgba(31, 36, 48, 0.07);
+    transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
   }
   .btn-glass:hover:not(:disabled) {
     transform: translateY(-1px);
-    background: rgba(255, 255, 255, 0.92);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(246, 247, 252, 0.85));
     box-shadow:
-      0 10px 26px rgba(30, 40, 70, 0.1),
+      0 10px 24px rgba(30, 40, 70, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 1),
-      0 0 0 1px rgba(31, 36, 48, 0.08);
+      0 0 0 1px rgba(31, 36, 48, 0.09);
+  }
+  .btn-glass:active:not(:disabled) {
+    transform: translateY(0.5px);
+  }
+  .btn-glass:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 3px rgba(82, 120, 237, 0.3),
+      0 6px 18px rgba(30, 40, 70, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95);
   }
 
+  /* Large product cards: pearl-tinted, lightly translucent, fine border, a
+     restrained inner top highlight, soft shadow. Only these get a blur. */
   .card-glass {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(247, 248, 252, 0.7));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.72);
     box-shadow:
-      0 14px 40px rgba(30, 40, 70, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 16px 44px rgba(30, 40, 70, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.85),
+      0 0 0 1px rgba(31, 36, 48, 0.05);
+  }
+  /* Dense or small surfaces: stable, no blur, still pearl-toned. */
+  .card-pearl {
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow:
+      0 8px 24px rgba(30, 40, 70, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
       0 0 0 1px rgba(31, 36, 48, 0.05);
   }
   .card-inset {
-    background: rgba(244, 243, 239, 0.5);
+    background: rgba(241, 243, 248, 0.6);
     border: 1px solid rgba(31, 36, 48, 0.06);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
   }
 
   .input-glass {
-    background: rgba(255, 255, 255, 0.66);
+    background: rgba(255, 255, 255, 0.72);
     border: 1px solid rgba(31, 36, 48, 0.12);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.85),
@@ -154,24 +209,36 @@
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
   .input-glass:focus-within {
-    border-color: #4b84f0;
+    border-color: #5278ed;
     box-shadow:
-      0 0 0 3px rgba(75, 132, 240, 0.18),
+      0 0 0 3px rgba(82, 120, 237, 0.18),
       inset 0 1px 0 rgba(255, 255, 255, 0.85);
   }
 
-  /* The living background: one fixed canvas behind everything. */
+  /* ── The atmosphere: one fixed canvas behind the page ─────────────────── */
+  /* The div carries a static CSS composition that resembles the ribbons, so
+     the page never flashes white; the canvas fades in over it. */
+  .landing {
+    position: relative;
+    isolation: isolate;
+  }
   .atmosphere {
     position: fixed;
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    background: #f0efe9;
+    background:
+      linear-gradient(168deg, rgba(173, 161, 222, 0) 22%, rgba(173, 161, 222, 0.3) 34%, rgba(255, 255, 255, 0.4) 40%, rgba(173, 161, 222, 0.22) 46%, rgba(173, 161, 222, 0) 60%),
+      linear-gradient(172deg, rgba(82, 120, 237, 0) 44%, rgba(82, 120, 237, 0.28) 56%, rgba(255, 255, 255, 0.36) 61%, rgba(82, 120, 237, 0.18) 67%, rgba(82, 120, 237, 0) 80%),
+      linear-gradient(176deg, rgba(149, 214, 226, 0) 70%, rgba(149, 214, 226, 0.3) 80%, rgba(255, 255, 255, 0.3) 85%, rgba(149, 214, 226, 0.16) 90%, rgba(149, 214, 226, 0) 100%),
+      #f1f3f8;
   }
   .atmosphere canvas {
     width: 100%;
     height: 100%;
     display: block;
+    opacity: 0;
+    transition: opacity 0.6s ease;
   }
 
   .no-scrollbar::-webkit-scrollbar {

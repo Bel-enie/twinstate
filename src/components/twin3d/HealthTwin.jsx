@@ -49,7 +49,7 @@ const SHELL_FRAG = /* glsl */ `
   varying vec3 vN; varying vec3 vV; varying float vY;
   void main() {
     float f = pow(1.0 - max(dot(normalize(vN), normalize(vV)), 0.0), 2.4);
-    float scan = smoothstep(0.05, 0.0, abs(fract(vY * 0.3 - uTime * 0.05) - 0.5)) * 0.35;
+    float scan = (1.0 - smoothstep(0.0, 0.05, abs(fract(vY * 0.3 - uTime * 0.05) - 0.5))) * 0.35;
     float grid = step(0.95, fract(vY * 16.0)) * 0.05;
     vec3 col = mix(uInner, uRim, f) + uRim * scan;
     float a = 0.13 + f * 0.8 + scan * 0.35 + grid;

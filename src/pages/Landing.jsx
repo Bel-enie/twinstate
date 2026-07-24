@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Atmosphere from '../components/marketing/Atmosphere.jsx'
 import Hero from '../components/marketing/Hero.jsx'
 import Timeline from '../components/marketing/Timeline.jsx'
@@ -15,13 +15,15 @@ import {
   SiteFooter,
 } from '../components/marketing/Sections.jsx'
 import { buildTwinStory, flagOnOrgan } from '../components/marketing/twinData.js'
+import { initSpecularButtons } from '../components/marketing/specular.js'
 
 /**
  * The single front door, built around one product experience: a live 3D twin
  * in the hero, a week you can scrub, a "why?" you can ask, evidence any flag
  * opens into. Every figure on the page is computed by the engine from a real
- * persona's week (twinData.js). A fixed WebGL field sits behind everything at
- * 10–20% strength; the page itself is transparent above it.
+ * persona's week (twinData.js). One fixed WebGL canvas draws a pearl-grey
+ * glass-ribbon field behind everything (Atmosphere.jsx, tuned via ATMOSPHERE);
+ * the page is transparent above it, in an isolated wrapper with explicit stacking.
  *
  * `Boot` in App.jsx sends users who already have a built twin to their
  * dashboard instead. The medical consent gate lives on the product routes,
@@ -32,6 +34,8 @@ export default function Landing() {
   const [wantName, setWantName] = useState(false)
   const [flagId, setFlagId] = useState(null)
   const [organ, setOrgan] = useState(null)
+
+  useEffect(() => initSpecularButtons(), [])
 
   const onBuild = useCallback(() => {
     setWantName(true)
@@ -57,9 +61,9 @@ export default function Landing() {
   )
 
   return (
-    <>
+    <div className="landing min-h-full">
       <Atmosphere />
-      <div id="top" className="relative z-10 min-h-full text-ink">
+      <div id="top" className="relative z-[1] min-h-full text-ink">
         <Hero
           story={story}
           wantName={wantName}
@@ -107,6 +111,6 @@ export default function Landing() {
         <FinalCta onBuild={onBuild} />
         <SiteFooter />
       </div>
-    </>
+    </div>
   )
 }

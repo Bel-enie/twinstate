@@ -4,9 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#FBF7F0" />
-    <!-- The app commits to a warm light palette; declare it so a browser's
-         forced/auto dark mode can't mangle the intended design at a venue. -->
-    <meta name="color-scheme" content="light" />
+    <!-- The app commits to a light palette. `only light` opts out of Chrome's
+         Auto Dark Theme and the Dark Reader lock opts out of that extension —
+         both would otherwise invert the CSS but not the WebGL background,
+         leaving white text on a light field. -->
+    <meta name="color-scheme" content="only light" />
+    <meta name="darkreader-lock" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

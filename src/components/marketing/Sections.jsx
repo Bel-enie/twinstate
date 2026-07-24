@@ -69,7 +69,7 @@ export function DataFusion() {
       <div className="mt-12 grid items-center gap-6 md:grid-cols-[auto_240px_auto] md:justify-center md:gap-0">
         <ul className="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
           {INPUTS.map((n) => (
-            <li key={n} className="card-glass rounded-[14px] px-4 py-2.5 text-sm font-semibold">
+            <li key={n} className="card-pearl rounded-[14px] px-4 py-2.5 text-sm font-semibold">
               {n}
             </li>
           ))}
@@ -90,7 +90,7 @@ export function DataFusion() {
           <circle cx={W} cy={H / 2} r="4" fill="#4B84F0" />
         </svg>
 
-        <div className="card-glass flex items-center gap-3 rounded-[22px] px-5 py-4">
+        <div className="card-pearl flex items-center gap-3 rounded-[22px] px-5 py-4">
           <BrandMark className="h-10 w-10" />
           <div>
             <div className="text-base font-extrabold tracking-tight">
@@ -211,7 +211,7 @@ export function Evidence({ story, flagId, onSelectFlag }) {
         ))}
       </div>
 
-      <div id="evidence-panel" className="card-glass mt-5 rounded-[28px] p-6 sm:p-8">
+      <div id="evidence-panel" className="card-pearl mt-5 rounded-[28px] p-6 sm:p-8">
         <div className="flex flex-wrap items-center gap-3">
           <span className="h-2 w-2 rounded-full" style={{ background: RISK[flag.severity].hex }} />
           <h3 className="text-lg font-bold">{flag.title}</h3>
@@ -331,7 +331,7 @@ const TRUST_QA = [
 ]
 
 export function Trust() {
-  const box = 'card-glass rounded-[14px] px-4 py-2.5 text-sm font-semibold'
+  const box = 'card-pearl rounded-[14px] px-4 py-2.5 text-sm font-semibold'
   return (
     <Section id="trust" mood="trust">
       <Heading
@@ -388,7 +388,7 @@ export function Trust() {
 // ── Final CTA ─────────────────────────────────────────────────────────────
 export function FinalCta({ onBuild }) {
   return (
-    <Section mood="cta" className="text-center">
+    <Section id="cta" mood="cta" className="text-center">
       <h2 className="mx-auto max-w-3xl font-display text-4xl leading-[1.05] tracking-tight sm:text-6xl">
         Build a health record that actually <em>understands time.</em>
       </h2>
