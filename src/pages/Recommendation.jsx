@@ -5,9 +5,12 @@ import Button from '../components/ui/Button.jsx'
 import { useTwin } from '../context/TwinContext.jsx'
 import { reasoning } from '../services/index.js'
 import { twinNaming } from '../utils/naming.js'
+import { coverageOf, clearanceCopy, labelOf } from '../services/analysis/coverage.js'
 
 const LEVELS = {
-  all_clear: { color: '#3FB8A0', bg: 'rgba(63,184,160,0.10)', icon: '✓', tag: "You're good" },
+  // Not "You're good" — the engine only knows a small curated rule set, so the
+  // honest claim is about what was checked, never about the person being fine.
+  all_clear: { color: '#3FB8A0', bg: 'rgba(63,184,160,0.10)', icon: '✓', tag: 'Nothing flagged' },
   monitor: { color: '#3FB8A0', bg: 'rgba(63,184,160,0.10)', icon: '👀', tag: 'Monitor at home' },
   clinic_soon: { color: '#EF8354', bg: 'rgba(239,131,84,0.10)', icon: '🩺', tag: 'Campus clinic soon' },
   seek_care: { color: '#E0567A', bg: 'rgba(224,86,122,0.10)', icon: '⚠️', tag: 'Seek care urgently' },
@@ -22,6 +25,8 @@ const LADDER = [
 
 export default function Recommendation() {
   const { twin, flags, overall, items, symptoms } = useTwin()
+  const coverage = coverageOf(items)
+  const clearance = clearanceCopy(coverage)
   const [rec, setRec] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -38,6 +43,7 @@ export default function Recommendation() {
   }, [twin, flags, overall, items, symptoms])
 
   const meta = LEVELS[rec?.level] || LEVELS.monitor
+  const level = rec?.level
   const activeIdx = LADDER.findIndex((l) => l.key === rec?.level)
   const who = twinNaming(twin?.name)
   const title = who.isSelf ? 'What should I do now?' : `What should ${who.first} do now?`
@@ -56,13 +62,57 @@ export default function Recommendation() {
           style={{ background: meta.bg, borderColor: meta.color }}
         >
           <div className="flex items-center gap-2 text-sm font-bold" style={{ color: meta.color }}>
-            <span className="text-lg">{meta.icon}</span> {meta.tag}
+            <span className="text-lg">{meta.icon}</span>
+            {level === 'all_clear' ? clearance.tag : meta.tag}
           </div>
           <h2 className="mt-2 text-2xl font-extrabold tracking-tight">
             {loading ? 'Thinking it through…' : rec?.action}
           </h2>
           <p className="mt-2 text-ink/80">{!loading && rec?.subtext}</p>
+          {!loading && level === 'all_clear' && (
+            <p className="mt-3 border-t pt-3 text-xs leading-relaxed text-ink/70" style={{ borderColor: meta.color }}>
+              {clearance.note}
+            </p>
+          )}
         </div>
+
+        {/* What we could not check. Shown before any reassurance so an
+            unrecognised substance is never hidden behind a teal tick. */}
+        {coverage.unchecked.length > 0 && (
+          <Card className="mt-5 border border-risk-watch/40 p-5">
+            <h3 className="flex items-center gap-2 text-sm font-bold text-ink">
+              <span aria-hidden="true">⚠</span> Not checked ({coverage.unchecked.length})
+            </h3>
+            <p className="mt-1 text-xs leading-relaxed text-slate-soft">
+              We could not identify these, so no interaction rule ran against them. Their absence
+              from the flags above means nothing either way — ask a pharmacist about them.
+            </p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {coverage.unchecked.map((it, i) => (
+                <li key={i} className="rounded-full bg-shell px-3 py-1 text-xs font-medium">
+                  {labelOf(it)}
+                </li>
+              ))}
+            </ul>
+          </Card>
+        )}
+
+        {coverage.hasUnverified && (
+          <Card className="mt-5 p-5">
+            <h3 className="text-sm font-bold text-ink">AI-identified, unverified</h3>
+            <p className="mt-1 text-xs leading-relaxed text-slate-soft">
+              These were matched by the AI rather than a curated entry, so the properties used to
+              screen them may be wrong or incomplete.
+            </p>
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {coverage.unverified.map((it, i) => (
+                <li key={i} className="rounded-full bg-shell px-3 py-1 text-xs font-medium">
+                  {labelOf(it)}
+                </li>
+              ))}
+            </ul>
+          </Card>
+        )}
 
         {/* Triage ladder */}
         <div className="mt-5 grid grid-cols-3 gap-2">

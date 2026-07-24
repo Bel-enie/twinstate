@@ -14,10 +14,12 @@ import { useTwin } from '../context/TwinContext.jsx'
 import { reasoning } from '../services/index.js'
 import { scaledBodyTrend } from '../services/mock/engine.js'
 import { riskOf } from '../utils/risk.js'
+import { coverageOf, labelOf } from '../services/analysis/coverage.js'
 
 export default function Dashboard() {
   const { twin, items, history, flags, organRisk, overall, notes, bodyIndex, analyzing, statsSource } =
     useTwin()
+  const coverage = coverageOf(items)
   const [selected, setSelected] = useState(null)
   const [summary, setSummary] = useState(null)
   const [loadingSummary, setLoadingSummary] = useState(true)
@@ -159,7 +161,29 @@ export default function Dashboard() {
 
             {shownFlags.length === 0 && (
               <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-4 text-sm text-emerald-800">
-                Nothing risky here right now. Keep resting and hydrating.
+                Nothing flagged among what we could check. That is not a clean bill of health — it
+                means no rule in our limited set fired.
+              </div>
+            )}
+
+            {/* An unidentified substance runs against no rule at all, so it must
+                never sit silently behind a green panel. */}
+            {coverage.unchecked.length > 0 && (
+              <div className="mt-3 rounded-2xl border border-risk-watch/40 bg-risk-watch/10 p-4 text-sm">
+                <div className="flex items-center gap-2 font-bold text-ink">
+                  <span aria-hidden="true">⚠</span> Not checked ({coverage.unchecked.length})
+                </div>
+                <p className="mt-1 text-xs leading-relaxed text-ink/75">
+                  We could not identify these, so no interaction rule ran against them. Ask a
+                  pharmacist about anything here.
+                </p>
+                <ul className="mt-2 flex flex-wrap gap-2">
+                  {coverage.unchecked.map((it, i) => (
+                    <li key={i} className="rounded-full bg-white/70 px-2.5 py-1 text-xs font-medium">
+                      {labelOf(it)}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
 

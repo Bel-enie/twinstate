@@ -63,13 +63,20 @@ function matchSubstance(name) {
 function normalizeAssessment(ai, baseline, rawItems) {
   if (!ai || typeof ai !== 'object') return baseline
 
-  // Organs
+  // Organs. The NUMBERS are the deterministic engine's — the model never
+  // originates a clinical score, it may only escalate a severity band (below)
+  // and write the prose note. Every figure on screen is therefore reproducible
+  // from the rules alone, which is what a clinical reviewer will ask for.
   const organRisk = {}
   for (const key of ORGAN_KEYS) {
     const a = ai.organs?.[key]
     const base = baseline.organRisk[key]
-    const severity = isSev(a?.severity) ? a.severity : base.severity
-    const intensity = intoBand(a?.intensity ?? base.intensity, severity)
+    // An AI severity may only move UP (safety), never down.
+    const severity =
+      isSev(a?.severity) && SEVERITY_WEIGHT[a.severity] > SEVERITY_WEIGHT[base.severity]
+        ? a.severity
+        : base.severity
+    const intensity = intoBand(base.intensity, severity)
     organRisk[key] = { severity, flagCount: 0, intensity, note: (a?.note || '').toString().slice(0, 160) }
   }
 
@@ -85,8 +92,12 @@ function normalizeAssessment(ai, baseline, rawItems) {
     const sources = []
     for (const bf of baseline.flags) {
       if (bf.organ !== organ) continue
+      // Only inherit a curated citation when the AI flag actually shares a
+      // substance with the rule-fired flag. Previously a flag with NO matched
+      // substance inherited every source on the organ, which could park an
+      // NHS/FDA link under a claim the model wrote by itself.
       const overlaps = bf.substances.some((s) => subIds.has(s.id))
-      if (overlaps || !substances.length) {
+      if (overlaps) {
         for (const src of bf.sources || []) if (!sources.some((x) => x.url === src.url)) sources.push(src)
       }
     }
@@ -140,7 +151,8 @@ function normalizeAssessment(ai, baseline, rawItems) {
     organRisk,
     flags,
     overall,
-    bodyIndex: clamp(ai.body_index ?? baseline.bodyIndex),
+    // Always the engine's number. The AI cannot move the headline figure.
+    bodyIndex: baseline.bodyIndex,
     headline: String(ai.headline || '').slice(0, 220),
     source: 'ai',
   }
@@ -148,22 +160,17 @@ function normalizeAssessment(ai, baseline, rawItems) {
 
 function normalizeProjection(ai, baseline, weeks) {
   if (!ai || typeof ai !== 'object' || !ai.continue || !ai.safer) return baseline
-  const path = (p, fallback) => {
-    const organStress = {}
-    for (const key of ORGAN_KEYS) organStress[key] = clamp(p?.organStress?.[key] ?? fallback.organStress[key])
-    const values = Object.values(organStress)
-    const worst = Math.max(...values)
-    const avg = values.reduce((a, b) => a + b, 0) / values.length
-    const bodyIndex = clamp(p?.bodyIndex ?? worst * 0.7 + avg * 0.3)
-    const overall = isSev(p?.overall) ? p.overall : fallback.overall
-    return {
-      organStress,
-      bodyIndex,
-      overall,
-      headline: String(p?.headline || fallback.headline).slice(0, 140),
-      detail: String(p?.detail || fallback.detail).slice(0, 400),
-    }
-  }
+  // As with the assessment: the projected NUMBERS stay the deterministic
+  // model's, and the AI supplies only the headline and detail prose. A
+  // projection is an illustrative trend, so letting a model invent its
+  // figures would dress a guess up as a measurement.
+  const path = (p, fallback) => ({
+    organStress: fallback.organStress,
+    bodyIndex: fallback.bodyIndex,
+    overall: fallback.overall,
+    headline: String(p?.headline || fallback.headline).slice(0, 140),
+    detail: String(p?.detail || fallback.detail).slice(0, 400),
+  })
   return { weeks, continue: path(ai.continue, baseline.continue), safer: path(ai.safer, baseline.safer) }
 }
 

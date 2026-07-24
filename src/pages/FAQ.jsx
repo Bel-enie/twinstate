@@ -73,7 +73,7 @@ const FAQ = [
     items: [
       {
         q: 'What do the colours on my twin mean?',
-        a: 'They\'re a warm scale, not an alarm: teal = all clear, amber = keep an eye on it, coral = time to change something, rose = act on it soon. Each highlighted organ links to a plain-language explanation of why it\'s flagged.',
+        a: 'They\'re a warm scale, not an alarm: teal = nothing flagged among what we could check (not a clean bill of health — anything we could not identify is listed separately as “not checked”), amber = keep an eye on it, coral = time to change something, rose = act on it soon. Each highlighted organ links to a plain-language explanation of why it\'s flagged.',
       },
       {
         q: 'Is Twinstate medical advice?',

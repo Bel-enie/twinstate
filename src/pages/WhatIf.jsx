@@ -47,6 +47,17 @@ export default function WhatIf() {
         <p className="text-sm text-slate-soft">
           Two futures for the same body. Slide the time, flip the path, watch the twin change.
         </p>
+        {/* This is a trend sketch, not a prediction: a smooth drift applied to
+            today's scores. Saying so plainly is more useful than confident
+            copy over a straight line. */}
+        <p className="mt-2 inline-flex items-start gap-2 rounded-[12px] border border-risk-watch/30 bg-risk-watch/10 px-3 py-2 text-xs leading-relaxed text-ink/80">
+          <span aria-hidden="true">⚠</span>
+          <span>
+            <strong>Illustrative only — not a prediction.</strong> This projects today's scores
+            forward along a simple trend to show the <em>direction</em> of each path. It is not
+            modelled on clinical outcome data and cannot tell you what will actually happen to you.
+          </span>
+        </p>
       </div>
 
       {/* Controls */}

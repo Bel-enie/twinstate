@@ -316,7 +316,7 @@ const TRUST_QA = [
   },
   {
     q: 'Who can access my data?',
-    a: 'Nobody but you. There is no account server; your twin lives in your own browser. If you add a HOLON key, substance names are sent to HOLON to be resolved — no symptoms, no history.',
+    a: "Nobody but you. There is no account server; your twin lives in your own browser and is never uploaded. Two things do leave it, and only if they are switched on: with a HOLON key, substance names go to HOLON to be resolved (no symptoms, no history); and if the AI assistant is enabled, what you logged and the symptoms you ticked are sent to the model provider to write its explanation. With both off, nothing leaves your device.",
   },
   {
     q: 'Can I delete my data?',
@@ -368,6 +368,12 @@ export function Trust() {
           <div className={box}>Your twin</div>
           <div className="rounded-[14px] border border-dashed border-ink/20 px-4 py-2.5 text-[11px] text-slate-soft">
             Optional, with a key: substance <em>names</em> → HOLON → concept &amp; interaction data back
+          </div>
+          {/* The AI hop is disclosed here too: it is the one path that carries
+              symptoms off the device, so it should not be buried in the FAQ. */}
+          <div className="rounded-[14px] border border-dashed border-ink/20 px-4 py-2.5 text-[11px] text-slate-soft">
+            Optional, if AI is on: logged items &amp; symptoms → model provider → wording only
+            <span className="mt-1 block text-ink/70">Scores stay local — the model never sets a number.</span>
           </div>
         </div>
       </div>
