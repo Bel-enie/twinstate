@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#FBF7F0" />
+    <meta name="theme-color" content="#F4F6FA" />
     <!-- The app commits to a light palette. `only light` opts out of Chrome's
          Auto Dark Theme and the Dark Reader lock opts out of that extension —
          both would otherwise invert the CSS but not the WebGL background,
@@ -17,9 +17,78 @@
       rel="stylesheet"
     />
     <title>Twinstate — Your living health twin</title>
+
+    <!-- Discovery + link previews. This is a client-rendered SPA, so a crawler
+         that doesn't run JavaScript sees ONLY what is in this <head> — without
+         these tags a pasted link renders as a blank card in Slack/WhatsApp/X
+         and search engines index an empty page.
+
+         NOTE: og:image and og:url must be ABSOLUTE for social scrapers.
+         If the site is deployed anywhere other than the URL below, update
+         SITE_ORIGIN in the three places it appears here. -->
+    <meta
+      name="description"
+      content="Twinstate builds a living model of your body from what you log — prescriptions, painkillers, energy drinks, supplements, sleep — and shows what changed, why it changed, and what deserves your attention. Screened against HOLON clinical interaction knowledge. An educational tool, not a medical device."
+    />
+    <link rel="canonical" href="https://twinstate.vercel.app/" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/og-image.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Twinstate" />
+    <meta property="og:title" content="Twinstate — Your living health twin" />
+    <meta
+      property="og:description"
+      content="Log what you take. A living model of your body shows what changed, why, and what deserves your attention — with the evidence behind every flag."
+    />
+    <meta property="og:url" content="https://twinstate.vercel.app/" />
+    <meta property="og:image" content="https://twinstate.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Twinstate — your health has a past; Twinstate gives it a living present." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Twinstate — Your living health twin" />
+    <meta
+      name="twitter:description"
+      content="Log what you take. A living model of your body shows what changed, why, and what deserves your attention — with the evidence behind every flag."
+    />
+    <meta name="twitter:image" content="https://twinstate.vercel.app/og-image.png" />
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Pre-render fallback. React replaces everything inside #root on mount,
+         so this is never seen by a normal visitor — but a crawler that doesn't
+         run JavaScript, a slow connection, or a JS-disabled browser gets the
+         actual pitch instead of a blank page. Keep it in sync with the hero. -->
+    <div id="root">
+      <div style="max-width:52rem;margin:0 auto;padding:4rem 1.5rem;font-family:Inter,system-ui,sans-serif;color:#1F2430">
+        <p style="font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#3A66D8">
+          Your living health twin
+        </p>
+        <h1 style="margin:.75rem 0 0;font-family:'Instrument Serif',Georgia,serif;font-size:3rem;line-height:1.05">
+          Your health has a past. Twinstate gives it a living present.
+        </h1>
+        <p style="margin-top:1.25rem;font-size:1.125rem;line-height:1.6;color:#48505F">
+          Log what you take — prescriptions, painkillers, energy drinks, supplements, how you slept.
+          Twinstate builds a continuously updating model of your body so you can see what changed,
+          why it changed, and what deserves your attention.
+        </p>
+        <ul style="margin-top:1.5rem;padding-left:1.1rem;font-size:1rem;line-height:1.9;color:#48505F">
+          <li>A living 3D twin that updates as your week does</li>
+          <li>A scrubbable timeline — every figure recomputed per day by the engine</li>
+          <li>Evidence behind every interaction flag, screened against HOLON clinical knowledge</li>
+          <li>Your data stays in your browser; there is no account server</li>
+        </ul>
+        <p style="margin-top:2rem;font-size:.875rem;color:#5B6472">
+          Twinstate needs JavaScript to run the interactive twin.
+          Built at the Ontomorph Hackathon · Powered by Ontomorph DTP + HOLON.
+        </p>
+        <p style="margin-top:1rem;font-size:.8125rem;color:#5B6472">
+          An educational tool, not a medical device. It does not diagnose or make prescription
+          decisions. In an emergency, contact local emergency services.
+        </p>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
