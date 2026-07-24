@@ -36,7 +36,7 @@ export default function EarlyAccessForm() {
 
   if (state.status === 'done') {
     return (
-      <div className="flex items-start gap-3 rounded-2xl border border-ink/10 bg-white p-4" role="status" aria-live="polite">
+      <div className="card-glass flex items-start gap-3 rounded-[22px] p-4" role="status" aria-live="polite">
         <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-emerald-50 text-xs text-emerald-700">
           ✓
         </span>
@@ -88,11 +88,11 @@ export default function EarlyAccessForm() {
           placeholder="you@university.edu"
           aria-label="Email address"
           aria-invalid={state.status === 'error'}
-          className="min-w-0 flex-1 rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-soft/70 focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+          className="input-glass min-w-0 flex-1 rounded-[14px] px-4 py-2.5 text-sm outline-none placeholder:text-slate-soft/70"
         />
         <button
           type="submit"
-          className="shrink-0 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700"
+          className="btn-specular shrink-0 rounded-[14px] px-4 py-2.5 text-sm font-semibold"
         >
           Notify me
         </button>

@@ -71,6 +71,109 @@
     );
   }
 
+  /* ── Liquid-glass surfaces (landing page) ────────────────────────────── */
+  /* Radius system: buttons/inputs 14px · pills 999px · product cards 22px ·
+     large cards 28px. Depth comes from a lit top edge + a soft drop shadow. */
+
+  .btn-specular {
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    background: linear-gradient(180deg, #567eff 0%, #3a62e8 100%);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow:
+      0 8px 24px rgba(48, 88, 210, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      inset 0 -1px 0 rgba(20, 40, 120, 0.16);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  }
+  .btn-specular::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0) 45%);
+    pointer-events: none;
+  }
+  .btn-specular:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow:
+      0 12px 30px rgba(48, 88, 210, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      inset 0 -1px 0 rgba(20, 40, 120, 0.18);
+  }
+  .btn-specular:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  .btn-specular:disabled {
+    opacity: 0.45;
+  }
+
+  .btn-glass {
+    position: relative;
+    color: #1f2430;
+    background: rgba(255, 255, 255, 0.58);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow:
+      0 6px 20px rgba(30, 40, 70, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 0 0 1px rgba(31, 36, 48, 0.06);
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-glass:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow:
+      0 10px 26px rgba(30, 40, 70, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 1),
+      0 0 0 1px rgba(31, 36, 48, 0.08);
+  }
+
+  .card-glass {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow:
+      0 14px 40px rgba(30, 40, 70, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 0 0 1px rgba(31, 36, 48, 0.05);
+  }
+  .card-inset {
+    background: rgba(244, 243, 239, 0.5);
+    border: 1px solid rgba(31, 36, 48, 0.06);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  .input-glass {
+    background: rgba(255, 255, 255, 0.66);
+    border: 1px solid rgba(31, 36, 48, 0.12);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.85),
+      inset 0 1px 2px rgba(31, 36, 48, 0.04);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .input-glass:focus-within {
+    border-color: #4b84f0;
+    box-shadow:
+      0 0 0 3px rgba(75, 132, 240, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  }
+
+  /* The living background: one fixed canvas behind everything. */
+  .atmosphere {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: #f0efe9;
+  }
+  .atmosphere canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -189,6 +292,21 @@
   }
   .twin-ring {
     animation: twinRingSpin 14s linear infinite;
+  }
+
+  /* Organ label in the 3D twin: appears after the glow has ramped. */
+  @keyframes labelIn {
+    from {
+      opacity: 0;
+      transform: translateX(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  .twin-label {
+    animation: labelIn 0.35s ease-out both;
   }
 
   /* Data "streaming" along the fusion diagram's connectors (landing page). */

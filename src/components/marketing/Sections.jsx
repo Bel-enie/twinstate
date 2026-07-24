@@ -1,12 +1,16 @@
 import BrandMark from '../ui/BrandMark.jsx'
 import EarlyAccessForm from './EarlyAccessForm.jsx'
 import { RISK } from '../../utils/risk.js'
-import { fmt, shortOrgan } from './twinData.js'
+import { evidenceFor, fmt, shortOrgan, weekFlags } from './twinData.js'
 
-/** Consistent rhythm down the scroll: one width, generous vertical space. */
-export function Section({ id, children, className = '' }) {
+/** Consistent rhythm down the scroll; `mood` tunes the background field. */
+export function Section({ id, mood, children, className = '' }) {
   return (
-    <section id={id} className={`mx-auto max-w-[1200px] scroll-mt-8 px-5 py-16 sm:px-8 sm:py-24 ${className}`}>
+    <section
+      id={id}
+      data-mood={mood}
+      className={`mx-auto max-w-[1200px] scroll-mt-8 px-5 py-16 sm:px-8 sm:py-24 ${className}`}
+    >
       {children}
     </section>
   )
@@ -52,23 +56,20 @@ export function DataFusion() {
   const W = 240
   const ys = INPUTS.map((_, i) => 24 + (i * (H - 48)) / (INPUTS.length - 1))
   return (
-    <Section>
+    <Section mood="trust">
       <Heading
         title={
           <>
             Your health data is fragmented. <em>Your body isn't.</em>
           </>
         }
-        sub="Everything a student takes lives in different places — a prescription, a pharmacy receipt, a fridge, a memory. Twinstate puts it on one timeline and models the body that has to deal with all of it."
+        sub="Everything a student takes lives in different places — a prescription, a pharmacy receipt, a fridge, a memory. Twinstate puts it on one timeline and models how it affects you over time."
       />
 
       <div className="mt-12 grid items-center gap-6 md:grid-cols-[auto_240px_auto] md:justify-center md:gap-0">
         <ul className="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
           {INPUTS.map((n) => (
-            <li
-              key={n}
-              className="rounded-xl border border-ink/10 bg-white px-4 py-2.5 text-sm font-semibold shadow-card"
-            >
+            <li key={n} className="card-glass rounded-[14px] px-4 py-2.5 text-sm font-semibold">
               {n}
             </li>
           ))}
@@ -89,7 +90,7 @@ export function DataFusion() {
           <circle cx={W} cy={H / 2} r="4" fill="#4B84F0" />
         </svg>
 
-        <div className="flex items-center gap-3 rounded-2xl border border-ink/10 bg-white px-5 py-4 shadow-card">
+        <div className="card-glass flex items-center gap-3 rounded-[22px] px-5 py-4">
           <BrandMark className="h-10 w-10" />
           <div>
             <div className="text-base font-extrabold tracking-tight">
@@ -120,9 +121,9 @@ export function WhatChanged({ story }) {
       k: 'Something changed',
       body: (
         <>
-          {firstName}'s caffeine {cafPct < 0 ? 'fell' : 'rose'} <strong>{Math.abs(cafPct)}%</strong> today —{' '}
-          {fmt(yesterday.caffeine)} → {fmt(today.caffeine)} mg — and heart stress moved{' '}
-          {yesterday.organ.heart} → {today.organ.heart} with it.
+          {firstName}'s logged caffeine {cafPct < 0 ? 'fell' : 'rose'} <strong>{Math.abs(cafPct)}%</strong> today —{' '}
+          {fmt(yesterday.caffeine)} → {fmt(today.caffeine)} mg. The engine's heart load moved{' '}
+          {yesterday.organ.heart} → {today.organ.heart} on the same day.
         </>
       ),
     },
@@ -130,9 +131,9 @@ export function WhatChanged({ story }) {
       k: 'Twinstate connects it',
       body: (
         <>
-          The heart flag first appeared on <strong>{heartDay?.dateLabel}</strong>, the day caffeine crossed
-          the ~400 mg line. The liver flag followed on <strong>{liverDay?.dateLabel}</strong>, when paracetamol
-          reached {fmt(liverDay?.paracetamol || 0)} mg. Both totals climbed over the same three days.
+          The heart flag first appeared on <strong>{heartDay?.dateLabel}</strong> — the day logged caffeine
+          crossed the ~400 mg line. The liver flag followed on <strong>{liverDay?.dateLabel}</strong>, when
+          paracetamol reached {fmt(liverDay?.paracetamol || 0)} mg. Both totals rose over the same three days.
         </>
       ),
     },
@@ -140,16 +141,17 @@ export function WhatChanged({ story }) {
       k: 'Then gives context',
       body: (
         <>
-          Caffeine is the likely driver of the heart number, and the paracetamol total is what the liver
-          flag is about. The headaches behind those doses may have more than one cause — exam stress
-          and {story.persona.profile.sleepHours} h of sleep are both in the picture.
+          These are threshold rules, not a diagnosis: the heart number tracks caffeine; the liver flag
+          tracks the paracetamol total. High caffeine intake is associated with poor sleep and a racing
+          heart (FDA, EFSA) — and {story.persona.profile.sleepHours} h of sleep and exam stress could account
+          for how {firstName} feels just as well. The twin can only see what was logged.
         </>
       ),
     },
   ]
 
   return (
-    <Section>
+    <Section mood="changed">
       <Heading
         eyebrow="Not another health dashboard"
         title={
@@ -157,7 +159,7 @@ export function WhatChanged({ story }) {
             Don't just show me numbers. <em>Tell me what changed.</em>
           </>
         }
-        sub="What changed? Why? What should I pay attention to? Every twin answers those three in plain language, and says what it can't tell."
+        sub="What changed? Why might that be? What should I pay attention to? Every twin answers those three in plain language — and says what it can't tell."
       />
       <div className="mt-12 grid gap-8 md:grid-cols-3 md:gap-10">
         {cols.map((c, i) => (
@@ -175,14 +177,14 @@ export function WhatChanged({ story }) {
 }
 
 // ── Evidence ──────────────────────────────────────────────────────────────
-export function Evidence({ story }) {
-  const { days, caffeineSources, today } = story
-  const flag = today.state.flags.find((f) => f.id === 'caffeine-stimulant-heart') || today.state.flags[0]
-  const daysPresent = days.filter((d) => d.flagIds.includes(flag.id))
-  const total = caffeineSources.reduce((a, b) => a + b.mg, 0)
+export function Evidence({ story, flagId, onSelectFlag }) {
+  const flags = weekFlags(story)
+  const ev = evidenceFor(story, flagId)
+  if (!ev) return null
+  const { flag, measurements, total, unit, line, firstDay, daysPresent, activeToday } = ev
 
   return (
-    <Section id="evidence">
+    <Section id="evidence" mood="evidence">
       <Heading
         eyebrow="Science"
         title={
@@ -190,34 +192,61 @@ export function Evidence({ story }) {
             Every insight <em>has evidence.</em>
           </>
         }
-        sub="See exactly which records contributed to a flag, which rule fired, how sure the twin is, and when it started. Nothing on the twin is a black box."
+        sub="Any flag, anywhere on this page, opens here: which records contributed, which rule fired, how sure the twin is, and when it started. Nothing on the twin is a black box."
       />
 
-      <div className="mt-12 rounded-3xl border border-ink/10 bg-white p-6 shadow-card sm:p-8">
+      <div className="mt-8 flex flex-wrap gap-2">
+        {flags.map((f) => (
+          <button
+            key={f.id}
+            onClick={() => onSelectFlag?.(f.id)}
+            aria-pressed={f.id === flag.id}
+            className={`flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-semibold transition ${
+              f.id === flag.id ? 'border-ink bg-ink text-white' : 'btn-glass border-transparent'
+            }`}
+          >
+            <span className="h-1.5 w-1.5 rounded-full" style={{ background: RISK[f.severity].hex }} />
+            {shortOrgan(f.organ)} · {f.title}
+          </button>
+        ))}
+      </div>
+
+      <div id="evidence-panel" className="card-glass mt-5 rounded-[28px] p-6 sm:p-8">
         <div className="flex flex-wrap items-center gap-3">
           <span className="h-2 w-2 rounded-full" style={{ background: RISK[flag.severity].hex }} />
           <h3 className="text-lg font-bold">{flag.title}</h3>
-          <span className="text-sm text-slate-soft">· {shortOrgan(flag.organ)}</span>
+          <span className="text-sm text-slate-soft">
+            · {shortOrgan(flag.organ)} · <span className="capitalize">{flag.severity}</span>
+          </span>
         </div>
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-soft">{flag.reason}</p>
 
         <div className="mt-8 grid gap-8 md:grid-cols-4">
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-soft">Measurements</h4>
             <ul className="mt-3 space-y-2">
-              {caffeineSources.map((s) => (
-                <li key={s.name} className="flex items-baseline justify-between gap-3 text-sm">
+              {measurements.map((m) => (
+                <li key={`${m.name}-${m.detail}`} className="flex items-baseline justify-between gap-3 text-sm">
                   <span>
-                    {s.name}
-                    <span className="block text-[11px] text-slate-soft">{s.detail}</span>
+                    {m.name}
+                    <span className="block text-[11px] text-slate-soft">{m.detail}</span>
                   </span>
-                  <span className="font-semibold tabular-nums">{fmt(s.mg)} mg</span>
+                  {m.value != null && (
+                    <span className="font-semibold tabular-nums">
+                      {fmt(m.value)} {unit}
+                    </span>
+                  )}
                 </li>
               ))}
-              <li className="flex items-baseline justify-between border-t border-ink/10 pt-2 text-sm">
-                <span className="font-semibold">Total</span>
-                <span className="font-semibold tabular-nums">{fmt(total)} mg</span>
-              </li>
-              <li className="text-[11px] text-slate-soft">Rule line: ~400 mg/day</li>
+              {total != null && (
+                <li className="flex items-baseline justify-between border-t border-ink/10 pt-2 text-sm">
+                  <span className="font-semibold">Total</span>
+                  <span className="font-semibold tabular-nums">
+                    {fmt(total)} {unit}
+                  </span>
+                </li>
+              )}
+              {line && <li className="text-[11px] text-slate-soft">Rule line: {line}</li>}
             </ul>
           </div>
 
@@ -251,19 +280,27 @@ export function Evidence({ story }) {
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-soft">Timeline</h4>
             <p className="mt-3 text-sm leading-relaxed">
-              First appeared <strong>{daysPresent[0]?.dateLabel}</strong>. Present on{' '}
-              <strong>{daysPresent.length} of {days.length}</strong> days this week; still active on{' '}
-              {today.dateLabel}.
+              First appeared <strong>{firstDay?.dateLabel}</strong>. Present on{' '}
+              <strong>
+                {daysPresent.length} of {story.days.length}
+              </strong>{' '}
+              days this week; {activeToday ? `still active on ${story.today.dateLabel}` : 'not active today'}.
             </p>
           </div>
         </div>
 
-        <p className="mt-8 border-t border-ink/10 pt-4 text-xs leading-relaxed text-slate-soft">
-          With a HOLON key, every substance you log resolves against HOLON's clinical concepts and the
-          whole list is screened through its interaction knowledge base — severity, mechanism, clinical
-          effect, management. Without one, the demo runs on a small, illustrative rule set that is
-          labelled as simulated in the source.
-        </p>
+        <div className="mt-8 border-t border-ink/10 pt-4">
+          <p className="text-sm leading-relaxed">
+            <span className="font-semibold">Safer alternative the twin suggests:</span>{' '}
+            <span className="text-slate-soft">{flag.saferAlternative}</span>
+          </p>
+          <p className="mt-3 text-xs leading-relaxed text-slate-soft">
+            With a HOLON key, every substance you log resolves against HOLON's clinical concepts and the
+            whole list is screened through its interaction knowledge base — severity, mechanism, clinical
+            effect, management. Without one, the demo runs on a small, illustrative rule set that is
+            labelled as simulated in the source.
+          </p>
+        </div>
       </div>
     </Section>
   )
@@ -294,9 +331,9 @@ const TRUST_QA = [
 ]
 
 export function Trust() {
-  const box = 'rounded-xl border border-ink/10 bg-white px-4 py-2.5 text-sm font-semibold shadow-card'
+  const box = 'card-glass rounded-[14px] px-4 py-2.5 text-sm font-semibold'
   return (
-    <Section id="trust">
+    <Section id="trust" mood="trust">
       <Heading
         eyebrow="Security"
         title={
@@ -307,15 +344,16 @@ export function Trust() {
         sub="For a health tool, trust isn't a supporting section — it's part of the product. Here is exactly what happens to what you log."
       />
 
-      {/* Data flow */}
       <div className="mt-12 grid items-center gap-4 md:grid-cols-[auto_1fr_auto_1fr_auto]">
         <ul className="space-y-2">
           {['What you log', 'How you slept', 'Your symptoms'].map((n) => (
-            <li key={n} className={box}>{n}</li>
+            <li key={n} className={box}>
+              {n}
+            </li>
           ))}
         </ul>
         <div className="hidden h-px bg-ink/15 md:block" />
-        <div className="rounded-2xl border border-brand-100 bg-brand-50 px-5 py-4 text-center">
+        <div className="rounded-[22px] border border-brand-100 bg-brand-50/80 px-5 py-4 text-center backdrop-blur">
           <div className="text-sm font-bold">This browser</div>
           <div className="mt-1 text-[11px] text-slate-soft">
             stored locally · no server
@@ -326,13 +364,13 @@ export function Trust() {
         <div className="hidden h-px bg-ink/15 md:block" />
         <div className="space-y-2">
           <div className={box}>Your twin</div>
-          <div className="rounded-xl border border-dashed border-ink/20 px-4 py-2.5 text-[11px] text-slate-soft">
+          <div className="rounded-[14px] border border-dashed border-ink/20 px-4 py-2.5 text-[11px] text-slate-soft">
             Optional, with a key: substance <em>names</em> → HOLON → concept &amp; interaction data back
           </div>
         </div>
       </div>
       <p className="mt-5 text-center text-sm text-slate-soft">
-        You control access: sign out keeps your twin, ✕ removes it, clearing site data erases it.
+        You control access: leave and your twin stays, ✕ removes it, clearing site data erases it.
       </p>
 
       <dl className="mx-auto mt-14 max-w-3xl divide-y divide-ink/10 border-y border-ink/10">
@@ -350,17 +388,14 @@ export function Trust() {
 // ── Final CTA ─────────────────────────────────────────────────────────────
 export function FinalCta({ onBuild }) {
   return (
-    <Section className="text-center">
+    <Section mood="cta" className="text-center">
       <h2 className="mx-auto max-w-3xl font-display text-4xl leading-[1.05] tracking-tight sm:text-6xl">
         Build a health record that actually <em>understands time.</em>
       </h2>
       <p className="mx-auto mt-5 max-w-lg text-base text-slate-soft sm:text-lg">
         Two minutes to log what you take. A twin that keeps up from there.
       </p>
-      <button
-        onClick={onBuild}
-        className="mt-8 rounded-2xl bg-brand-600 px-6 py-3.5 text-base font-semibold text-white shadow-card transition hover:bg-brand-700"
-      >
+      <button onClick={onBuild} className="btn-specular mt-8 rounded-[16px] px-7 py-3.5 text-base font-semibold">
         Build my twin
       </button>
     </Section>
@@ -404,7 +439,9 @@ export function SiteFooter() {
               <ul className="mt-3 space-y-2">
                 {c.links.map(([href, label]) => (
                   <li key={label}>
-                    <a href={href} className="text-sm transition hover:text-brand-700">{label}</a>
+                    <a href={href} className="text-sm transition hover:text-brand-700">
+                      {label}
+                    </a>
                   </li>
                 ))}
               </ul>

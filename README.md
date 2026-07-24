@@ -129,7 +129,7 @@ doses aren't overwritten on reload.)
 - **React 18** (functional components + hooks) · **Vite 5**
 - **Tailwind CSS 3** — warm, approachable, non-clinical design; mobile-first
 - **react-router-dom 6**
-- The anatomy is a **dependency-free real 3D model** ([AnatomyModel.jsx](src/components/anatomy/AnatomyModel.jsx)) — pure CSS 3D transforms give it true perspective, a depth-extruded volumetric body, drag-to-rotate + auto-rotate, and glowing organs that parallax inside it. No WebGL/three.js, so nothing extra to install and nothing to break in a live demo. It's driven by the twin's organ-risk map, so `@ontomorph/dtp-sdk` streaming a true GPU mesh is a drop-in swap on the same data.
+- The anatomy is a **dependency-free real 3D model** ([AnatomyModel.jsx](src/components/anatomy/AnatomyModel.jsx)) — pure CSS 3D transforms give it true perspective, a depth-extruded volumetric body, drag-to-rotate + auto-rotate, and glowing organs that parallax inside it. No WebGL/three.js in the app itself, so nothing to break in a live demo. The **landing page** adds a WebGL twin ([src/components/twin3d/](src/components/twin3d/), three + react-three-fiber, lazy-loaded into its own chunk) that stages each organ change and falls back to the CSS model where WebGL is unavailable, plus a subtle full-page shader field behind the content. It's driven by the twin's organ-risk map, so `@ontomorph/dtp-sdk` streaming a true GPU mesh is a drop-in swap on the same data.
 
 ### Design direction
 - Warm risk scale — teal → amber → coral → rose. Deliberately **not** a red-alarm aesthetic; it should feel helpful to a stressed student, not scary.

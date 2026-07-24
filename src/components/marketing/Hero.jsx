@@ -8,10 +8,10 @@ import { listProfiles, removeProfile } from '../../services/storage.js'
 /**
  * Nav + hero. Left: the pitch and the way in. Right (~55%): the live twin.
  *
- * "Build my twin" needs a name (the app's sign-in is a first name), so the
- * button reveals the name field in place rather than sending people to a
- * second page. `wantName` is owned by Landing so the final CTA can open the
- * same field.
+ * There are no accounts — a first name is the whole "sign in" and it stays in
+ * this browser — so the nav never says "Sign in". "Build my twin" reveals the
+ * name field in place; a saved profile gets a "Resume" instead. `wantName` is
+ * owned by Landing so the final CTA can open the same field.
  */
 
 const NAV = [
@@ -20,7 +20,7 @@ const NAV = [
   ['#trust', 'Security'],
 ]
 
-export default function Hero({ story, wantName, onBuild }) {
+export default function Hero({ story, wantName, onBuild, onSelectFlag, selectedOrgan, onSelectOrgan }) {
   const navigate = useNavigate()
   const { signIn, resumeAccount, loadPersona, status } = useTwin()
   const [name, setName] = useState('')
@@ -30,6 +30,7 @@ export default function Hero({ story, wantName, onBuild }) {
 
   const building = busy || status === 'building'
   const canContinue = name.trim().length > 0 && !building
+  const latest = accounts[0] || null
 
   useEffect(() => {
     if (wantName) inputRef.current?.focus()
@@ -77,16 +78,15 @@ export default function Hero({ story, wantName, onBuild }) {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <button
-            onClick={onBuild}
-            className="hidden rounded-full px-3 py-2 text-sm font-medium text-slate-soft transition hover:text-ink sm:block"
-          >
-            Sign in
-          </button>
-          <button
-            onClick={onBuild}
-            className="rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
-          >
+          {latest && (
+            <button
+              onClick={() => onResume(latest.key)}
+              className="hidden rounded-full px-3 py-2 text-sm font-medium text-slate-soft transition hover:text-ink sm:block"
+            >
+              Resume {latest.name?.split(',')[0] || 'twin'}
+            </button>
+          )}
+          <button onClick={onBuild} className="btn-specular rounded-full px-4 py-2 text-sm font-semibold">
             Build my twin
           </button>
         </div>
@@ -94,6 +94,7 @@ export default function Hero({ story, wantName, onBuild }) {
 
       <section
         id="hero"
+        data-mood="hero"
         className="mx-auto grid max-w-[1200px] items-center gap-10 px-5 pb-20 pt-10 sm:px-8 lg:grid-cols-[45fr_55fr] lg:gap-14 lg:pt-16"
       >
         <div>
@@ -116,7 +117,7 @@ export default function Hero({ story, wantName, onBuild }) {
               <label htmlFor="name" className="text-sm font-semibold">
                 What should we call you?
               </label>
-              <div className="mt-2 flex items-center gap-2 rounded-2xl border border-ink/15 bg-white p-1.5 shadow-card transition focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-100">
+              <div className="input-glass mt-2 flex items-center gap-2 rounded-[16px] p-1.5">
                 <input
                   ref={inputRef}
                   id="name"
@@ -128,27 +129,24 @@ export default function Hero({ story, wantName, onBuild }) {
                 <button
                   type="submit"
                   disabled={!canContinue}
-                  className="shrink-0 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:opacity-40"
+                  className="btn-specular shrink-0 rounded-[12px] px-4 py-2.5 text-sm font-semibold"
                 >
                   Build my twin →
                 </button>
               </div>
               <p className="mt-2 text-xs text-slate-soft">
-                No password, no email. Your data stays in this browser.
+                No account, no password — a first name is all it takes, and it stays in this browser.
               </p>
             </form>
           ) : (
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <button
-                onClick={onBuild}
-                className="rounded-2xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-card transition hover:bg-brand-700"
-              >
+              <button onClick={onBuild} className="btn-specular rounded-[14px] px-5 py-3 text-sm font-semibold">
                 Build my twin
               </button>
               <button
                 onClick={onDemo}
                 disabled={building}
-                className="rounded-2xl border border-ink/15 bg-white px-5 py-3 text-sm font-semibold transition hover:border-ink/40 disabled:opacity-60"
+                className="btn-glass rounded-[14px] px-5 py-3 text-sm font-semibold disabled:opacity-60"
               >
                 {building ? 'Opening…' : `See ${story.firstName}'s twin live →`}
               </button>
@@ -159,7 +157,7 @@ export default function Hero({ story, wantName, onBuild }) {
             <div className="mt-5 flex flex-wrap items-center gap-2 text-xs text-slate-soft">
               <span>Continue where you left off:</span>
               {accounts.map((a) => (
-                <span key={a.key} className="inline-flex items-center gap-0.5 rounded-full border border-ink/10 bg-white pl-2.5 pr-1">
+                <span key={a.key} className="inline-flex items-center gap-0.5 rounded-full border border-ink/10 bg-white/70 pl-2.5 pr-1">
                   <button onClick={() => onResume(a.key)} className="py-1 font-semibold text-ink">
                     {a.name?.split(',')[0] || 'Guest'}
                     {a.personaId && <span className="ml-1 font-normal text-slate-soft">demo</span>}
@@ -177,7 +175,12 @@ export default function Hero({ story, wantName, onBuild }) {
           )}
         </div>
 
-        <LiveTwin story={story} />
+        <LiveTwin
+          story={story}
+          onSelectFlag={onSelectFlag}
+          selectedOrgan={selectedOrgan}
+          onSelectOrgan={onSelectOrgan}
+        />
       </section>
     </>
   )
