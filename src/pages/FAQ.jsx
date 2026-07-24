@@ -92,7 +92,7 @@ function Item({ item, open, onToggle }) {
       >
         <span className="font-semibold">{item.q}</span>
         <span
-          className={`grid h-6 w-6 shrink-0 place-items-center rounded-full bg-cream text-slate-soft transition-transform ${
+          className={`grid h-6 w-6 shrink-0 place-items-center rounded-full bg-shell text-slate-soft transition-transform ${
             open ? 'rotate-45' : ''
           }`}
         >

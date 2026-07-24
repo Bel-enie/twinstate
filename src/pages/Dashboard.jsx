@@ -175,7 +175,7 @@ export default function Dashboard() {
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <Button to="/what-if" variant="dark" size="sm">
+            <Button to="/what-if" size="sm">
               Run What-If →
             </Button>
             <Button to="/recommendation" variant="ghost" size="sm">

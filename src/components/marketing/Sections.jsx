@@ -18,7 +18,9 @@ export function Section({ id, mood, children, className = '' }) {
 
 export function Heading({ eyebrow, title, sub, center = false }) {
   return (
-    <div className={center ? 'mx-auto max-w-2xl text-center' : 'max-w-2xl'}>
+    <div
+      className={`text-plate ${center ? 'text-plate-center mx-auto max-w-2xl text-center' : 'max-w-2xl'}`}
+    >
       {eyebrow && (
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-600">{eyebrow}</p>
       )}
@@ -163,7 +165,7 @@ export function WhatChanged({ story }) {
       />
       <div className="mt-12 grid gap-8 md:grid-cols-3 md:gap-10">
         {cols.map((c, i) => (
-          <div key={c.k} className="border-t border-ink/10 pt-5">
+          <div key={c.k} className="card-pearl rounded-[22px] px-5 py-5">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-soft">
               <span className="grid h-5 w-5 place-items-center rounded-full bg-ink text-[10px] text-white">{i + 1}</span>
               {c.k}
@@ -369,11 +371,13 @@ export function Trust() {
           </div>
         </div>
       </div>
-      <p className="mt-5 text-center text-sm text-slate-soft">
-        You control access: leave and your twin stays, ✕ removes it, clearing site data erases it.
-      </p>
+      <div className="text-plate text-plate-center mx-auto mt-5 max-w-2xl">
+        <p className="text-center text-sm text-slate-soft">
+          You control access: leave and your twin stays, ✕ removes it, clearing site data erases it.
+        </p>
+      </div>
 
-      <dl className="mx-auto mt-14 max-w-3xl divide-y divide-ink/10 border-y border-ink/10">
+      <dl className="card-pearl mx-auto mt-14 max-w-3xl divide-y divide-ink/10 rounded-[28px] px-6 py-2 sm:px-10">
         {TRUST_QA.map((x) => (
           <div key={x.q} className="grid gap-2 py-5 sm:grid-cols-[1fr_1.6fr] sm:gap-8">
             <dt className="font-display text-xl">{x.q}</dt>
@@ -389,12 +393,14 @@ export function Trust() {
 export function FinalCta({ onBuild }) {
   return (
     <Section id="cta" mood="cta" className="text-center">
-      <h2 className="mx-auto max-w-3xl font-display text-4xl leading-[1.05] tracking-tight sm:text-6xl">
-        Build a health record that actually <em>understands time.</em>
-      </h2>
-      <p className="mx-auto mt-5 max-w-lg text-base text-slate-soft sm:text-lg">
-        Two minutes to log what you take. A twin that keeps up from there.
-      </p>
+      <div className="text-plate text-plate-center mx-auto max-w-3xl">
+        <h2 className="font-display text-4xl leading-[1.05] tracking-tight sm:text-6xl">
+          Build a health record that actually <em>understands time.</em>
+        </h2>
+        <p className="mx-auto mt-5 max-w-lg text-base text-slate-soft sm:text-lg">
+          Two minutes to log what you take. A twin that keeps up from there.
+        </p>
+      </div>
       <button onClick={onBuild} className="btn-specular mt-8 rounded-[16px] px-7 py-3.5 text-base font-semibold">
         Build my twin
       </button>

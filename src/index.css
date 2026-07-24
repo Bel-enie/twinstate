@@ -15,6 +15,20 @@
     color-scheme: only light;
   }
 
+  /* Some mobile browsers (Chrome's "auto dark theme", Samsung Internet, Opera)
+     force-darken a light page anyway. They invert CSS colours but CANNOT touch
+     the WebGL canvas — which is how dark copy ended up rendering white over a
+     still-pale atmosphere. Re-assert the light palette under every dark signal
+     so text and its substrate always move together. */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: only light;
+    }
+    body {
+      @apply bg-shell text-ink;
+    }
+  }
+
   html {
     scroll-behavior: smooth;
   }
@@ -73,22 +87,30 @@
 
   /* ── Material system (landing page) ──────────────────────────────────── */
   /* Radius: buttons/inputs 14–16px · pills 999px · product cards 22px · large
-     cards 28px. Buttons are satin glass: a blue vertical gradient, a narrow
-     white highlight on the upper inner edge, a darker lower edge, a soft blue
-     shadow, and a broad reflection that follows the pointer (--px/--py, set by
-     specular.js). Both highlight layers sit UNDER the label. */
+     cards 28px.
+
+     The primary button sits on a moving field that is itself blue, so it can't
+     rely on hue to separate from its background — it separates by VALUE: a deep
+     navy face (roughly L* 30 against a field that never goes below L* 70), a
+     white hairline ring so the edge survives even on the brightest ribbon, and
+     a pale halo that holds a light gap around the shape. Label contrast is
+     ~11:1 and does not depend on what the atmosphere is doing behind it.
+     The highlight and the pointer reflection (--px/--py, set by specular.js)
+     are restrained satin, not glare, and both sit UNDER the label. */
 
   .btn-specular {
     position: relative;
     isolation: isolate;
     color: #fff;
-    background: linear-gradient(180deg, #6389f4 0%, #5278ed 46%, #3f63d8 100%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: linear-gradient(180deg, #2f4796 0%, #263b80 48%, #1c2c63 100%);
+    border: 1px solid rgba(255, 255, 255, 0.24);
     box-shadow:
-      0 8px 22px rgba(82, 120, 237, 0.26),
-      0 1px 2px rgba(31, 44, 96, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5),
-      inset 0 -1px 0 rgba(20, 40, 120, 0.22);
+      0 0 0 1px rgba(255, 255, 255, 0.4),
+      0 0 14px 6px rgba(246, 248, 252, 0.5),
+      0 10px 24px rgba(20, 32, 74, 0.26),
+      0 1px 2px rgba(20, 32, 74, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 -1px 0 rgba(10, 18, 48, 0.4);
     transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
   }
   .btn-specular::before {
@@ -97,7 +119,7 @@
     inset: 1px;
     z-index: -1;
     border-radius: inherit;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.06) 42%, rgba(255, 255, 255, 0) 60%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04) 44%, rgba(255, 255, 255, 0) 62%);
     pointer-events: none;
   }
   .btn-specular::after {
@@ -108,38 +130,50 @@
     border-radius: inherit;
     background: radial-gradient(
       130% 80% at var(--px, 50%) var(--py, -10%),
-      rgba(255, 255, 255, 0.3) 0%,
-      rgba(255, 255, 255, 0.1) 32%,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.07) 32%,
       rgba(255, 255, 255, 0) 62%
     );
     pointer-events: none;
   }
   .btn-specular:hover:not(:disabled) {
     transform: translateY(-1px);
+    filter: brightness(1.08);
     box-shadow:
-      0 12px 28px rgba(82, 120, 237, 0.32),
-      0 1px 2px rgba(31, 44, 96, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.62),
-      inset 0 -1px 0 rgba(20, 40, 120, 0.24);
+      0 0 0 1px rgba(255, 255, 255, 0.5),
+      0 0 16px 7px rgba(246, 248, 252, 0.58),
+      0 14px 30px rgba(20, 32, 74, 0.3),
+      0 1px 2px rgba(20, 32, 74, 0.26),
+      inset 0 1px 0 rgba(255, 255, 255, 0.34),
+      inset 0 -1px 0 rgba(10, 18, 48, 0.42);
   }
   .btn-specular:active:not(:disabled) {
     transform: translateY(0.5px);
-    filter: brightness(0.97);
+    filter: brightness(0.94);
     box-shadow:
-      0 4px 12px rgba(82, 120, 237, 0.24),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      inset 0 -1px 0 rgba(20, 40, 120, 0.22);
+      0 0 0 1px rgba(255, 255, 255, 0.36),
+      0 0 10px 4px rgba(246, 248, 252, 0.44),
+      0 4px 12px rgba(20, 32, 74, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      inset 0 -1px 0 rgba(10, 18, 48, 0.4);
   }
   .btn-specular:focus-visible {
     outline: none;
     box-shadow:
       0 0 0 2px #fff,
-      0 0 0 5px rgba(82, 120, 237, 0.55),
-      0 8px 22px rgba(82, 120, 237, 0.26),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      0 0 0 5px rgba(38, 59, 128, 0.8),
+      0 10px 24px rgba(20, 32, 74, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28);
   }
+  /* Disabled: stay recognisably the same button (a muted slate, not a washed
+     lavender), so "unavailable" reads as state rather than a different control. */
   .btn-specular:disabled {
-    opacity: 0.45;
+    background: linear-gradient(180deg, #8f98b5 0%, #7d87a6 48%, #6c7693 100%);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.35),
+      0 2px 6px rgba(31, 44, 96, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    opacity: 0.75;
     transform: none;
   }
 
@@ -147,21 +181,21 @@
   .btn-glass {
     position: relative;
     color: #1f2430;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(244, 246, 251, 0.66));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(244, 246, 251, 0.82));
     border: 1px solid rgba(255, 255, 255, 0.85);
     box-shadow:
-      0 6px 18px rgba(30, 40, 70, 0.08),
+      0 6px 18px rgba(30, 40, 70, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.95),
-      0 0 0 1px rgba(31, 36, 48, 0.07);
+      0 0 0 1px rgba(31, 44, 96, 0.16);
     transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
   }
   .btn-glass:hover:not(:disabled) {
     transform: translateY(-1px);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(246, 247, 252, 0.85));
     box-shadow:
-      0 10px 24px rgba(30, 40, 70, 0.1),
+      0 10px 24px rgba(30, 40, 70, 0.12),
       inset 0 1px 0 rgba(255, 255, 255, 1),
-      0 0 0 1px rgba(31, 36, 48, 0.09);
+      0 0 0 1px rgba(31, 44, 96, 0.22);
   }
   .btn-glass:active:not(:disabled) {
     transform: translateY(0.5px);
@@ -172,6 +206,45 @@
       0 0 0 3px rgba(82, 120, 237, 0.3),
       0 6px 18px rgba(30, 40, 70, 0.08),
       inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  }
+
+  /* ── Text legibility over the atmosphere ────────────────────────────────
+     The atmosphere is a moving field, so the contrast of anything drawn over
+     it would otherwise depend on where a ribbon happens to be — which is how
+     headings ended up as white-on-white. `.text-plate` guarantees the
+     substrate instead of hoping for it: a soft pearl veil, blurred well past
+     the text box so it has no visible edge, that keeps background luminance
+     high under copy no matter what the ribbon is doing. Text sits above it. */
+  .text-plate {
+    position: relative;
+    isolation: isolate;
+  }
+  .text-plate > * {
+    position: relative;
+    z-index: 1;
+  }
+  .text-plate::before {
+    content: '';
+    position: absolute;
+    inset: -1.75rem -2.5rem;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: 2.5rem;
+    background: radial-gradient(
+      70% 60% at 30% 50%,
+      rgba(244, 246, 250, 0.92) 0%,
+      rgba(244, 246, 250, 0.78) 45%,
+      rgba(244, 246, 250, 0) 100%
+    );
+    filter: blur(6px);
+  }
+  .text-plate-center::before {
+    background: radial-gradient(
+      70% 60% at 50% 50%,
+      rgba(244, 246, 250, 0.92) 0%,
+      rgba(244, 246, 250, 0.78) 45%,
+      rgba(244, 246, 250, 0) 100%
+    );
   }
 
   /* Large product cards: pearl-tinted, lightly translucent, fine border, a
@@ -187,12 +260,12 @@
   }
   /* Dense or small surfaces: stable, no blur, still pearl-toned. */
   .card-pearl {
-    background: rgba(255, 255, 255, 0.86);
-    border: 1px solid rgba(255, 255, 255, 0.75);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(250, 252, 255, 0.9));
+    border: 1px solid rgba(255, 255, 255, 0.8);
     box-shadow:
-      0 8px 24px rgba(30, 40, 70, 0.07),
-      inset 0 1px 0 rgba(255, 255, 255, 0.9),
-      0 0 0 1px rgba(31, 36, 48, 0.05);
+      0 8px 24px rgba(31, 44, 96, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      0 0 0 1px rgba(31, 44, 96, 0.06);
   }
   .card-inset {
     background: rgba(241, 243, 248, 0.6);

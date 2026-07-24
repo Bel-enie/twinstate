@@ -4,10 +4,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Warm, approachable base — not clinical.
-        cream: '#FBF7F0',
-        paper: '#F4F3EF', // off-white ground the landing page sits on
-        shell: '#E8E6E1', // soft backdrop the app "card" floats on
+        // Cool pearl base, shared with the landing page so the product and the
+        // marketing site read as one thing (they used to be warm beige vs. cool
+        // pearl, which is why the app looked like a different product).
+        cream: '#FCFDFF', // raised app surface
+        paper: '#F4F6FA', // off-white ground the landing page sits on
+        shell: '#E9ECF4', // soft backdrop the app "card" floats on
         ink: '#1F2430',
         slate: {
           soft: '#5B6472',
@@ -45,16 +47,16 @@ export default {
         display: ['"Instrument Serif"', 'Georgia', 'serif'],
       },
       boxShadow: {
-        soft: '0 10px 40px -12px rgba(31, 36, 48, 0.18)',
+        soft: '0 10px 40px -12px rgba(31, 44, 96, 0.16)',
         glow: '0 0 40px -6px rgba(75, 132, 240, 0.35)',
-        shell: '0 40px 120px -50px rgba(31, 36, 48, 0.55)',
-        card: '0 2px 10px -3px rgba(31, 36, 48, 0.10)',
+        shell: '0 40px 120px -50px rgba(31, 44, 96, 0.45)',
+        card: '0 2px 10px -3px rgba(31, 44, 96, 0.10)',
         // Dark-surface elevation: depth comes from shadow + a light top edge.
         lift: '0 24px 60px -24px rgba(0, 0, 0, 0.75)',
         halo: '0 0 60px -12px rgba(75, 132, 240, 0.45)',
       },
       backgroundImage: {
-        'brand-grad': 'linear-gradient(135deg, #4B84F0 0%, #6AA6FF 100%)',
+        'brand-grad': 'linear-gradient(180deg, #2F4796 0%, #263B80 48%, #1C2C63 100%)',
       },
       keyframes: {
         pulseGlow: {

@@ -87,7 +87,7 @@ export default function HealthChat() {
           <Message key={i} m={m} />
         ))}
         {busy && (
-          <div className="flex items-center gap-1.5 self-start rounded-2xl bg-cream px-4 py-3">
+          <div className="flex items-center gap-1.5 self-start rounded-[16px] bg-shell px-4 py-3">
             <Dot /> <Dot d="150" /> <Dot d="300" />
           </div>
         )}
@@ -123,12 +123,12 @@ export default function HealthChat() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about a med, symptom, or anything health…"
           aria-label="Ask a health question"
-          className="flex-1 rounded-2xl border border-ink/10 bg-cream px-4 py-3 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+          className="input-glass flex-1 rounded-[14px] px-4 py-3 text-sm outline-none"
         />
         <button
           type="submit"
           disabled={busy || !input.trim()}
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-brand-500 text-white transition hover:bg-brand-600 disabled:opacity-40"
+          className="btn-specular grid h-11 w-11 shrink-0 place-items-center rounded-[14px] transition"
           aria-label="Send"
         >
           ↑
@@ -141,7 +141,7 @@ export default function HealthChat() {
 function Message({ m }) {
   if (m.role === 'user') {
     return (
-      <div className="max-w-[85%] self-end rounded-2xl rounded-br-md bg-brand-500 px-4 py-2.5 text-sm text-white">
+      <div className="max-w-[85%] self-end rounded-2xl rounded-br-md bg-brand-600 px-4 py-2.5 text-sm text-white">
         {m.text}
       </div>
     )
@@ -156,7 +156,7 @@ function Message({ m }) {
       )}
       <div
         className={`rounded-2xl rounded-bl-md px-4 py-3 text-sm ${
-          urgent ? 'bg-rose-50 text-rose-900' : 'bg-cream text-ink/90'
+          urgent ? 'bg-rose-50 text-rose-900' : 'bg-shell text-ink/90'
         }`}
       >
         <Markdown text={m.text} />

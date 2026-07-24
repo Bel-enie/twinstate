@@ -10,7 +10,7 @@ import { MedicalDisclaimer } from '../safety/SafetyLayer.jsx'
 export default function AppShell({ children, wide = false }) {
   return (
     <div className="min-h-full bg-shell sm:p-4 lg:p-6">
-      <div className="mx-auto flex min-h-full max-w-6xl flex-col bg-cream shadow-shell sm:min-h-[calc(100vh-2rem)] sm:rounded-[2.25rem] lg:min-h-[calc(100vh-3rem)]">
+      <div className="mx-auto flex min-h-full max-w-6xl flex-col border border-white/70 bg-cream shadow-shell sm:min-h-[calc(100vh-2rem)] sm:rounded-[2.25rem] lg:min-h-[calc(100vh-3rem)]">
         <Header />
         <main className={`mx-auto w-full flex-1 px-4 py-7 sm:px-6 lg:px-8 ${wide ? 'max-w-6xl' : 'max-w-5xl'}`}>
           {children}
@@ -27,7 +27,7 @@ export default function AppShell({ children, wide = false }) {
             </span>
             <span className="text-center sm:text-right">Powered by Ontomorph DTP + HOLON.</span>
           </div>
-          <MedicalDisclaimer className="mt-4 border-t border-ink/5 pt-4 text-center sm:text-left" />
+          <MedicalDisclaimer className="mt-4 border-t border-ink/10 pt-4 text-center sm:text-left" />
         </footer>
       </div>
     </div>

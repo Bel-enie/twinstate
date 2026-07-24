@@ -69,11 +69,13 @@ export default function WhatIf() {
           </div>
         </div>
 
-        <div className="flex rounded-2xl bg-cream p-1">
+        <div className="flex rounded-[14px] bg-shell p-1">
           <button
             onClick={() => setPath('continue')}
             className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
-              path === 'continue' ? 'bg-risk-caution text-white shadow-soft' : 'text-slate-soft'
+              path === 'continue'
+                ? 'bg-white text-risk-caution shadow-card ring-1 ring-risk-caution/30'
+                : 'text-slate-soft hover:text-ink'
             }`}
           >
             Keep this pattern
@@ -81,7 +83,9 @@ export default function WhatIf() {
           <button
             onClick={() => setPath('safer')}
             className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
-              path === 'safer' ? 'bg-risk-calm text-white shadow-soft' : 'text-slate-soft'
+              path === 'safer'
+                ? 'bg-white text-risk-calm shadow-card ring-1 ring-risk-calm/30'
+                : 'text-slate-soft hover:text-ink'
             }`}
           >
             Rest + hydrate
@@ -145,7 +149,7 @@ export default function WhatIf() {
                     <span className="font-semibold">{p.label}</span>
                     <span className="text-slate-soft">{sim?.[p.key]?.bodyIndex ?? '…'}/100</span>
                   </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-cream">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-shell">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${sim?.[p.key]?.bodyIndex || 0}%`, background: p.color }}
@@ -166,7 +170,7 @@ export default function WhatIf() {
                 return (
                   <div key={key} className="flex items-center gap-3">
                     <span className="w-28 shrink-0 text-xs font-medium">{o.label}</span>
-                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-cream">
+                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-shell">
                       <div
                         className="h-full rounded-full transition-all duration-500"
                         style={{ width: `${v}%`, background: r.hex }}
@@ -179,7 +183,7 @@ export default function WhatIf() {
             </div>
           </Card>
 
-          <Button to="/recommendation" variant="dark" className="w-full">
+          <Button to="/recommendation" className="w-full">
             What should I do? →
           </Button>
         </div>

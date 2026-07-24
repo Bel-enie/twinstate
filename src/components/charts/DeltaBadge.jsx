@@ -8,7 +8,7 @@ export default function DeltaBadge({ delta, suffix = '', goodWhenDown = true, cl
   const flat = delta === 0
   const good = flat ? null : goodWhenDown ? !up : up
   const tone = flat
-    ? 'bg-cream text-slate-soft'
+    ? 'bg-shell text-slate-soft'
     : good
       ? 'bg-emerald-50 text-emerald-700'
       : 'bg-orange-50 text-orange-700'

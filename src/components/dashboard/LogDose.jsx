@@ -118,7 +118,7 @@ export default function LogDose() {
           <select
             value={substanceId}
             onChange={(e) => setSubstanceId(e.target.value)}
-            className="w-full rounded-xl border border-ink/10 bg-cream px-3 py-2 text-sm outline-none focus:border-brand-400"
+            className="input-glass w-full rounded-[12px] px-3 py-2 text-sm outline-none"
           >
             {options.map((c) => (
               <option key={c.id} value={c.id}>
@@ -130,7 +130,7 @@ export default function LogDose() {
 
         <label>
           <span className="mb-1 block text-[11px] font-semibold text-slate-soft">Dose</span>
-          <div className="flex items-center gap-1 rounded-xl border border-ink/10 bg-cream px-2 py-2">
+          <div className="card-inset flex items-center gap-1 rounded-[12px] px-2 py-2">
             <input
               type="number"
               min="0"
@@ -145,7 +145,7 @@ export default function LogDose() {
         <button
           onClick={addToQueue}
           disabled={!selected}
-          className="rounded-xl border border-brand-500 px-4 py-2 text-sm font-semibold text-brand-600 transition hover:bg-brand-50 disabled:opacity-40"
+          className="btn-glass rounded-[14px] px-4 py-2 text-sm font-semibold transition disabled:opacity-40"
         >
           + Add
         </button>
@@ -153,7 +153,7 @@ export default function LogDose() {
         <button
           onClick={logAll}
           disabled={!selected && !count}
-          className="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-600 disabled:opacity-40"
+          className="btn-specular rounded-[14px] px-4 py-2 text-sm font-semibold transition"
         >
           {count ? `Log ${count} dose${count > 1 ? 's' : ''}` : 'Log dose'}
         </button>
@@ -167,7 +167,7 @@ export default function LogDose() {
           onChange={(e) => setCustomName(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCustom())}
           placeholder="Type any substance…"
-          className="min-w-[8rem] flex-1 rounded-xl border border-ink/10 bg-cream px-3 py-1.5 text-sm outline-none focus:border-brand-400"
+          className="input-glass min-w-[8rem] flex-1 rounded-[12px] px-3 py-1.5 text-sm outline-none"
         />
         <button
           onClick={addCustom}
@@ -188,7 +188,7 @@ export default function LogDose() {
           {queue.map((q, i) => (
             <span
               key={`${q.substanceId}-${i}`}
-              className="inline-flex items-center gap-1.5 rounded-full bg-cream px-3 py-1 text-xs font-medium"
+              className="inline-flex items-center gap-1.5 rounded-full bg-shell px-3 py-1 text-xs font-medium"
             >
               {q.label}
               <span className="text-slate-soft">

@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useTwin } from './context/TwinContext.jsx'
 import { ConsentGate } from './components/safety/SafetyLayer.jsx'
+import { initSpecularButtons } from './components/marketing/specular.js'
 
 import Landing from './pages/Landing.jsx'
 import Intake from './pages/Intake.jsx'
@@ -43,6 +45,10 @@ function RequireTwin({ children }) {
 }
 
 export default function App() {
+  // Primary buttons are specular app-wide now, not just on the landing page,
+  // so the pointer-following reflection is initialised once at the root.
+  useEffect(() => initSpecularButtons(), [])
+
   return (
     <Routes>
       <Route path="/faq" element={<FAQ />} />

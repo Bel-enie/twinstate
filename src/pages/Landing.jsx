@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import Atmosphere from '../components/marketing/Atmosphere.jsx'
 import Hero from '../components/marketing/Hero.jsx'
 import Timeline from '../components/marketing/Timeline.jsx'
@@ -15,7 +15,6 @@ import {
   SiteFooter,
 } from '../components/marketing/Sections.jsx'
 import { buildTwinStory, flagOnOrgan } from '../components/marketing/twinData.js'
-import { initSpecularButtons } from '../components/marketing/specular.js'
 
 /**
  * The single front door, built around one product experience: a live 3D twin
@@ -34,8 +33,6 @@ export default function Landing() {
   const [wantName, setWantName] = useState(false)
   const [flagId, setFlagId] = useState(null)
   const [organ, setOrgan] = useState(null)
-
-  useEffect(() => initSpecularButtons(), [])
 
   const onBuild = useCallback(() => {
     setWantName(true)

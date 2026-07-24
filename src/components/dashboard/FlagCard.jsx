@@ -27,7 +27,7 @@ export default function FlagCard({ flag, active, onHover, onLeave }) {
       <p className="mt-2 line-clamp-2 text-sm text-slate-soft">{flag.reason}</p>
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
         {flag.substances.map((s) => (
-          <span key={s.id} className="rounded-full bg-cream px-2 py-0.5 text-[11px] font-medium">
+          <span key={s.id} className="rounded-full bg-shell px-2 py-0.5 text-[11px] font-medium">
             {s.label.split(' (')[0]}
           </span>
         ))}

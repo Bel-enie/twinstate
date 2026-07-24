@@ -91,7 +91,7 @@ export default function Header() {
               <button
                 onClick={onSwitch}
                 title="Switch user"
-                className="rounded-full px-2 py-1 text-xs font-semibold text-slate-soft transition hover:bg-cream hover:text-brand-600"
+                className="rounded-full px-2 py-1 text-xs font-semibold text-slate-soft transition hover:bg-shell hover:text-brand-600"
               >
                 Switch
               </button>

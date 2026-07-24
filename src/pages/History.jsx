@@ -67,7 +67,7 @@ export default function History() {
         <h2 className="text-sm font-bold text-slate-soft">This week, totalled up</h2>
         <div className="mt-3 flex flex-wrap gap-2">
           {totals.map((t) => (
-            <span key={t.id} className="rounded-full bg-cream px-3 py-1.5 text-sm font-semibold">
+            <span key={t.id} className="rounded-full bg-shell px-3 py-1.5 text-sm font-semibold">
               {t.count}× {t.label}
             </span>
           ))}
@@ -75,7 +75,7 @@ export default function History() {
       </Card>
 
       <div className="mt-5 flex gap-2">
-        <Button to="/what-if" variant="dark">
+        <Button to="/what-if">
           Where does this lead? →
         </Button>
         <Button to="/dashboard" variant="ghost">

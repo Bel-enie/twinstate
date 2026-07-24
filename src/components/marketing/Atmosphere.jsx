@@ -33,8 +33,8 @@ export const ATMOSPHERE = {
     lilac: '#ADA1DE',
     cyan: '#95D6E2',
   },
-  intensity: 1.0, // overall ribbon presence (0–1.2)
-  highlight: 0.6, // strength of the white reflections
+  intensity: 0.92, // overall ribbon presence (0–1.2)
+  highlight: 0.3, // strength of the reflections (kept off pure white)
   speed: 1.0, // deformation speed multiplier
   pointerStrength: 1.0, // how much the field bends toward the pointer (0 disables)
   grain: 0.014, // static grain to soften banding (0 disables)
@@ -65,7 +65,7 @@ export const ATMOSPHERE = {
       ],
     },
     {
-      at: '#evidence', calm: 0.35, calmX: 0.35, flow: 1.2, contrast: 0.6,
+      at: '#evidence', calm: 0.35, calmX: 0.35, flow: 1.2, contrast: 0.45,
       ribbons: [
         { a: [0.78, 0.06, 0.26, 0.3], b: [0.9, 1.6, 0.07, 0.3] },
         { a: [0.34, 0.07, 0.22, 0.34], b: [0.8, 3.3, 0.07, 0.3] },
@@ -73,7 +73,7 @@ export const ATMOSPHERE = {
       ],
     },
     {
-      at: '#trust', calm: 0.3, calmX: 0.35, flow: 1.6, contrast: 0.55,
+      at: '#trust', calm: 0.3, calmX: 0.35, flow: 1.6, contrast: 0.4,
       ribbons: [
         { a: [0.8, 0.05, 0.24, 0.26], b: [0.9, 2.0, 0.07, 0.3] },
         { a: [0.3, 0.06, 0.2, 0.3], b: [0.8, 3.7, 0.07, 0.3] },
@@ -81,7 +81,7 @@ export const ATMOSPHERE = {
       ],
     },
     {
-      at: '#cta', calm: 0.0, calmX: 0.5, flow: 2.1, contrast: 1.05,
+      at: '#cta', calm: 0.3, calmX: 0.5, flow: 2.1, contrast: 0.72,
       ribbons: [
         { a: [0.74, 0.1, 0.22, 0.4], b: [1.2, 2.3, 0.1, 0.32] },
         { a: [0.5, 0.12, 0.26, 0.66], b: [1.0, 4.2, 0.08, 0.3] },
@@ -115,14 +115,19 @@ vec4 ribbon(vec2 p, vec4 a, vec4 b, vec3 tint, float bend, vec3 L) {
   float dd = clamp(d, -1.0, 1.0);
   float z = sqrt(max(0.0, 1.0 - dd * dd));
   vec3 n = normalize(vec3(0.0, dd * 0.9, z));
-  float lam = 0.6 + 0.4 * max(dot(n, L), 0.0);
+  float lam = 0.52 + 0.42 * max(dot(n, L), 0.0);
   float rim = pow(1.0 - z, 2.5);
   float hp = b.w + 0.25 * (tw - 0.5);
   float spec = exp(-pow((dd - hp) / 0.07, 2.0));
   float spec2 = exp(-pow((dd + 0.55) / 0.16, 2.0)) * 0.35;
-  vec3 body = mix(tint, vec3(1.0), 0.16 * (1.0 - z)) * lam;
-  body += vec3(1.0) * (spec + spec2) * uHighlight;
-  body += tint * rim * 0.5;
+  // Reflections are a pale tint of the ribbon, never pure white, and the body
+  // is shaded down before they are added — so a highlight lifts the surface
+  // instead of blowing it out to glare.
+  vec3 sheen = mix(tint, vec3(1.0), 0.72);
+  vec3 body = mix(tint * 0.86, vec3(1.0), 0.1 * (1.0 - z)) * lam;
+  body += sheen * (spec + spec2) * uHighlight;
+  body += tint * rim * 0.4;
+  body = min(body, vec3(0.93));
   float alpha = a.w * inside * (0.72 + 0.28 * z);
   return vec4(body, alpha);
 }
@@ -143,6 +148,11 @@ void main(){
   r = ribbon(p, uA0, uB0, uC0, bend * 0.6, L); col = mix(col, r.rgb, r.a * k);
   r = ribbon(p, uA1, uB1, uC1, bend, L);       col = mix(col, r.rgb, r.a * k);
   if (uRibbons > 2.5) { r = ribbon(p, uA2, uB2, uC2, bend * 1.3, L); col = mix(col, r.rgb, r.a * k); }
+
+  // Hard ceiling on brightness: text over this field must never approach the
+  // luminance of the copy drawn on top of it, whatever the ribbons are doing.
+  float lum = dot(col, vec3(0.2126, 0.7152, 0.0722));
+  col *= 1.0 - 0.55 * smoothstep(0.86, 0.98, lum);
 
   col += (hash(gl_FragCoord.xy) - 0.5) * uGrain;
   gl_FragColor = vec4(col, 1.0);

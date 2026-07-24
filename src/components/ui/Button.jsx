@@ -1,11 +1,17 @@
 import { Link } from 'react-router-dom'
 
+/**
+ * One button language across the product: `primary` is the same specular
+ * treatment as the landing page CTA (.btn-specular in index.css) — a deep navy
+ * face that separates from any background by VALUE, not hue — and `ghost` is
+ * the same pearl surface as .btn-glass. The app and the marketing site used to
+ * ship visibly different buttons; they now share these.
+ */
 const VARIANTS = {
-  primary:
-    'bg-brand-grad text-white shadow-soft hover:shadow-glow hover:brightness-105 active:scale-[0.98]',
-  ghost: 'bg-white/70 text-ink border border-ink/10 hover:bg-white active:scale-[0.98]',
-  soft: 'bg-brand-50 text-brand-700 hover:bg-brand-100 active:scale-[0.98]',
-  dark: 'bg-ink text-white hover:bg-ink/90 active:scale-[0.98]',
+  primary: 'btn-specular',
+  ghost: 'btn-glass',
+  soft: 'bg-brand-50 text-brand-700 border border-brand-100 hover:bg-brand-100 active:scale-[0.98]',
+  dark: 'bg-ink text-white shadow-soft hover:bg-ink/90 active:scale-[0.98]',
 }
 
 const SIZES = {
@@ -24,7 +30,7 @@ export default function Button({
   children,
   ...props
 }) {
-  const cls = `inline-flex items-center justify-center gap-2 rounded-2xl font-semibold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 focus-visible:ring-offset-cream disabled:opacity-50 disabled:pointer-events-none ${VARIANTS[variant]} ${SIZES[size]} ${className}`
+  const cls = `inline-flex items-center justify-center gap-2 rounded-[16px] font-semibold transition-all duration-150 focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none ${VARIANTS[variant]} ${SIZES[size]} ${className}`
 
   if (to) {
     return (

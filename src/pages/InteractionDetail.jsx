@@ -69,7 +69,7 @@ export default function InteractionDetail() {
               {flag.substances.map((s, i) => (
                 <span key={s.id} className="flex items-center gap-2">
                   {i > 0 && <span className="text-slate-soft">＋</span>}
-                  <span className="rounded-xl bg-cream px-3 py-1.5 text-sm font-semibold">{s.label.split(' (')[0]}</span>
+                  <span className="rounded-xl bg-shell px-3 py-1.5 text-sm font-semibold">{s.label.split(' (')[0]}</span>
                 </span>
               ))}
             </div>
@@ -127,7 +127,7 @@ export default function InteractionDetail() {
           )}
 
           <div className="flex gap-2">
-            <Button to="/what-if" variant="dark">
+            <Button to="/what-if">
               See this play out →
             </Button>
             <Button to="/recommendation" variant="ghost">

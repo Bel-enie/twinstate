@@ -128,10 +128,10 @@ export default function Intake() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search e.g. paracetamol, energy drink, ibuprofen…"
                 aria-label="Search substances to add"
-                className="w-full rounded-2xl border border-ink/10 bg-cream px-4 py-3 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+                className="input-glass w-full rounded-[14px] px-4 py-3 text-sm outline-none"
               />
               {(query || results.length > 0) && (
-                <div className="mt-2 overflow-hidden rounded-2xl border border-ink/10 bg-white shadow-soft">
+                <div className="card-pearl mt-2 overflow-hidden rounded-[18px]">
                   {results.length === 0 && query.trim() && (
                     <button
                       type="button"
@@ -169,7 +169,7 @@ export default function Intake() {
                       className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm hover:bg-brand-50"
                     >
                       <span className="font-medium">{c.label}</span>
-                      <span className="rounded-full bg-cream px-2 py-0.5 text-[11px] text-slate-soft">
+                      <span className="rounded-full bg-shell px-2 py-0.5 text-[11px] text-slate-soft">
                         {CATEGORY_LABEL[c.category]}
                       </span>
                     </button>
@@ -181,14 +181,14 @@ export default function Intake() {
             {/* chosen items */}
             <div className="mt-4 space-y-2">
               {items.length === 0 && (
-                <p className="rounded-2xl bg-cream px-4 py-3 text-sm text-slate-soft">
+                <p className="card-inset rounded-[14px] px-4 py-3 text-sm text-slate-soft">
                   Nothing added yet. Add at least one to build your twin.
                 </p>
               )}
               {items.map((it) => (
                 <div
                   key={it.substanceId}
-                  className="flex flex-wrap items-center gap-2 rounded-2xl border border-ink/10 bg-white px-3 py-2.5"
+                  className="card-pearl flex flex-wrap items-center gap-2 rounded-[18px] px-3 py-2.5"
                 >
                   <span className="flex flex-1 flex-wrap items-center gap-1.5 text-sm font-semibold">
                     {it.label}
@@ -203,7 +203,7 @@ export default function Intake() {
                       </span>
                     )}
                   </span>
-                  <div className="flex items-center gap-1 rounded-xl bg-cream px-2 py-1">
+                  <div className="card-inset flex items-center gap-1 rounded-[12px] px-2 py-1">
                     <input
                       type="number"
                       min="0"
@@ -217,7 +217,7 @@ export default function Intake() {
                   <select
                     value={it.frequency}
                     onChange={(e) => updateItem(it.substanceId, { frequency: e.target.value })}
-                    className="rounded-xl bg-cream px-2 py-1.5 text-sm outline-none"
+                    className="card-inset rounded-[12px] px-2 py-1.5 text-sm outline-none"
                   >
                     {FREQS.map((f) => (
                       <option key={f} value={f}>
@@ -228,7 +228,7 @@ export default function Intake() {
                   <button
                     type="button"
                     onClick={() => removeItem(it.substanceId)}
-                    className="grid h-7 w-7 place-items-center rounded-lg text-slate-soft hover:bg-cream"
+                    className="grid h-7 w-7 place-items-center rounded-lg text-slate-soft hover:bg-shell"
                     aria-label="Remove"
                   >
                     ✕
@@ -250,7 +250,9 @@ export default function Intake() {
                     type="button"
                     onClick={() => toggleSymptom(s.id)}
                     className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
-                      on ? 'bg-brand-500 text-white' : 'bg-cream text-slate-soft hover:bg-brand-50'
+                      on
+                        ? 'bg-ink text-white shadow-card'
+                        : 'border border-ink/10 bg-shell text-slate-soft hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700'
                     }`}
                   >
                     {s.label}
@@ -264,7 +266,7 @@ export default function Intake() {
               rows={2}
               placeholder="Anything else? (free text, optional)"
               aria-label="Anything else (optional)"
-              className="mt-3 w-full rounded-2xl border border-ink/10 bg-cream px-4 py-3 text-sm outline-none focus:border-brand-400"
+              className="input-glass mt-3 w-full rounded-[14px] px-4 py-3 text-sm outline-none"
             />
           </Card>
 
@@ -295,7 +297,9 @@ export default function Intake() {
                       type="button"
                       onClick={() => setStress(lvl)}
                       className={`rounded-xl px-3 py-1.5 text-sm font-medium capitalize ${
-                        stress === lvl ? 'bg-brand-500 text-white' : 'bg-cream text-slate-soft'
+                        stress === lvl
+                          ? 'bg-ink text-white shadow-card'
+                          : 'border border-ink/10 bg-shell text-slate-soft hover:text-ink'
                       }`}
                     >
                       {lvl}
@@ -306,7 +310,9 @@ export default function Intake() {
             </div>
           </Card>
 
-          <div className="sticky bottom-4 z-10">
+          {/* Floating action bar: it scrolls over the cards above it, so it gets
+              a soft fade behind it rather than colliding with their edges. */}
+          <div className="sticky bottom-0 z-10 -mx-1 bg-gradient-to-t from-cream via-cream/95 to-transparent px-1 pb-4 pt-6">
             <Button as="button" type="submit" size="lg" className="w-full" disabled={!canSubmit}>
               {status === 'building' ? 'Building your twin…' : 'Build my twin →'}
             </Button>

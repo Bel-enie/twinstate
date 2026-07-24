@@ -116,7 +116,7 @@ export default function Recommendation() {
         )}
 
         <div className="mt-5 flex flex-wrap gap-2">
-          <Button to="/dashboard" variant="dark">
+          <Button to="/dashboard">
             Back to {who.possessive} twin
           </Button>
           <Button to="/what-if" variant="ghost">
