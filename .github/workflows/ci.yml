@@ -17,5 +17,5 @@ jobs:
       - run: npm ci
       - name: Unit tests (deterministic engine)
         run: npm test
-      - name: Production build
+      - name: Production build (fails if a secret is in the bundle)
         run: npm run build
