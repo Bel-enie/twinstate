@@ -4,6 +4,7 @@ import BrandMark from '../ui/BrandMark.jsx'
 import LiveTwin from './LiveTwin.jsx'
 import { useTwin } from '../../context/TwinContext.jsx'
 import { listProfiles, removeProfile } from '../../services/storage.js'
+import { useStuck } from '../../utils/useStuck.js'
 
 /**
  * Nav + hero. Left: the pitch and the way in. Right (~55%): the live twin.
@@ -22,6 +23,7 @@ const NAV = [
 
 export default function Hero({ story, wantName, onBuild, onSelectFlag, selectedOrgan, onSelectOrgan }) {
   const navigate = useNavigate()
+  const stuck = useStuck()
   const { signIn, resumeAccount, loadPersona, status } = useTwin()
   const [name, setName] = useState('')
   const [busy, setBusy] = useState(false)
@@ -62,7 +64,14 @@ export default function Hero({ story, wantName, onBuild, onSelectFlag, selectedO
 
   return (
     <>
-      <header className="mx-auto flex max-w-[1200px] items-center justify-between px-5 py-5 sm:px-8">
+      {/* Sticky so the primary action stays reachable down a long page, and
+          given its own edge so content passes UNDER a distinct bar rather
+          than merging with it. */}
+      <header
+        data-stuck={stuck}
+        className="site-header sticky top-0 z-40"
+      >
+        <div className="mx-auto flex max-w-[1200px] items-center justify-between px-5 py-4 sm:px-8">
         <a href="#top" className="flex items-center gap-2.5">
           <BrandMark className="h-8 w-8" />
           <span className="text-base font-extrabold tracking-tight">
@@ -89,6 +98,7 @@ export default function Hero({ story, wantName, onBuild, onSelectFlag, selectedO
           <button onClick={onBuild} className="btn-specular rounded-full px-4 py-2 text-sm font-semibold">
             Build my twin
           </button>
+        </div>
         </div>
       </header>
 

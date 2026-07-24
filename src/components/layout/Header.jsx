@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTwin } from '../../context/TwinContext.jsx'
 import { dataSourceLabel } from '../../services/index.js'
+import { useStuck } from '../../utils/useStuck.js'
 
 const TABS = [
   { to: '/dashboard', label: 'Twin' },
@@ -22,6 +23,7 @@ function BrandMark({ className = '' }) {
 
 export default function Header() {
   const { hasTwin, session, signOut } = useTwin()
+  const stuck = useStuck()
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
@@ -33,7 +35,10 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-30 bg-cream/85 backdrop-blur-md sm:rounded-t-[2.25rem]">
+    <header
+      data-stuck={stuck}
+      className="site-header sticky top-0 z-30 sm:rounded-t-[2.25rem]"
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
         {/* brand */}
         <Link to={hasTwin ? '/dashboard' : '/'} className="flex items-center gap-2">

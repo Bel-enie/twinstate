@@ -208,6 +208,45 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.95);
   }
 
+  /* ── Headers ────────────────────────────────────────────────────────────
+     A header floating over scrolling content needs its own edge, or the page
+     simply slides underneath it and the two read as one surface. Both the
+     landing header and the in-app header use this: a pearl glass bar, a
+     hairline bottom border, and a soft shadow that only appears once the page
+     has actually scrolled (data-stuck, set by the component) so the header
+     looks flush at rest and lifted while content passes beneath it. */
+  .site-header {
+    /* At rest the bar is fully transparent — the page reads as one surface. */
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease,
+      -webkit-backdrop-filter 0.25s ease, backdrop-filter 0.25s ease;
+  }
+  /* Once scrolling, it stays visible but as GLASS: the ribbons and content
+     keep showing through, blurred, with only a hairline to mark the edge.
+     No solid fill — the point is that you can still see what passes under it. */
+  .site-header[data-stuck='true'] {
+    background: linear-gradient(180deg, rgba(252, 253, 255, 0.55), rgba(244, 246, 250, 0.38));
+    -webkit-backdrop-filter: saturate(170%) blur(18px);
+    backdrop-filter: saturate(170%) blur(18px);
+    border-bottom-color: rgba(31, 44, 96, 0.1);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.6) inset,
+      0 10px 28px -18px rgba(31, 44, 96, 0.3);
+  }
+  /* Where backdrop-filter is unavailable the glass would vanish, so fall back
+     to a more opaque fill — legibility wins over the effect. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .site-header[data-stuck='true'] {
+      background: rgba(248, 250, 253, 0.92);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      transition: none;
+    }
+  }
+
   /* ── Text legibility over the atmosphere ────────────────────────────────
      The atmosphere is a moving field, so the contrast of anything drawn over
      it would otherwise depend on where a ribbon happens to be — which is how
