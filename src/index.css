@@ -10,8 +10,13 @@
   }
 
   :root {
-    /* Commit to the light palette so OS/browser dark mode can't invert it. */
+    /* Commit to the light palette so OS/browser dark mode can't invert it.
+       Dark areas (the landing hero card, footer) are painted explicitly. */
     color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
@@ -31,6 +36,39 @@
 
   .glass {
     @apply bg-white/70 backdrop-blur-md border border-white/60;
+  }
+
+  /* ── Dark holographic surfaces (landing page) ─────────────────────────── */
+
+  /* The dark hero / footer card that floats on the light page: deep navy with
+     two soft aurora blooms so a large dark area never reads flat. */
+  .hero-card {
+    background:
+      radial-gradient(70% 60% at 82% 0%, rgba(75, 132, 240, 0.22), transparent 60%),
+      radial-gradient(55% 50% at 8% 100%, rgba(63, 184, 160, 0.16), transparent 62%),
+      linear-gradient(180deg, #101833 0%, #0a0e1a 100%);
+  }
+
+  /* Raised panel on the dark ground — depth from a lit top edge, not a border. */
+  .panel-dark {
+    @apply rounded-3xl border backdrop-blur-sm;
+    border-color: rgba(36, 48, 73, 0.7);
+    background-color: rgba(20, 28, 49, 0.8);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+      0 24px 60px -24px rgba(0, 0, 0, 0.75);
+  }
+
+  /* Hairline divider that fades at both ends. */
+  .rule-fade {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(150, 163, 189, 0.28) 20%,
+      rgba(150, 163, 189, 0.28) 80%,
+      transparent
+    );
   }
 
   .no-scrollbar::-webkit-scrollbar {

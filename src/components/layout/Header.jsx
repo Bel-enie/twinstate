@@ -29,7 +29,7 @@ export default function Header() {
 
   const onSwitch = () => {
     signOut()
-    navigate('/welcome')
+    navigate('/')
   }
 
   return (
