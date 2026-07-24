@@ -6,11 +6,12 @@
   "description": "Twinstate \u2014 a living digital twin that turns scattered student medication data into an interactive 3D patient model, powered by Ontomorph DTP + HOLON.",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/check-bundle-secrets.mjs",
     "preview": "vite preview",
     "proxy": "node server/proxy.mjs",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "check:secrets": "node scripts/check-bundle-secrets.mjs"
   },
   "dependencies": {
     "@ontomorph/dtp-sdk": "^0.1.4",

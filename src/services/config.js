@@ -18,7 +18,11 @@ export const config = {
   // never use it for a deployed/shared build. Without either, a grounded
   // offline mock answers so the demo always works.
   chatProxyUrl: import.meta.env.VITE_CHAT_PROXY_URL || '',
-  openaiKey: import.meta.env.VITE_OPENAI_API_KEY || '',
+  // HARD GATE: a VITE_ variable is inlined into the public bundle, so in a
+  // production build this key would be readable by anyone who opens the site.
+  // It is therefore dropped unless we are running the dev server. Comments
+  // alone did not prevent this — the key shipped live once already.
+  openaiKey: import.meta.env.DEV ? import.meta.env.VITE_OPENAI_API_KEY || '' : '',
   openaiModel: import.meta.env.VITE_OPENAI_MODEL || 'gpt-4o-mini',
 
   // HOLON clinical-knowledge API (@ontomorph/holon-client). Powers REAL drug
