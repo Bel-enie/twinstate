@@ -64,41 +64,52 @@ export default function Hero({ story, wantName, onBuild, onSelectFlag, selectedO
 
   return (
     <>
-      {/* Sticky so the primary action stays reachable down a long page, and
-          given its own edge so content passes UNDER a distinct bar rather
-          than merging with it. */}
-      <header
-        data-stuck={stuck}
-        className="site-header sticky top-0 z-40"
-      >
-        <div className="mx-auto flex max-w-[1200px] items-center justify-between px-5 py-4 sm:px-8">
-        <a href="#top" className="flex items-center gap-2.5">
-          <BrandMark className="h-8 w-8" />
-          <span className="text-base font-extrabold tracking-tight">
-            <span className="text-brand-600">Twin</span>
-            <span className="text-risk-calm">state</span>
+      {/* One floating pill rather than a full-bleed bar: the brand, the live
+          badge, the nav and the CTA travel down the page as a single object,
+          detached from the page edges. The <header> is only the track — it
+          never paints, so the atmosphere shows through around the capsule. */}
+      <header data-stuck={stuck} className="site-header sticky top-0 z-40 px-4 pt-3 sm:px-6 sm:pt-4">
+        <div className="site-pill mx-auto w-full max-w-[1200px] py-2 pl-3 pr-2 sm:pl-5 sm:pr-3">
+          <a href="#top" className="flex shrink-0 items-center gap-2.5">
+            <BrandMark className="h-8 w-8" />
+            <span className="text-base font-extrabold tracking-tight">
+              <span className="text-brand-600">Twin</span>
+              <span className="text-risk-calm">state</span>
+            </span>
+          </a>
+
+          {/* The twin really is recomputing as you scrub the week, so the
+              badge states a fact about the page rather than decorating it. */}
+          <span className="ml-1 hidden items-center gap-1.5 rounded-full border border-brand-200/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-700 sm:inline-flex">
+            <span className="h-1.5 w-1.5 rounded-full bg-risk-calm" />
+            Live
           </span>
-        </a>
-        <nav className="hidden items-center gap-7 md:flex">
-          {NAV.map(([href, label]) => (
-            <a key={href} href={href} className="text-sm font-medium text-slate-soft transition hover:text-ink">
-              {label}
-            </a>
-          ))}
-        </nav>
-        <div className="flex items-center gap-2">
-          {latest && (
-            <button
-              onClick={() => onResume(latest.key)}
-              className="hidden rounded-full px-3 py-2 text-sm font-medium text-slate-soft transition hover:text-ink sm:block"
-            >
-              Resume {latest.name?.split(',')[0] || 'twin'}
+
+          <nav className="mx-auto hidden items-center gap-7 md:flex">
+            {NAV.map(([href, label]) => (
+              <a
+                key={href}
+                href={href}
+                className="rounded-full px-2.5 py-1 text-sm font-semibold text-ink/75 transition hover:bg-white/50 hover:text-ink"
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
+            {latest && (
+              <button
+                onClick={() => onResume(latest.key)}
+                className="hidden rounded-full px-3 py-2 text-sm font-medium text-slate-soft transition hover:text-ink sm:block"
+              >
+                Resume {latest.name?.split(',')[0] || 'twin'}
+              </button>
+            )}
+            <button onClick={onBuild} className="btn-specular rounded-full px-4 py-2 text-sm font-semibold">
+              Build my twin
             </button>
-          )}
-          <button onClick={onBuild} className="btn-specular rounded-full px-4 py-2 text-sm font-semibold">
-            Build my twin
-          </button>
-        </div>
+          </div>
         </div>
       </header>
 

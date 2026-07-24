@@ -37,9 +37,9 @@ export default function Header() {
   return (
     <header
       data-stuck={stuck}
-      className="site-header sticky top-0 z-30 sm:rounded-t-[2.25rem]"
+      className="site-header sticky top-0 z-30 px-3 pt-3 sm:px-4 sm:pt-4"
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
+      <div className="site-pill mx-auto w-full max-w-6xl justify-between gap-3 py-2 pl-3 pr-2 sm:pl-4 sm:pr-3">
         {/* brand */}
         <Link to={hasTwin ? '/dashboard' : '/'} className="flex items-center gap-2">
           <BrandMark className="h-9 w-9" />
@@ -107,7 +107,7 @@ export default function Header() {
 
       {/* mobile tab bar */}
       {hasTwin && (
-        <nav className="flex gap-1.5 overflow-x-auto px-4 pb-3 no-scrollbar md:hidden">
+        <nav className="mx-auto mt-2 flex w-full max-w-6xl gap-1.5 overflow-x-auto pb-1 no-scrollbar md:hidden">
           {TABS.map((t) => {
             const active = pathname === t.to
             return (

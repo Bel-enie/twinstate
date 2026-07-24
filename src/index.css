@@ -263,33 +263,46 @@
      has actually scrolled (data-stuck, set by the component) so the header
      looks flush at rest and lifted while content passes beneath it. */
   .site-header {
-    /* At rest the bar is fully transparent — the page reads as one surface. */
+    /* The header is a track; the pill inside it is the visible object. The
+       track itself never paints, so the page shows through around the pill. */
     background: transparent;
-    border-bottom: 1px solid transparent;
-    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease,
-      -webkit-backdrop-filter 0.25s ease, backdrop-filter 0.25s ease;
+    pointer-events: none;
   }
-  /* Once scrolling, it stays visible but as GLASS: the ribbons and content
-     keep showing through, blurred, with only a hairline to mark the edge.
-     No solid fill — the point is that you can still see what passes under it. */
-  .site-header[data-stuck='true'] {
-    background: linear-gradient(180deg, rgba(252, 253, 255, 0.55), rgba(244, 246, 250, 0.38));
-    -webkit-backdrop-filter: saturate(170%) blur(18px);
-    backdrop-filter: saturate(170%) blur(18px);
-    border-bottom-color: rgba(31, 44, 96, 0.1);
+  .site-header > * {
+    pointer-events: auto;
+  }
+  /* The pill: one detached capsule carrying the brand, the nav and the CTA as
+     a single travelling unit, rather than a full-bleed bar ruled off from the
+     page by a bottom border. At rest it is barely there; once the page moves
+     it firms up into glass so content stays readable passing beneath it. */
+  .site-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    background: transparent;
+    transition: background 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease,
+      padding 0.28s ease, -webkit-backdrop-filter 0.28s ease, backdrop-filter 0.28s ease;
+  }
+  .site-header[data-stuck='true'] .site-pill {
+    background: linear-gradient(180deg, rgba(252, 253, 255, 0.72), rgba(244, 246, 250, 0.58));
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-color: rgba(31, 44, 96, 0.12);
     box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.6) inset,
-      0 10px 28px -18px rgba(31, 44, 96, 0.3);
+      0 1px 0 rgba(255, 255, 255, 0.75) inset,
+      0 18px 40px -22px rgba(31, 44, 96, 0.45);
   }
   /* Where backdrop-filter is unavailable the glass would vanish, so fall back
      to a more opaque fill — legibility wins over the effect. */
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .site-header[data-stuck='true'] {
-      background: rgba(248, 250, 253, 0.92);
+    .site-header[data-stuck='true'] .site-pill {
+      background: rgba(248, 250, 253, 0.94);
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .site-header {
+    .site-pill {
       transition: none;
     }
   }
