@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  :root {
+    /* Commit to the light palette so OS/browser dark mode can't invert it. */
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-shell text-ink antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  /* Warm gradient backdrop used behind the anatomy stage. */
+  .stage-backdrop {
+    background:
+      radial-gradient(120% 90% at 50% -10%, rgba(75, 132, 240, 0.14), transparent 55%),
+      radial-gradient(90% 70% at 50% 120%, rgba(63, 184, 160, 0.12), transparent 60%),
+      #0e1526;
+  }
+
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/60;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@layer utilities {
+  /* Pulsing glow for flagged organs in the 3D twin. */
+  @keyframes organGlow {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.95;
+      transform: scale(1.16);
+    }
+  }
+  .organ-glow {
+    animation: organGlow 2.4s ease-in-out infinite;
+  }
+
+  /* ── Living-body motion for the holographic twin ─────────────────────── */
+
+  /* Whole-body breathing — a slow, shallow chest rise. */
+  @keyframes twinBreathe {
+    0%,
+    100% {
+      transform: scaleY(1) scaleX(1);
+    }
+    50% {
+      transform: scaleY(1.012) scaleX(1.006);
+    }
+  }
+  .twin-breathe {
+    animation: twinBreathe 4.6s ease-in-out infinite;
+    transform-origin: 50% 42%;
+    transform-box: fill-box;
+  }
+
+  /* Realistic double-thump heartbeat. */
+  @keyframes twinHeartbeat {
+    0%,
+    45%,
+    100% {
+      transform: scale(1);
+    }
+    8% {
+      transform: scale(1.18);
+    }
+    16% {
+      transform: scale(1);
+    }
+    24% {
+      transform: scale(1.12);
+    }
+    32% {
+      transform: scale(1);
+    }
+  }
+  .twin-heartbeat {
+    animation: twinHeartbeat 1.15s ease-in-out infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+
+  /* Flagged-organ pulse — brightness + scale in one. */
+  @keyframes twinOrganPulse {
+    0%,
+    100% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.14);
+    }
+  }
+  .twin-organ-pulse {
+    animation: twinOrganPulse 2.2s ease-in-out infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+
+  /* Drifting data motes rising through the body. */
+  @keyframes twinMote {
+    0% {
+      transform: translateY(8px) scale(0.6);
+      opacity: 0;
+    }
+    15% {
+      opacity: 0.9;
+    }
+    85% {
+      opacity: 0.9;
+    }
+    100% {
+      transform: translateY(-96px) scale(1);
+      opacity: 0;
+    }
+  }
+  .twin-mote {
+    animation: twinMote var(--dur, 5s) linear infinite;
+    animation-delay: var(--delay, 0s);
+  }
+
+  /* Slowly spinning hologram base ring. */
+  @keyframes twinRingSpin {
+    to {
+      transform: rotateX(74deg) rotateZ(360deg);
+    }
+  }
+  .twin-ring {
+    animation: twinRingSpin 14s linear infinite;
+  }
+
+  /* Grab affordance for the rotatable twin stage. */
+  .twin-grab {
+    cursor: grab;
+    touch-action: none;
+  }
+  .twin-grab:active {
+    cursor: grabbing;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .twin-breathe,
+    .twin-heartbeat,
+    .twin-organ-pulse,
+    .twin-mote,
+    .twin-ring,
+    .organ-glow {
+      animation: none;
+    }
+  }
+}
