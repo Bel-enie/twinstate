@@ -87,7 +87,7 @@ The API key is read **only** in [src/services/config.js](src/services/config.js)
 
 | Route | Screen | What it does |
 |-------|--------|--------------|
-| `/` | Landing | One-sentence pitch, exam-season framing, "Start My Twin" + persona demos |
+| `/` | Landing | The public front door: a live twin computed from a persona's week, a scrubbable timeline, "ask your twin" (runs the real What-If simulation), evidence per flag, and where your data lives — plus name sign-in and persona demos. No consent modal here; it appears on entry to the product. |
 | `/intake` | Intake | Fast (<2 min) entry of substances (dose/frequency), symptoms, sleep/stress |
 | `/dashboard` | Twin dashboard | The 3D anatomy centrepiece + AI plain-language flags in the sidebar |
 | `/interaction/:id` | Interaction detail | What's interacting, why it's risky (plain English), a safer alternative |
@@ -164,5 +164,5 @@ src/
 - **Ada** — high-risk liver + heart story from energy drinks + repeated paracetamol.
 - **Tunde** shows the double-NSAID gut/kidney story.
 - **Zoe** shows a prescription-level interaction (SSRI + tramadol) + herbal liver load.
-- On the **Welcome** gate you can type a name to make a demo account, resume a saved one, or jump straight into any persona — handy for a live demo.
+- On the landing page, **Build my twin** reveals a name field (a first name is the whole sign-in), saved profiles can be resumed or removed, and any persona opens with one click — handy for a live demo.
 - The `● demo data` badge in the header flips to `● live data` automatically when `VITE_DATA_SOURCE=live`.

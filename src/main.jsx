@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import { TwinProvider } from './context/TwinContext.jsx'
 import ErrorBoundary from './components/ui/ErrorBoundary.jsx'
-import { ConsentGate } from './components/safety/SafetyLayer.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -12,9 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ErrorBoundary>
       <BrowserRouter>
         <TwinProvider>
-          <ConsentGate>
-            <App />
-          </ConsentGate>
+          <App />
         </TwinProvider>
       </BrowserRouter>
     </ErrorBoundary>

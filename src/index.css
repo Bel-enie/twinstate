@@ -191,6 +191,22 @@
     animation: twinRingSpin 14s linear infinite;
   }
 
+  /* Data "streaming" along the fusion diagram's connectors (landing page). */
+  @keyframes streamDash {
+    to {
+      stroke-dashoffset: -20;
+    }
+  }
+  .stream {
+    stroke-dasharray: 4 6;
+    animation: streamDash 1.1s linear infinite;
+  }
+
+  /* The week scrubber on the landing page — native range, brand accent. */
+  .twin-range {
+    accent-color: #4b84f0;
+  }
+
   /* Grab affordance for the rotatable twin stage. */
   .twin-grab {
     cursor: grab;
@@ -206,7 +222,8 @@
     .twin-organ-pulse,
     .twin-mote,
     .twin-ring,
-    .organ-glow {
+    .organ-glow,
+    .stream {
       animation: none;
     }
   }

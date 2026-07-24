@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useTwin } from './context/TwinContext.jsx'
+import { ConsentGate } from './components/safety/SafetyLayer.jsx'
 
 import Landing from './pages/Landing.jsx'
 import Intake from './pages/Intake.jsx'
@@ -22,10 +23,15 @@ function Boot() {
   return <Landing />
 }
 
-/** Needs a signed-in account (but not necessarily a built twin). */
+/**
+ * Needs a signed-in account (but not necessarily a built twin).
+ * The medical consent gate lives here and on RequireTwin — i.e. on entry to the
+ * product — so the public landing page can be read without a modal, while no
+ * product screen is reachable without consent.
+ */
 function RequireSession({ children }) {
   const { isSignedIn } = useTwin()
-  return isSignedIn ? children : <Navigate to="/" replace />
+  return isSignedIn ? <ConsentGate>{children}</ConsentGate> : <Navigate to="/" replace />
 }
 
 /** Needs a fully built twin — otherwise route to the right earlier step. */
@@ -33,7 +39,7 @@ function RequireTwin({ children }) {
   const { isSignedIn, hasTwin } = useTwin()
   if (!isSignedIn) return <Navigate to="/" replace />
   if (!hasTwin) return <Navigate to="/intake" replace />
-  return children
+  return <ConsentGate>{children}</ConsentGate>
 }
 
 export default function App() {

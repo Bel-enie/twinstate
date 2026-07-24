@@ -8,11 +8,11 @@ const ROLES = [
 ]
 
 /**
- * Working early-access form. Signups persist to localStorage (see
- * services/earlyAccess.js) — the confirmation says so explicitly rather than
- * implying a real mailing list, because nothing leaves the browser.
+ * Working early-access form, on a light surface. Signups persist to
+ * localStorage (services/earlyAccess.js) — the confirmation says so explicitly
+ * rather than implying a mailing list, because nothing leaves the browser.
  */
-export default function EarlyAccessForm({ compact = false }) {
+export default function EarlyAccessForm() {
   const [email, setEmail] = useState('')
   const [role, setRole] = useState('student')
   const [state, setState] = useState({ status: 'idle', message: '' })
@@ -20,7 +20,6 @@ export default function EarlyAccessForm({ compact = false }) {
   const onSubmit = (e) => {
     e.preventDefault()
     const res = addSignup({ email, role })
-
     if (res.ok) {
       setState({ status: 'done', message: "You're on the list." })
       setEmail('')
@@ -30,30 +29,26 @@ export default function EarlyAccessForm({ compact = false }) {
       status: 'error',
       message:
         res.reason === 'duplicate'
-          ? "That email is already on the list."
+          ? 'That email is already on the list.'
           : 'Please enter a valid email address.',
     })
   }
 
   if (state.status === 'done') {
     return (
-      <div
-        className="panel-dark flex items-start gap-3 p-5"
-        role="status"
-        aria-live="polite"
-      >
-        <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-risk-calm/15 text-sm text-risk-calm">
+      <div className="flex items-start gap-3 rounded-2xl border border-ink/10 bg-white p-4" role="status" aria-live="polite">
+        <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-emerald-50 text-xs text-emerald-700">
           ✓
         </span>
         <div>
-          <p className="font-bold text-frost">{state.message}</p>
-          <p className="mt-1 text-sm text-mist">
-            Saved in this browser only — Twinstate has no server collecting emails. You can start
-            using the twin right now, no signup needed.
+          <p className="text-sm font-semibold">{state.message}</p>
+          <p className="mt-1 text-xs text-slate-soft">
+            Saved in this browser only — Twinstate has no server collecting emails. You can build a
+            twin right now; no signup needed.
           </p>
           <button
             onClick={() => setState({ status: 'idle', message: '' })}
-            className="mt-2 text-sm font-semibold text-brand-400 hover:text-brand-300"
+            className="mt-2 text-xs font-semibold text-brand-600 hover:text-brand-700"
           >
             Add another →
           </button>
@@ -63,28 +58,18 @@ export default function EarlyAccessForm({ compact = false }) {
   }
 
   return (
-    <form onSubmit={onSubmit} className={compact ? '' : 'panel-dark p-6 sm:p-7'}>
-      {!compact && (
-        <>
-          <h3 className="text-xl font-bold text-frost">Get early access</h3>
-          <p className="mt-1.5 text-sm text-mist">
-            Twinstate is a student project from the Ontomorph Hackathon. Leave your email and we'll
-            tell you when it opens up properly.
-          </p>
-        </>
-      )}
-
-      <div className="mt-4 flex flex-wrap gap-2">
+    <form onSubmit={onSubmit}>
+      <div className="flex flex-wrap gap-2">
         {ROLES.map((r) => (
           <button
             key={r.id}
             type="button"
             onClick={() => setRole(r.id)}
             aria-pressed={role === r.id}
-            className={`rounded-full border px-3.5 py-1.5 text-sm font-semibold transition ${
+            className={`rounded-full border px-3 py-1 text-xs font-semibold transition ${
               role === r.id
-                ? 'border-brand-400/60 bg-brand-500/15 text-brand-300'
-                : 'border-hairline text-mist hover:border-brand-400/40 hover:text-frost'
+                ? 'border-ink bg-ink text-white'
+                : 'border-ink/15 text-slate-soft hover:border-ink/40 hover:text-ink'
             }`}
           >
             {r.label}
@@ -103,26 +88,19 @@ export default function EarlyAccessForm({ compact = false }) {
           placeholder="you@university.edu"
           aria-label="Email address"
           aria-invalid={state.status === 'error'}
-          className="min-w-0 flex-1 rounded-full border border-hairline bg-deep/80 px-5 py-3 text-base text-frost outline-none transition placeholder:text-mist/55 focus:border-brand-400/70 focus:ring-2 focus:ring-brand-500/25"
+          className="min-w-0 flex-1 rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-soft/70 focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
         />
         <button
           type="submit"
-          className="shrink-0 rounded-full bg-brand-grad px-6 py-3 text-sm font-semibold text-white shadow-halo transition hover:brightness-110"
+          className="shrink-0 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700"
         >
-          Notify me →
+          Notify me
         </button>
       </div>
 
-      {state.status === 'error' && (
-        <p className="mt-2 text-sm text-risk-urgent" role="alert">
-          {state.message}
-        </p>
-      )}
-      {state.status !== 'error' && (
-        <p className="mt-2 text-xs text-mist/75">
-          Stored in your browser only. No mailing list, no third party.
-        </p>
-      )}
+      <p className={`mt-2 text-xs ${state.status === 'error' ? 'text-rose-700' : 'text-slate-soft'}`} role={state.status === 'error' ? 'alert' : undefined}>
+        {state.status === 'error' ? state.message : 'Stored in your browser only. No mailing list, no third party.'}
+      </p>
     </form>
   )
 }
