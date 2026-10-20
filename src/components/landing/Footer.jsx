@@ -33,10 +33,14 @@ export default function Footer() {
         </nav>
       </div>
       <div className="border-t border-hairline/50">
-        <p className="mx-auto max-w-[1200px] px-5 py-5 text-xs text-mist/70 sm:px-8">
-          Educational demo — not medical advice, not a diagnosis. Everything you log stays in your
-          browser.
-        </p>
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-3 px-5 py-6 text-xs leading-relaxed sm:px-8 md:flex-row md:items-start md:justify-between md:gap-10">
+          <p className="shrink-0 text-mist">© 2026 Twinstate · OAU, Ontomorph Hackathon</p>
+          <p className="max-w-2xl text-mist md:text-right">
+            An educational tool, not a medical device. It does not diagnose or make prescription
+            decisions. In an emergency, contact local emergency services. Everything you log stays in
+            your browser.
+          </p>
+        </div>
       </div>
     </footer>
   )
