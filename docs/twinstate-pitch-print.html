@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Twinstate — Pitch Deck</title>
+<style>
+  :root {
+    --bg:#14101B; --bg-2:#1C1626; --bg-3:#241C31; --ink:#F4EFF8; --muted:#A69DB4; --faint:#8A8199;
+    --line:rgba(255,255,255,0.11); --line-2:rgba(255,255,255,0.06);
+    --calm:#34D3B7; --watch:#F6A73F; --caut:#FF6E57; --urg:#F5477A; --accent:#FF6E57;
+    --spine: linear-gradient(180deg, var(--calm) 0%, var(--watch) 42%, var(--caut) 74%, var(--urg) 100%);
+    --heat:  linear-gradient(90deg, var(--calm), var(--watch) 55%, var(--caut) 82%, var(--urg));
+    --font-display: "Helvetica Neue", "Segoe UI", system-ui, -apple-system, "Inter", sans-serif;
+    --font-body:    "Helvetica Neue", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: "Cascadia Code", "Consolas", ui-monospace, monospace;
+    --maxw: 12in;
+  }
+  @page { size: 13.333in 7.5in; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+
+  .slide {
+    position: relative;
+    width: 13.333in; height: 7.5in;
+    overflow: hidden;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0.72in 0.9in 0.72in 1in;
+    page-break-after: always; break-after: page;
+    background: var(--bg);
+  }
+  .slide:last-child { page-break-after: avoid; break-after: avoid; }
+  .slide::before { content:""; position:absolute; left:0; top:0; bottom:0; width:6px; background: var(--spine); }
+  .inner { width: 100%; max-width: var(--maxw); margin: 0 auto; }
+
+  .rail {
+    position: absolute; top: 0.55in; left: 1in;
+    display: flex; align-items: center; gap: 0.6rem;
+    font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--faint);
+  }
+  .rail b { color: var(--ink); font-weight: 700; }
+  .rail .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+
+  .eyebrow { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 0.9rem; display: flex; align-items: center; gap: 0.6rem; }
+  .eyebrow::before { content:""; width: 24px; height: 1px; background: currentColor; opacity:0.7; }
+  h1 { font-family: var(--font-display); font-size: 5rem; line-height: 0.92; letter-spacing: -0.03em; font-weight: 800; margin: 0; }
+  h2 { font-family: var(--font-display); font-size: 2.6rem; line-height: 1.02; letter-spacing: -0.02em; font-weight: 800; margin: 0 0 0.9rem; }
+  h2 .hl { color: var(--accent); }
+  .lead { font-size: 1.15rem; color: var(--muted); max-width: 42ch; margin: 0; }
+  p { margin: 0 0 1rem; }
+
+  .grid { display: grid; gap: 2.4rem; align-items: center; }
+  .grid.two { grid-template-columns: 1.05fr 0.95fr; }
+
+  .panel { background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 1.5rem; }
+  .panel .cap { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--faint); margin: 0 0 1rem; display:flex; justify-content:space-between; align-items:center; gap:1rem; }
+
+  .dial-wrap { display: grid; grid-template-columns: auto 1fr; gap: 1.4rem; align-items: center; }
+  .dial { position: relative; width: 160px; height: 160px; flex: none; }
+  .dial svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+  .dial .track { fill: none; stroke: var(--line); stroke-width: 12; }
+  .dial .val { fill: none; stroke: url(#heatgrad); stroke-width: 12; stroke-linecap: round; stroke-dasharray: 471; stroke-dashoffset: 150.8; }
+  .dial .num { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .dial .num b { font-family: var(--mono); font-size: 2.6rem; font-weight: 700; line-height: 1; }
+  .dial .num span { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--caut); margin-top: 0.35rem; }
+
+  .organs { display: flex; flex-direction: column; gap: 0.7rem; }
+  .organ { display: grid; grid-template-columns: 5rem 1fr 2.4rem; align-items: center; gap: 0.7rem; }
+  .organ .name { font-size: 0.88rem; }
+  .organ .bar { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+  .organ .fill { height: 100%; border-radius: 99px; }
+  .organ .score { font-family: var(--mono); font-size: 0.85rem; text-align: right; color: var(--muted); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.1rem; }
+  .chip { font-family: var(--mono); font-size: 0.72rem; padding: 0.38rem 0.72rem; border-radius: 99px;
+    border: 1px solid var(--line); background: var(--bg-2); color: var(--muted); display:inline-flex; align-items:center; gap:0.42rem; }
+  .chip .d { width: 7px; height: 7px; border-radius: 50%; flex:none; }
+
+  .steps { display: grid; gap: 0.75rem; grid-template-columns: repeat(2,1fr); counter-reset: s; }
+  .step { position: relative; padding: 0.95rem 1.05rem 1rem 2.9rem; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; }
+  .step::before { counter-increment: s; content: counter(s,decimal-leading-zero); position: absolute; left: 1rem; top: 0.95rem;
+    font-family: var(--mono); font-size: 0.78rem; font-weight: 700; color: var(--accent); }
+  .step h4 { margin: 0 0 0.25rem; font-size: 0.98rem; }
+  .step p { margin: 0; color: var(--muted); font-size: 0.85rem; line-height:1.4; }
+
+  .points { list-style: none; padding: 0; margin: 1.2rem 0 0; display: flex; flex-direction: column; gap: 0.85rem; }
+  .points li { position: relative; padding-left: 1.5rem; color: var(--muted); font-size: 0.98rem; }
+  .points li b { color: var(--ink); font-weight: 650; }
+  .points li::before { content:""; position: absolute; left: 0; top: 0.55em; width: 8px; height: 8px; border-radius: 2px; background: var(--heat); }
+
+  .arch { display: flex; flex-direction: column; gap: 0.6rem; font-family: var(--mono); font-size: 0.8rem; }
+  .arch .ui { text-align:center; padding: 0.62rem; border:1px dashed var(--line); border-radius: 9px; color: var(--muted); }
+  .arch .layer { text-align:center; padding: 0.75rem; border-radius: 9px; background: var(--bg-3); border: 1px solid var(--accent); color: var(--ink); font-weight:700; }
+  .arch .backends { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.55rem; }
+  .arch .be { padding: 0.65rem 0.4rem; border-radius: 9px; border: 1px solid var(--line); background: var(--bg-2); text-align:center; }
+  .arch .be small { display:block; color: var(--faint); font-size: 0.6rem; letter-spacing:0.08em; margin-top:0.28rem; text-transform:uppercase; }
+  .arch .flow { text-align:center; color: var(--faint); font-size: 1rem; line-height: 0.5; }
+
+  .honest { margin-top: 1.2rem; padding: 0.95rem 1.1rem; border-radius: 12px;
+    background: rgba(255,110,87,0.12); border: 1px solid rgba(255,110,87,0.45); font-size: 0.9rem; }
+  .honest .tag { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-right: 0.5rem; }
+  code { font-family: var(--mono); font-size: 0.85em; }
+
+  .metrics { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.9rem; margin-top: 1.4rem; }
+  .metric { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 1.05rem 1.15rem; }
+  .metric .big { font-family: var(--mono); font-size: 2.2rem; font-weight: 700; line-height:1; }
+  .metric .big small { font-size: 0.85rem; color: var(--faint); font-weight: 400; }
+  .metric .lbl { color: var(--muted); font-size: 0.82rem; margin-top: 0.5rem; line-height:1.4; }
+
+  .cards { display: grid; gap: 0.9rem; grid-template-columns: repeat(2,1fr); margin-top: 0; }
+  .card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; }
+  .card .k { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin: 0 0 0.45rem; }
+  .card h4 { margin: 0 0 0.3rem; font-size: 0.98rem; }
+  .card p { margin: 0; color: var(--muted); font-size: 0.82rem; line-height:1.4; }
+
+  .footmeta { margin-top: 1.6rem; display: flex; flex-wrap: wrap; gap: 0.55rem 1.2rem; align-items:center;
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--faint); }
+  .footmeta .pill { border:1px solid var(--line); border-radius: 99px; padding: 0.32rem 0.7rem; color: var(--muted); }
+  .kicker { font-family: var(--mono); color: var(--calm); font-size: 0.72rem; letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" aria-hidden="true"><defs>
+  <linearGradient id="heatgrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#34D3B7"/><stop offset="55%" stop-color="#F6A73F"/>
+    <stop offset="82%" stop-color="#FF6E57"/><stop offset="100%" stop-color="#F5477A"/>
+  </linearGradient>
+</defs></svg>
+
+<!-- 1 — TITLE -->
+<section class="slide">
+  <div class="rail"><b>Twinstate</b> <span class="dot"></span> Living Health Twin</div>
+  <div class="inner grid two">
+    <div>
+      <p class="eyebrow">Ontomorph Hackathon · OAU · 2026</p>
+      <h1>Twin&shy;state</h1>
+      <p class="lead" style="margin-top:1.4rem">A living health twin for students. Log what you're taking — it builds a 3D body that <b style="color:var(--ink)">visibly reacts</b>, screens the combination against real clinical knowledge, and explains the risk in plain language, with a clear path to care.</p>
+      <div class="chips">
+        <span class="chip"><span class="d" style="background:var(--calm)"></span>Powered by HOLON</span>
+        <span class="chip"><span class="d" style="background:var(--watch)"></span>3D anatomy</span>
+        <span class="chip"><span class="d" style="background:var(--caut)"></span>AI reasoning</span>
+      </div>
+    </div>
+    <div class="panel">
+      <p class="cap"><span>Body-stress index</span><span>Live twin · "Ada"</span></p>
+      <div class="dial-wrap">
+        <div class="dial">
+          <svg viewBox="0 0 180 180"><circle class="track" cx="90" cy="90" r="75"/><circle class="val" cx="90" cy="90" r="75"/></svg>
+          <div class="num"><b>68</b><span>Elevated</span></div>
+        </div>
+        <div class="organs">
+          <div class="organ"><span class="name">Heart</span><div class="bar"><div class="fill" style="width:78%;background:var(--caut)"></div></div><span class="score">78</span></div>
+          <div class="organ"><span class="name">Liver</span><div class="bar"><div class="fill" style="width:71%;background:var(--caut)"></div></div><span class="score">71</span></div>
+          <div class="organ"><span class="name">Kidneys</span><div class="bar"><div class="fill" style="width:44%;background:var(--watch)"></div></div><span class="score">44</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 — PROBLEM -->
+<section class="slide">
+  <div class="rail"><b>02</b> <span class="dot"></span> The Problem</div>
+  <div class="inner">
+    <p class="eyebrow">Exam-season polypharmacy</p>
+    <h2>Nobody checks the <span class="hl">combination.</span></h2>
+    <div class="grid two" style="margin-top:0.4rem">
+      <div>
+        <p class="lead" style="max-width:46ch">Each thing feels harmless alone. Stacked together through exam season, they quietly strain the heart, liver, kidneys and gut — and no one is looking at the total load.</p>
+        <div class="chips">
+          <span class="chip"><span class="d" style="background:var(--caut)"></span>energy drinks</span>
+          <span class="chip"><span class="d" style="background:var(--caut)"></span>coffee</span>
+          <span class="chip"><span class="d" style="background:var(--watch)"></span>paracetamol</span>
+          <span class="chip"><span class="d" style="background:var(--watch)"></span>ibuprofen</span>
+          <span class="chip"><span class="d" style="background:var(--urg)"></span>"study aids"</span>
+        </div>
+      </div>
+      <div>
+        <div class="metrics">
+          <div class="metric"><div class="big">~400<small> mg/day</small></div><div class="lbl">Caffeine ceiling — a heavy exam day sails past it without a thought.</div></div>
+          <div class="metric"><div class="big">~4<small> g/day</small></div><div class="lbl">Paracetamol ceiling — easy to repeat-dose over when you feel rough.</div></div>
+        </div>
+        <div class="honest" style="background:var(--bg-2); border-color:var(--line)">Twinstate is the missing safety check — made <b>visual</b> and <b>personal</b>, for the student first and the campus health centre that sees the fallout second.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 — SOLUTION -->
+<section class="slide">
+  <div class="rail"><b>03</b> <span class="dot"></span> How It Works</div>
+  <div class="inner">
+    <p class="eyebrow">From a scattered stack to a body you can read</p>
+    <h2>See what the stack is <span class="hl">doing to you.</span></h2>
+    <div class="steps" style="margin-top:1.4rem">
+      <div class="step"><h4>Log it — under two minutes</h4><p>Rough doses are fine. Anything you type resolves to a real clinical concept, even off-catalogue names like "Augmentin".</p></div>
+      <div class="step"><h4>The twin reacts</h4><p>A live 3D body recolours organ by organ — a beating heart, a scanning beam — driven directly by your risk data.</p></div>
+      <div class="step"><h4>HOLON screens the whole list</h4><p>The full combination is checked for interactions: severity, mechanism, clinical effect, management and evidence grade.</p></div>
+      <div class="step"><h4>Plain language + a path to care</h4><p>Graded calm → watch → caution → urgent, in a friend's voice — never "stop your meds", always "here's your next step".</p></div>
+    </div>
+    <div class="footmeta">
+      <span class="kicker">One living body, end to end — five pieces of the platform:</span>
+      <span class="pill">Digital-twin model</span><span class="pill">3D anatomy</span><span class="pill">HOLON knowledge</span><span class="pill">AI reasoning</span><span class="pill">Simulation</span>
+    </div>
+  </div>
+</section>
+
+<!-- 4 — DIFFERENTIATION -->
+<section class="slide">
+  <div class="rail"><b>04</b> <span class="dot"></span> The Difference</div>
+  <div class="inner grid two">
+    <div>
+      <p class="eyebrow">Not a checker — a living twin</p>
+      <h2>Being told a risk<br>vs. <span class="hl">watching it.</span></h2>
+      <ul class="points">
+        <li><b>A living 3D body</b> that reacts to your own inputs — the data model you can see, not a text box and a list.</li>
+        <li><b>Two projected futures</b> side by side — "keep this pattern" vs "rest + hydrate" — so the trade-off is something you watch.</li>
+        <li><b>AI computes your numbers</b> from your data; interactions come from HOLON, never invented by the model.</li>
+        <li><b>Grounded health chat</b> with a hard safety rule — anything urgent routes straight to real care.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <p class="cap"><span>Organ readout</span><span>Index 68 · Elevated</span></p>
+      <div class="organs">
+        <div class="organ"><span class="name">Heart</span><div class="bar"><div class="fill" style="width:78%;background:var(--caut)"></div></div><span class="score">78</span></div>
+        <div class="organ"><span class="name">Liver</span><div class="bar"><div class="fill" style="width:71%;background:var(--caut)"></div></div><span class="score">71</span></div>
+        <div class="organ"><span class="name">Kidneys</span><div class="bar"><div class="fill" style="width:44%;background:var(--watch)"></div></div><span class="score">44</span></div>
+        <div class="organ"><span class="name">Stomach</span><div class="bar"><div class="fill" style="width:38%;background:var(--watch)"></div></div><span class="score">38</span></div>
+        <div class="organ"><span class="name">Brain</span><div class="bar"><div class="fill" style="width:29%;background:var(--calm)"></div></div><span class="score">29</span></div>
+      </div>
+      <div class="chips">
+        <span class="chip"><span class="d" style="background:var(--caut)"></span>Caffeine ~520 mg/day · EFSA</span>
+        <span class="chip"><span class="d" style="background:var(--watch)"></span>Paracetamol nearing 4 g · FDA</span>
+      </div>
+      <p style="margin:1rem 0 0; color:var(--muted); font-size:0.85rem">Tap an organ → the twin focuses and filters the flags behind it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 — ARCHITECTURE -->
+<section class="slide">
+  <div class="rail"><b>05</b> <span class="dot"></span> Architecture &amp; Platform</div>
+  <div class="inner grid two">
+    <div>
+      <p class="eyebrow">Real HOLON, behind one clean layer</p>
+      <h2>Wired in — and it <span class="hl">never dead-ends.</span></h2>
+      <ul class="points">
+        <li>Two live calls on <b>@ontomorph/holon-client</b>: <code>concepts.search()</code> resolves every substance; <code>interactions.checkList()</code> screens the whole list.</li>
+        <li>Thresholds grounded in <b>NHS · FDA · EFSA</b> guidance — every flag carries its source and evidence grade.</li>
+        <li>Educational tool, not a medical device: <b>consent gate, disclaimers, emergency routing</b>.</li>
+      </ul>
+      <div class="honest"><span class="tag">Say it straight</span>Real HOLON lives behind the service layer. With no key or a flaky network it falls back to a <b>deterministic clinical-rule engine</b> — set <code>VITE_HOLON_API_KEY</code> and it goes live, no code change.</div>
+    </div>
+    <div class="panel">
+      <p class="cap"><span>One facade, swappable backends</span><span>React · Vite · Tailwind</span></p>
+      <div class="arch">
+        <div class="ui">UI — pages &amp; components</div>
+        <div class="flow">▼</div>
+        <div class="layer">services/index.js — the service layer</div>
+        <div class="flow">▼</div>
+        <div class="backends">
+          <div class="be">HOLON<small>live · real</small></div>
+          <div class="be">AI reasoning<small>scores · chat</small></div>
+          <div class="be">Offline engine<small>fallback</small></div>
+        </div>
+      </div>
+      <p style="margin:1.1rem 0 0; color:var(--muted); font-size:0.85rem">Dependency-free 3D anatomy. State persists in the browser — no central health database to breach. DTP patient-twin stubbed behind the same interface, ready to connect.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 — MARKET / ASK -->
+<section class="slide">
+  <div class="rail"><b>06</b> <span class="dot"></span> Market &amp; Ask</div>
+  <div class="inner">
+    <p class="eyebrow">Business model &amp; why it wins</p>
+    <h2>Free for students. Bought by <span class="hl">campus health.</span></h2>
+    <div class="grid two" style="margin-top:0.3rem">
+      <div>
+        <p class="lead" style="max-width:44ch">B2B2C through campuses: the consumer tool is the wedge, the university health service is the buyer — it carries the cost and risk of student self-medication. A sharp, underserved beachhead before anyone managing several substances at once.</p>
+        <div class="footmeta" style="margin-top:1.5rem">
+          <span class="kicker">Roadmap →</span>
+          <span class="pill">Live DTP patient twin</span><span class="pill">Wearables</span><span class="pill">Wider HOLON coverage</span><span class="pill">Clinician view</span>
+        </div>
+      </div>
+      <div class="cards">
+        <div class="card"><p class="k">Innovation</p><h4>A body that reacts</h4><p>Two projected futures you can watch.</p></div>
+        <div class="card"><p class="k">Clinical value</p><h4>A real, common harm</h4><p>Genuine interaction check + path to care.</p></div>
+        <div class="card"><p class="k">Execution</p><h4>Works end to end</h4><p>Safety framework + graceful fallbacks.</p></div>
+        <div class="card"><p class="k">Platform use</p><h4>All five pieces</h4><p>HOLON, 3D, AI, twin, simulation — one layer.</p></div>
+      </div>
+    </div>
+    <div class="footmeta" style="margin-top:1.8rem; border-top:1px solid var(--line-2); padding-top:1.1rem">
+      <b style="color:var(--ink); font-family:var(--font-display); font-size:1rem">Twinstate</b>
+      <span>Ontomorph Hackathon · OAU · 2026</span>
+      <span class="pill">Not medical advice — educational tool only</span>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

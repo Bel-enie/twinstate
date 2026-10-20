@@ -1,0 +1,513 @@
+<title>Twinstate — Pitch Deck</title>
+<style>
+  :root {
+    /* warm anatomical palette — dark is the default */
+    --bg:      #14101B;
+    --bg-2:    #1C1626;
+    --bg-3:    #241C31;
+    --ink:     #F4EFF8;
+    --muted:   #A69DB4;
+    --faint:   #766E85;
+    --line:    rgba(255,255,255,0.10);
+    --line-2:  rgba(255,255,255,0.055);
+
+    /* the product's own warm risk scale — the signature */
+    --calm:  #34D3B7;
+    --watch: #F6A73F;
+    --caut:  #FF6E57;
+    --urg:   #F5477A;
+    --accent: #FF6E57;      /* brand pop = coral */
+
+    --spine: linear-gradient(180deg, var(--calm) 0%, var(--watch) 42%, var(--caut) 74%, var(--urg) 100%);
+    --heat:  linear-gradient(90deg, var(--calm), var(--watch) 55%, var(--caut) 82%, var(--urg));
+
+    --font-display: "Helvetica Neue", "Segoe UI", system-ui, -apple-system, "Inter", sans-serif;
+    --font-body:    "Helvetica Neue", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: "SFMono-Regular", "Cascadia Code", "JetBrains Mono", "Consolas", ui-monospace, monospace;
+
+    --maxw: 1120px;
+    --radius: 18px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg:     #FBF6F2;
+      --bg-2:   #FFFFFF;
+      --bg-3:   #FDF3EE;
+      --ink:    #1E1826;
+      --muted:  #675E74;
+      --faint:  #9A90A6;
+      --line:   rgba(28,14,40,0.12);
+      --line-2: rgba(28,14,40,0.07);
+      --calm:  #0F9E88;
+      --watch: #CF8016;
+      --caut:  #E8503A;
+      --urg:   #D51F5F;
+      --accent: #E8503A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:#14101B; --bg-2:#1C1626; --bg-3:#241C31; --ink:#F4EFF8; --muted:#A69DB4; --faint:#766E85;
+    --line:rgba(255,255,255,0.10); --line-2:rgba(255,255,255,0.055);
+    --calm:#34D3B7; --watch:#F6A73F; --caut:#FF6E57; --urg:#F5477A; --accent:#FF6E57;
+  }
+  :root[data-theme="light"] {
+    --bg:#FBF6F2; --bg-2:#FFFFFF; --bg-3:#FDF3EE; --ink:#1E1826; --muted:#675E74; --faint:#9A90A6;
+    --line:rgba(28,14,40,0.12); --line-2:rgba(28,14,40,0.07);
+    --calm:#0F9E88; --watch:#CF8016; --caut:#E8503A; --urg:#D51F5F; --accent:#E8503A;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    line-height: 1.55;
+  }
+  .deck { scroll-snap-type: y proximity; }
+
+  /* ---- slide frame ---- */
+  .slide {
+    position: relative;
+    min-height: 100vh;
+    scroll-snap-align: start;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: clamp(2.2rem, 5vw, 4.5rem);
+    padding-left: clamp(3rem, 6.5vw, 6rem);
+    border-bottom: 1px solid var(--line-2);
+    overflow: hidden;
+  }
+  .slide::before {   /* the risk-gradient spine */
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 6px; background: var(--spine);
+  }
+  .inner { width: 100%; max-width: var(--maxw); margin: 0 auto; }
+
+  .rail {
+    position: absolute; top: clamp(2.2rem,5vw,4.5rem); left: clamp(3rem,6.5vw,6rem);
+    display: flex; align-items: center; gap: 0.75rem;
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--faint);
+  }
+  .rail b { color: var(--ink); font-weight: 700; }
+  .rail .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+
+  /* ---- type scale ---- */
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 1.1rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .eyebrow::before { content:""; width: 26px; height: 1px; background: currentColor; opacity:0.7; }
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(3.4rem, 9vw, 7rem); line-height: 0.92; letter-spacing: -0.03em;
+    font-weight: 800; margin: 0; text-wrap: balance;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.02; letter-spacing: -0.02em;
+    font-weight: 800; margin: 0 0 1.1rem; text-wrap: balance;
+  }
+  h2 .hl { color: var(--accent); }
+  .lead { font-size: clamp(1.05rem, 1.9vw, 1.4rem); color: var(--muted); max-width: 40ch; margin: 0; }
+  p { margin: 0 0 1rem; }
+
+  .grid { display: grid; gap: clamp(1.6rem, 4vw, 3.4rem); align-items: center; }
+  @media (min-width: 860px) { .grid.two { grid-template-columns: 1.05fr 0.95fr; } }
+
+  /* ---- panels ---- */
+  .panel {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: clamp(1.3rem, 2.5vw, 1.9rem);
+  }
+  .panel .cap {
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--faint); margin: 0 0 1.1rem; display:flex; justify-content:space-between; align-items:center; gap:1rem;
+  }
+
+  /* ---- dial ---- */
+  .dial-wrap { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: center; }
+  .dial { position: relative; width: 180px; height: 180px; flex: none; }
+  .dial svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+  .dial .track { fill: none; stroke: var(--line); stroke-width: 12; }
+  .dial .val   { fill: none; stroke: url(#heatgrad); stroke-width: 12; stroke-linecap: round;
+                 stroke-dasharray: 471; stroke-dashoffset: 471; transition: stroke-dashoffset 1.6s cubic-bezier(.2,.7,.2,1); }
+  .dial .num { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .dial .num b { font-family: var(--mono); font-size: 2.9rem; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .dial .num span { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--caut); margin-top: 0.35rem; }
+
+  /* ---- organ readout ---- */
+  .organs { display: flex; flex-direction: column; gap: 0.85rem; }
+  .organ { display: grid; grid-template-columns: 5.5rem 1fr 2.6rem; align-items: center; gap: 0.8rem; }
+  .organ .name { font-size: 0.92rem; }
+  .organ .bar { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+  .organ .fill { height: 100%; width: 0; border-radius: 99px; transition: width 1.2s cubic-bezier(.2,.7,.2,1); }
+  .organ .score { font-family: var(--mono); font-size: 0.9rem; text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+
+  /* ---- flag chips / stack ---- */
+  .chips { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 1.2rem; }
+  .chip {
+    font-family: var(--mono); font-size: 0.78rem; padding: 0.42rem 0.8rem; border-radius: 99px;
+    border: 1px solid var(--line); background: var(--bg-2); color: var(--muted);
+    display:inline-flex; align-items:center; gap:0.45rem;
+  }
+  .chip .d { width: 7px; height: 7px; border-radius: 50%; flex:none; }
+
+  /* ---- steps ---- */
+  .steps { display: grid; gap: 0.9rem; counter-reset: s; }
+  @media (min-width:760px){ .steps { grid-template-columns: repeat(2,1fr); } }
+  .step { position: relative; padding: 1.15rem 1.25rem 1.2rem 3.2rem; background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; }
+  .step::before {
+    counter-increment: s; content: counter(s,decimal-leading-zero);
+    position: absolute; left: 1.15rem; top: 1.1rem;
+    font-family: var(--mono); font-size: 0.82rem; font-weight: 700; color: var(--accent);
+  }
+  .step h4 { margin: 0 0 0.3rem; font-size: 1.05rem; }
+  .step p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+
+  /* ---- lists ---- */
+  .points { list-style: none; padding: 0; margin: 1.4rem 0 0; display: flex; flex-direction: column; gap: 1rem; }
+  .points li { position: relative; padding-left: 1.6rem; color: var(--muted); }
+  .points li b { color: var(--ink); font-weight: 650; }
+  .points li::before { content:""; position: absolute; left: 0; top: 0.62em; width: 8px; height: 8px; border-radius: 2px; background: var(--heat); }
+
+  /* ---- architecture ---- */
+  .arch { display: flex; flex-direction: column; gap: 0.7rem; font-family: var(--mono); font-size: 0.86rem; }
+  .arch .ui { text-align:center; padding: 0.7rem; border:1px dashed var(--line); border-radius: 10px; color: var(--muted); }
+  .arch .layer { text-align:center; padding: 0.85rem; border-radius: 10px; background: var(--bg-3);
+    border: 1px solid var(--accent); color: var(--ink); font-weight:700; letter-spacing: 0.02em; }
+  .arch .backends { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.6rem; }
+  .arch .be { padding: 0.75rem 0.5rem; border-radius: 10px; border: 1px solid var(--line); background: var(--bg-2); text-align:center; }
+  .arch .be small { display:block; color: var(--faint); font-size: 0.66rem; letter-spacing:0.08em; margin-top:0.3rem; text-transform:uppercase; }
+  .arch .flow { text-align:center; color: var(--faint); font-size: 1.1rem; line-height: 0.6; }
+
+  .honest {
+    margin-top: 1.5rem; padding: 1.1rem 1.25rem; border-radius: 14px;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    font-size: 0.96rem;
+  }
+  .honest .tag { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-right: 0.5rem; }
+  code { font-family: var(--mono); font-size: 0.85em; }
+
+  /* ---- metric row (problem slide) ---- */
+  .metrics { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; margin-top: 1.6rem; }
+  .metric { background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; padding: 1.2rem 1.3rem; }
+  .metric .big { font-family: var(--mono); font-size: clamp(1.8rem,4vw,2.6rem); font-weight: 700; line-height:1; font-variant-numeric: tabular-nums; }
+  .metric .big small { font-size: 0.9rem; color: var(--faint); font-weight: 400; }
+  .metric .lbl { color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; }
+
+  /* ---- market / cards ---- */
+  .cards { display: grid; gap: 1rem; margin-top: 1.6rem; }
+  .card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; padding: 1.15rem 1.2rem; }
+  .card .k { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin: 0 0 0.55rem; }
+  .card h4 { margin: 0 0 0.35rem; font-size: 1.02rem; }
+  .card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+
+  .footmeta { margin-top: 2.4rem; display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; align-items:center;
+    font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.06em; color: var(--faint); }
+  .footmeta .pill { border:1px solid var(--line); border-radius: 99px; padding: 0.35rem 0.75rem; color: var(--muted); }
+
+  .kicker { font-family: var(--mono); color: var(--calm); font-size: 0.8rem; letter-spacing: 0.1em; }
+
+  /* ---- side nav dots ---- */
+  .nav { position: fixed; right: 1.4rem; top: 50%; transform: translateY(-50%); z-index: 20;
+    display: flex; flex-direction: column; gap: 0.7rem; }
+  .nav a { width: 9px; height: 9px; border-radius: 50%; border: 1px solid var(--faint); background: transparent; transition: all .2s; }
+  .nav a:hover { border-color: var(--accent); }
+  .nav a.on { background: var(--accent); border-color: var(--accent); transform: scale(1.25); }
+  @media (max-width: 720px){ .nav { display:none; } }
+
+  .theme-toggle {
+    position: fixed; top: 1.2rem; right: 1.2rem; z-index: 25;
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+    background: var(--bg-2); color: var(--muted); border: 1px solid var(--line);
+    border-radius: 99px; padding: 0.45rem 0.85rem; cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--ink); border-color: var(--accent); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+
+<svg width="0" height="0" aria-hidden="true"><defs>
+  <linearGradient id="heatgrad" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%"  stop-color="#34D3B7"/>
+    <stop offset="55%" stop-color="#F6A73F"/>
+    <stop offset="82%" stop-color="#FF6E57"/>
+    <stop offset="100%" stop-color="#F5477A"/>
+  </linearGradient>
+</defs></svg>
+
+<button class="theme-toggle" id="tt">◐ Theme</button>
+
+<nav class="nav" aria-label="Slide navigation">
+  <a href="#s1" class="on" aria-label="Slide 1"></a>
+  <a href="#s2" aria-label="Slide 2"></a>
+  <a href="#s3" aria-label="Slide 3"></a>
+  <a href="#s4" aria-label="Slide 4"></a>
+  <a href="#s5" aria-label="Slide 5"></a>
+  <a href="#s6" aria-label="Slide 6"></a>
+</nav>
+
+<main class="deck">
+
+  <!-- 1 — TITLE -->
+  <section class="slide" id="s1">
+    <div class="rail"><b>Twinstate</b> <span class="dot"></span> Living Health Twin</div>
+    <div class="inner grid two">
+      <div>
+        <p class="eyebrow">Ontomorph Hackathon · OAU · 2026</p>
+        <h1>Twin&shy;state</h1>
+        <p class="lead" style="margin-top:1.5rem">
+          A living health twin for students. Log what you're taking — it builds a 3D body that
+          <b style="color:var(--ink)">visibly reacts</b>, screens the combination against real clinical
+          knowledge, and explains the risk in plain language, with a clear path to care.
+        </p>
+        <div class="chips">
+          <span class="chip"><span class="d" style="background:var(--calm)"></span>Powered by HOLON</span>
+          <span class="chip"><span class="d" style="background:var(--watch)"></span>3D anatomy</span>
+          <span class="chip"><span class="d" style="background:var(--caut)"></span>AI reasoning</span>
+        </div>
+      </div>
+      <div class="panel">
+        <p class="cap"><span>Body-stress index</span><span>Live twin · "Ada"</span></p>
+        <div class="dial-wrap">
+          <div class="dial">
+            <svg viewBox="0 0 180 180"><circle class="track" cx="90" cy="90" r="75"/><circle class="val" data-target="68" cx="90" cy="90" r="75"/></svg>
+            <div class="num"><b data-count="68">0</b><span>Elevated</span></div>
+          </div>
+          <div class="organs">
+            <div class="organ"><span class="name">Heart</span><div class="bar"><div class="fill" data-w="78" style="background:var(--caut)"></div></div><span class="score">78</span></div>
+            <div class="organ"><span class="name">Liver</span><div class="bar"><div class="fill" data-w="71" style="background:var(--caut)"></div></div><span class="score">71</span></div>
+            <div class="organ"><span class="name">Kidneys</span><div class="bar"><div class="fill" data-w="44" style="background:var(--watch)"></div></div><span class="score">44</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 — PROBLEM -->
+  <section class="slide" id="s2">
+    <div class="rail"><b>02</b> <span class="dot"></span> The Problem</div>
+    <div class="inner">
+      <p class="eyebrow">Exam-season polypharmacy</p>
+      <h2>Nobody checks the <span class="hl">combination.</span></h2>
+      <div class="grid two" style="margin-top:0.5rem">
+        <div>
+          <p class="lead" style="max-width:46ch">
+            Each thing feels harmless alone. Stacked together through exam season, they quietly strain the
+            heart, liver, kidneys and gut — and no one is looking at the total load.
+          </p>
+          <div class="chips">
+            <span class="chip"><span class="d" style="background:var(--caut)"></span>energy drinks</span>
+            <span class="chip"><span class="d" style="background:var(--caut)"></span>coffee</span>
+            <span class="chip"><span class="d" style="background:var(--watch)"></span>paracetamol</span>
+            <span class="chip"><span class="d" style="background:var(--watch)"></span>ibuprofen</span>
+            <span class="chip"><span class="d" style="background:var(--urg)"></span>"study aids"</span>
+          </div>
+        </div>
+        <div>
+          <div class="metrics">
+            <div class="metric">
+              <div class="big">~400<small> mg/day</small></div>
+              <div class="lbl">Caffeine ceiling — a heavy exam day sails past it without a thought.</div>
+            </div>
+            <div class="metric">
+              <div class="big">~4<small> g/day</small></div>
+              <div class="lbl">Paracetamol ceiling — easy to repeat-dose over when you feel rough.</div>
+            </div>
+          </div>
+          <div class="honest" style="background:var(--bg-2); border-color:var(--line)">
+            Twinstate is the missing safety check — made <b>visual</b> and <b>personal</b>, for the student
+            first and the campus health centre that sees the fallout second.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 — SOLUTION -->
+  <section class="slide" id="s3">
+    <div class="rail"><b>03</b> <span class="dot"></span> How It Works</div>
+    <div class="inner">
+      <p class="eyebrow">From a scattered stack to a body you can read</p>
+      <h2>See what the stack is <span class="hl">doing to you.</span></h2>
+      <div class="steps" style="margin-top:1.8rem">
+        <div class="step"><h4>Log it — under two minutes</h4><p>Rough doses are fine. Anything you type resolves to a real clinical concept, even off-catalogue names like "Augmentin".</p></div>
+        <div class="step"><h4>The twin reacts</h4><p>A live 3D body recolours organ by organ — a beating heart, a scanning beam — driven directly by your risk data.</p></div>
+        <div class="step"><h4>HOLON screens the whole list</h4><p>The full combination is checked for interactions: severity, mechanism, clinical effect, management and evidence grade.</p></div>
+        <div class="step"><h4>Plain language + a path to care</h4><p>Graded calm → watch → caution → urgent, in a friend's voice — never "stop your meds", always "here's your next step".</p></div>
+      </div>
+      <div class="footmeta">
+        <span class="kicker">One living body, end to end — five pieces of the platform:</span>
+        <span class="pill">Digital-twin model</span>
+        <span class="pill">3D anatomy</span>
+        <span class="pill">HOLON knowledge</span>
+        <span class="pill">AI reasoning</span>
+        <span class="pill">Simulation</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 — PRODUCT / DIFFERENTIATION -->
+  <section class="slide" id="s4">
+    <div class="rail"><b>04</b> <span class="dot"></span> The Difference</div>
+    <div class="inner grid two">
+      <div>
+        <p class="eyebrow">Not a checker — a living twin</p>
+        <h2>Being told a risk<br>vs. <span class="hl">watching it.</span></h2>
+        <ul class="points">
+          <li><b>A living 3D body</b> that reacts to your own inputs — the data model you can see, not a text box and a list.</li>
+          <li><b>Two projected futures</b> side by side — "keep this pattern" vs "rest + hydrate" — so the trade-off is something you watch.</li>
+          <li><b>AI computes your numbers</b> from your data; interactions come from HOLON, never invented by the model.</li>
+          <li><b>Grounded health chat</b> with a hard safety rule — anything urgent routes straight to real care.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <p class="cap"><span>Organ readout</span><span>Index 68 · Elevated</span></p>
+        <div class="organs">
+          <div class="organ"><span class="name">Heart</span><div class="bar"><div class="fill" data-w="78" style="background:var(--caut)"></div></div><span class="score">78</span></div>
+          <div class="organ"><span class="name">Liver</span><div class="bar"><div class="fill" data-w="71" style="background:var(--caut)"></div></div><span class="score">71</span></div>
+          <div class="organ"><span class="name">Kidneys</span><div class="bar"><div class="fill" data-w="44" style="background:var(--watch)"></div></div><span class="score">44</span></div>
+          <div class="organ"><span class="name">Stomach</span><div class="bar"><div class="fill" data-w="38" style="background:var(--watch)"></div></div><span class="score">38</span></div>
+          <div class="organ"><span class="name">Brain</span><div class="bar"><div class="fill" data-w="29" style="background:var(--calm)"></div></div><span class="score">29</span></div>
+        </div>
+        <div class="chips">
+          <span class="chip"><span class="d" style="background:var(--caut)"></span>Caffeine ~520 mg/day · EFSA</span>
+          <span class="chip"><span class="d" style="background:var(--watch)"></span>Paracetamol nearing 4 g · FDA</span>
+        </div>
+        <p style="margin:1.2rem 0 0; color:var(--muted); font-size:0.9rem">Tap an organ → the twin focuses and filters the flags behind it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 — TECH & PLATFORM -->
+  <section class="slide" id="s5">
+    <div class="rail"><b>05</b> <span class="dot"></span> Architecture &amp; Platform</div>
+    <div class="inner grid two">
+      <div>
+        <p class="eyebrow">Real HOLON, behind one clean layer</p>
+        <h2>Wired in — and it <span class="hl">never dead-ends.</span></h2>
+        <ul class="points">
+          <li>Two live calls on <b>@ontomorph/holon-client</b>: <code>concepts.search()</code> resolves every substance; <code>interactions.checkList()</code> screens the whole list.</li>
+          <li>Thresholds grounded in <b>NHS · FDA · EFSA</b> guidance — every flag carries its source and evidence grade.</li>
+          <li>Educational tool, not a medical device: <b>consent gate, disclaimers, emergency routing</b> — it points to care, never replaces it.</li>
+        </ul>
+        <div class="honest">
+          <span class="tag">Say it straight</span>
+          Real HOLON integration lives behind the service layer. With no key or a flaky venue network it falls back to a
+          <b>deterministic clinical-rule engine</b> — set <code>VITE_HOLON_API_KEY</code> and it goes live, no code change.
+        </div>
+      </div>
+      <div class="panel">
+        <p class="cap"><span>One facade, swappable backends</span><span>React · Vite · Tailwind</span></p>
+        <div class="arch">
+          <div class="ui">UI — pages &amp; components</div>
+          <div class="flow">▼</div>
+          <div class="layer">services/index.js — the service layer</div>
+          <div class="flow">▼</div>
+          <div class="backends">
+            <div class="be">HOLON<small>live · real</small></div>
+            <div class="be">AI reasoning<small>scores · chat</small></div>
+            <div class="be">Offline engine<small>fallback</small></div>
+          </div>
+        </div>
+        <p style="margin:1.3rem 0 0; color:var(--muted); font-size:0.9rem">
+          Dependency-free 3D anatomy. State persists in the browser — no central health database to breach.
+          DTP patient-twin stubbed behind the same interface, ready to connect.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 — MARKET / ASK -->
+  <section class="slide" id="s6">
+    <div class="rail"><b>06</b> <span class="dot"></span> Market &amp; Ask</div>
+    <div class="inner">
+      <p class="eyebrow">Business model &amp; why it wins</p>
+      <h2>Free for students. Bought by <span class="hl">campus health.</span></h2>
+      <div class="grid two" style="margin-top:0.4rem">
+        <div>
+          <p class="lead" style="max-width:44ch">
+            B2B2C through campuses: the consumer tool is the wedge, the university health service is the buyer —
+            it carries the cost and risk of student self-medication. A sharp, underserved beachhead before
+            anyone managing several substances at once.
+          </p>
+          <div class="footmeta" style="margin-top:1.8rem">
+            <span class="kicker">Roadmap →</span>
+            <span class="pill">Live DTP patient twin</span>
+            <span class="pill">Wearables</span>
+            <span class="pill">Wider HOLON coverage</span>
+            <span class="pill">Clinician view</span>
+          </div>
+        </div>
+        <div class="cards" style="grid-template-columns:repeat(2,1fr)">
+          <div class="card"><p class="k">Innovation</p><h4>A body that reacts</h4><p>Two projected futures you can watch.</p></div>
+          <div class="card"><p class="k">Clinical value</p><h4>A real, common harm</h4><p>Genuine interaction check + path to care.</p></div>
+          <div class="card"><p class="k">Execution</p><h4>Works end to end</h4><p>Safety framework + graceful fallbacks.</p></div>
+          <div class="card"><p class="k">Platform use</p><h4>All five pieces</h4><p>HOLON, 3D, AI, twin, simulation — one layer.</p></div>
+        </div>
+      </div>
+      <div class="footmeta" style="margin-top:2.6rem; border-top:1px solid var(--line-2); padding-top:1.4rem">
+        <b style="color:var(--ink); font-family:var(--font-display); letter-spacing:-0.01em; font-size:1rem">Twinstate</b>
+        <span>Ontomorph Hackathon · OAU · 2026</span>
+        <span class="pill">Not medical advice — educational tool only</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // theme toggle
+  const root = document.documentElement, tt = document.getElementById('tt');
+  tt.addEventListener('click', () => {
+    const cur = root.getAttribute('data-theme')
+      || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    root.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+  });
+
+  // animate a dial + organ bars when a panel enters view
+  function animate(el){
+    el.querySelectorAll('.val').forEach(c => {
+      const t = +c.dataset.target; c.style.strokeDashoffset = 471 - (471 * t/100);
+    });
+    el.querySelectorAll('.fill').forEach(f => { f.style.width = f.dataset.w + '%'; });
+    el.querySelectorAll('[data-count]').forEach(n => {
+      const target = +n.dataset.count; let v = 0;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce){ n.textContent = target; return; }
+      const step = () => { v += Math.ceil(target/34); if (v>=target){ v=target; } n.textContent = v; if (v<target) requestAnimationFrame(step); };
+      step();
+    });
+  }
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e => { if (e.isIntersecting){ animate(e.target); io.unobserve(e.target); } });
+  }, { threshold: 0.35 });
+  document.querySelectorAll('.slide .panel').forEach(p => io.observe(p));
+
+  // side-nav active state
+  const dots = [...document.querySelectorAll('.nav a')];
+  const slides = [...document.querySelectorAll('.slide')];
+  const navIo = new IntersectionObserver((entries)=>{
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        const i = slides.indexOf(e.target);
+        dots.forEach((d,j) => d.classList.toggle('on', j===i));
+      }
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(s => navIo.observe(s));
+
+  // arrow-key navigation
+  addEventListener('keydown', (ev)=>{
+    const i = slides.findIndex(s => s.getBoundingClientRect().top >= -50);
+    if (ev.key === 'ArrowDown' || ev.key === 'PageDown'){ ev.preventDefault(); slides[Math.min(i+1, slides.length-1)]?.scrollIntoView(); }
+    if (ev.key === 'ArrowUp'   || ev.key === 'PageUp'){   ev.preventDefault(); slides[Math.max(i-1, 0)]?.scrollIntoView(); }
+  });
+</script>
