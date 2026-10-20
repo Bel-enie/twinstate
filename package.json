@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Twinstate \u2014 a living digital twin that turns scattered student medication data into an interactive 3D patient model, powered by Ontomorph DTP + HOLON.",
+  "description": "Twinstate — a living digital twin that turns scattered student medication data into an interactive 3D patient model, powered by Ontomorph DTP + HOLON.",
   "scripts": {
     "dev": "vite",
     "build": "vite build && node scripts/check-bundle-secrets.mjs",
@@ -19,9 +19,13 @@
     "@ontomorph/holon-types": "^0.1.1",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^14.4.0",
+    "lucide-react": "^1.60.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2",
+    "tailwind-merge": "^3.7.0",
     "three": "^0.170.0"
   },
   "devDependencies": {

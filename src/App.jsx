@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useTwin } from './context/TwinContext.jsx'
 import { ConsentGate } from './components/safety/SafetyLayer.jsx'
-import { initSpecularButtons } from './components/marketing/specular.js'
+import { initSpecularButtons } from './utils/specular.js'
 
 import Landing from './pages/Landing.jsx'
 import Intake from './pages/Intake.jsx'

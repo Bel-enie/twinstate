@@ -43,8 +43,8 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        // Editorial serif for headlines only — figures and UI stay in Inter.
-        display: ['"Instrument Serif"', 'Georgia', 'serif'],
+        // Display grotesque for headlines only — figures and UI stay in Inter.
+        display: ['"Bricolage Grotesque"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         soft: '0 10px 40px -12px rgba(31, 44, 96, 0.16)',
@@ -67,10 +67,30 @@ export default {
           '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        // ── Landing (bold gradient bento) ──────────────────────────────────
+        // Marquee rows: each copy slides exactly its own width + one gap.
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(calc(-100% - var(--gap)))' },
+        },
+        // Panning gradient for text and shimmer buttons.
+        'gradient-x': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        // Slow drifting glow blobs behind the page.
+        aurora: {
+          '0%': { transform: 'translate3d(0, 0, 0) scale(1)' },
+          '50%': { transform: 'translate3d(4%, 6%, 0) scale(1.08)' },
+          '100%': { transform: 'translate3d(-3%, -4%, 0) scale(0.96)' },
+        },
       },
       animation: {
         pulseGlow: 'pulseGlow 2.6s ease-in-out infinite',
         floatIn: 'floatIn 0.4s ease-out both',
+        marquee: 'marquee var(--duration, 40s) linear infinite',
+        'gradient-x': 'gradient-x 6s ease infinite',
+        aurora: 'aurora 16s ease-in-out infinite alternate',
       },
     },
   },
