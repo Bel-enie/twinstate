@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Plus } from 'lucide-react'
 import AppShell from '../components/layout/AppShell.jsx'
 import Card from '../components/ui/Card.jsx'
 import Button from '../components/ui/Button.jsx'
@@ -83,29 +84,38 @@ const FAQ = [
   },
 ]
 
-function Item({ item, open, onToggle }) {
+function Item({ id, item, open, onToggle }) {
   return (
     <div className="border-b border-ink/5 last:border-0">
-      <button
-        onClick={onToggle}
-        className="flex w-full items-center justify-between gap-4 py-4 text-left"
-      >
-        <span className="font-semibold">{item.q}</span>
-        <span
-          className={`grid h-6 w-6 shrink-0 place-items-center rounded-full bg-shell text-slate-soft transition-transform ${
-            open ? 'rotate-45' : ''
-          }`}
+      <h3>
+        <button
+          onClick={onToggle}
+          aria-expanded={open}
+          aria-controls={`faq-${id}`}
+          className="flex w-full items-center justify-between gap-4 py-4 text-left"
         >
-          +
-        </span>
-      </button>
-      {open && <p className="pb-4 pr-10 text-sm leading-relaxed text-slate-soft">{item.a}</p>}
+          <span className="font-semibold">{item.q}</span>
+          <span
+            className={`grid h-6 w-6 shrink-0 place-items-center rounded-full bg-violet-50 text-violet-600 transition-transform ${
+              open ? 'rotate-45' : ''
+            }`}
+            aria-hidden="true"
+          >
+            <Plus className="h-3.5 w-3.5" />
+          </span>
+        </button>
+      </h3>
+      {open && (
+        <p id={`faq-${id}`} className="pb-4 pr-10 text-sm leading-relaxed text-slate-soft">
+          {item.a}
+        </p>
+      )}
     </div>
   )
 }
 
 export default function FAQPage() {
-  const { hasTwin } = useTwin()
+  const { hasTwin, isSignedIn } = useTwin()
   const [open, setOpen] = useState('0-0')
 
   return (
@@ -122,7 +132,7 @@ export default function FAQPage() {
         <div className="space-y-5">
           {FAQ.map((section, si) => (
             <Card key={section.group} className="p-5">
-              <h2 className="mb-1 text-xs font-bold uppercase tracking-wide text-brand-600">
+              <h2 className="mb-1 text-xs font-bold uppercase tracking-[0.16em] text-violet-600">
                 {section.group}
               </h2>
               <div>
@@ -131,6 +141,7 @@ export default function FAQPage() {
                   return (
                     <Item
                       key={id}
+                      id={id}
                       item={item}
                       open={open === id}
                       onToggle={() => setOpen((cur) => (cur === id ? null : id))}
@@ -142,12 +153,12 @@ export default function FAQPage() {
           ))}
         </div>
 
-        <div className="mt-6 rounded-[12px] border border-brand-100 bg-brand-50/60 p-5 text-center">
+        <div className="mt-6 rounded-2xl border border-violet-100 bg-violet-50/60 p-5 text-center">
           <p className="text-sm font-semibold">Still wondering about something specific to you?</p>
           <p className="mt-1 text-sm text-slate-soft">
             Ask the health helper right on your twin — it grounds answers in what you've logged.
           </p>
-          <Button to={hasTwin ? '/dashboard' : '/'} className="mt-3">
+          <Button to={hasTwin ? '/dashboard' : isSignedIn ? '/intake' : '/'} className="mt-3">
             {hasTwin ? 'Open my twin' : 'Build my twin'}
           </Button>
         </div>

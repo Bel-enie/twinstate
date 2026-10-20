@@ -101,7 +101,16 @@ function normalizeAssessment(ai, baseline, rawItems) {
         for (const src of bf.sources || []) if (!sources.some((x) => x.url === src.url)) sources.push(src)
       }
     }
-    let id = `${slug(f.title)}-${organ}` || `flag-${flags.length}`
+    // Stable ids: an AI flag that covers a rule-fired flag reuses that rule's
+    // id, otherwise the id derives from organ + substances. The model's title
+    // wording changes between calls, so ids built from it broke
+    // /interaction/:flagId links on every refresh.
+    const covering = baseline.flags.find(
+      (bf) => bf.organ === organ && bf.substances.some((s) => subIds.has(s.id))
+    )
+    let id = covering
+      ? covering.id
+      : `ai-${organ}-${[...subIds].sort().join('+') || slug(f.title) || flags.length}`
     while (seen.has(id)) id += 'x'
     seen.add(id)
     flags.push({

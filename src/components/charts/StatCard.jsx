@@ -36,7 +36,7 @@ export default function StatCard({
         <span className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${DOT[tone] || DOT.neutral}`} aria-hidden="true" />
       </div>
       <div className="mt-2 flex items-end gap-2">
-        <span className="text-[32px] font-extrabold leading-none tracking-tight">
+        <span className="font-display text-[32px] font-extrabold leading-none tracking-[-0.03em]">
           {value}
           {unit && <span className="ml-0.5 text-base font-bold text-slate-soft">{unit}</span>}
         </span>

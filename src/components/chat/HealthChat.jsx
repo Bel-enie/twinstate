@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { AlertTriangle, ArrowUp } from 'lucide-react'
 import Card from '../ui/Card.jsx'
 import Markdown from '../ui/Markdown.jsx'
 import { useTwin } from '../../context/TwinContext.jsx'
@@ -13,6 +14,16 @@ const GREETING = {
   meta: {},
 }
 
+/** Which backend actually produced the last answer, not which one is configured. */
+function sourceLabel(messages) {
+  const last = [...messages].reverse().find((m) => m.role === 'assistant' && m.meta?.source)
+  if (!last) return chat.isAI ? 'AI assistant' : 'offline helper'
+  const s = last.meta.source
+  if (s.startsWith('openai')) return 'AI assistant'
+  if (s === 'mock-fallback') return 'offline answer · AI unavailable'
+  return 'offline helper'
+}
+
 export default function HealthChat() {
   const { twin, items, symptoms, flags, overall } = useTwin()
   const ctx = useMemo(
@@ -24,10 +35,15 @@ export default function HealthChat() {
   const [messages, setMessages] = useState([GREETING])
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
-  const endRef = useRef(null)
+  const listRef = useRef(null)
 
+  // Keep the newest message in view by scrolling the transcript box itself,
+  // never the page — and not on mount, which used to drag the whole dashboard
+  // down to the chat every time it opened.
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    if (messages.length <= 1 && !busy) return
+    const el = listRef.current
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
   }, [messages, busy])
 
   const send = async (text) => {
@@ -67,29 +83,26 @@ export default function HealthChat() {
       <div className="panel-head flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="panel-eyebrow">Grounded assistant</p>
-          <h2 className="mt-1.5 text-[17px] font-bold leading-tight tracking-tight text-ink">
+          <h2 className="mt-1.5 font-display text-[18px] font-bold leading-tight tracking-[-0.02em] text-ink">
             Ask about your health
           </h2>
-          <p className="mt-1 text-[13px] leading-relaxed text-slate-soft">
-            Answered from your twin · {chat.isAI ? 'AI assistant' : 'offline helper'}
-          </p>
+          <p className="mt-1 text-[13px] leading-relaxed text-slate-soft">Answered from your twin · {sourceLabel(messages)}</p>
         </div>
-        <Link to="/faq" className="shrink-0 text-xs font-semibold text-brand-600 hover:underline">
+        <Link to="/faq" className="shrink-0 text-xs font-semibold text-violet-600 hover:underline">
           FAQ →
         </Link>
       </div>
 
       {/* messages */}
-      <div className="flex max-h-[380px] flex-col gap-3 overflow-y-auto px-5 py-4">
+      <div ref={listRef} className="flex max-h-[380px] flex-col gap-3 overflow-y-auto px-5 py-4" aria-live="polite">
         {messages.map((m, i) => (
           <Message key={i} m={m} />
         ))}
         {busy && (
-          <div className="flex items-center gap-1.5 self-start rounded-[10px] bg-shell px-4 py-3">
+          <div className="flex items-center gap-1.5 self-start rounded-2xl rounded-bl-md bg-paper px-4 py-3" aria-label="Thinking">
             <Dot /> <Dot d="150" /> <Dot d="300" />
           </div>
         )}
-        <div ref={endRef} />
       </div>
 
       {/* suggestions */}
@@ -100,7 +113,7 @@ export default function HealthChat() {
               key={s}
               onClick={() => send(s)}
               disabled={busy}
-              className="rounded-full border border-ink/10 bg-white px-3 py-1.5 text-xs font-medium text-slate-soft hover:bg-brand-50 disabled:opacity-50"
+              className="rounded-full border border-ink/10 bg-white px-3 py-1.5 text-xs font-medium text-slate-soft transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 disabled:opacity-50"
             >
               {s}
             </button>
@@ -121,15 +134,15 @@ export default function HealthChat() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about a med, symptom, or anything health…"
           aria-label="Ask a health question"
-          className="input-glass flex-1 rounded-[10px] px-4 py-3 text-sm outline-none"
+          className="input-glass flex-1 rounded-full px-4 py-3 text-sm outline-none"
         />
         <button
           type="submit"
           disabled={busy || !input.trim()}
-          className="btn-solid grid h-11 w-11 shrink-0 place-items-center rounded-[10px] transition"
+          className="btn-solid grid h-11 w-11 shrink-0 place-items-center rounded-full transition"
           aria-label="Send"
         >
-          ↑
+          <ArrowUp className="h-4 w-4" aria-hidden="true" />
         </button>
       </form>
     </Card>
@@ -139,7 +152,7 @@ export default function HealthChat() {
 function Message({ m }) {
   if (m.role === 'user') {
     return (
-      <div className="max-w-[85%] self-end rounded-[10px] rounded-br-[3px] bg-brand-600 px-4 py-2.5 text-sm text-white">
+      <div className="max-w-[85%] self-end rounded-2xl rounded-br-md bg-brand-grad px-4 py-2.5 text-sm text-white">
         {m.text}
       </div>
     )
@@ -149,23 +162,21 @@ function Message({ m }) {
     <div className="max-w-[92%] self-start">
       {urgent && (
         <div className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-rose-100 px-2.5 py-1 text-[11px] font-bold text-rose-700">
-          ⚠️ Please seek care
+          <AlertTriangle className="h-3 w-3" aria-hidden="true" /> Please seek care
         </div>
       )}
       <div
-        className={`rounded-[10px] rounded-bl-[3px] px-4 py-3 text-sm ${
-          urgent ? 'bg-rose-50 text-rose-900' : 'bg-shell text-ink/90'
+        className={`rounded-2xl rounded-bl-md px-4 py-3 text-sm ${
+          urgent ? 'bg-rose-50 text-rose-900' : 'bg-paper text-ink/90'
         }`}
       >
         <Markdown text={m.text} />
       </div>
       {m.meta?.groundedOn?.length > 0 && (
         <div className="mt-1.5 flex flex-wrap items-center gap-1">
-          <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-soft">
-            Grounded in
-          </span>
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-soft">Grounded in</span>
           {m.meta.groundedOn.slice(0, 4).map((g) => (
-            <span key={g} className="rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-700">
+            <span key={g} className="rounded-full bg-violet-50 px-2 py-0.5 text-[10px] font-medium text-violet-700">
               {g}
             </span>
           ))}

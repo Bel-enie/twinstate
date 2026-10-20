@@ -41,7 +41,9 @@ export default function Twin3D({ organRisk, selected, onSelect, showLabels = tru
     return () => io.disconnect()
   }, [])
 
-  const fallback = <AnatomyModel organRisk={organRisk} compact />
+  // The CSS twin takes the same selection props, so organ clicks keep working
+  // without WebGL (this used to drop them and dead-end "click an organ").
+  const fallback = <AnatomyModel organRisk={organRisk} selected={selected} onSelect={onSelect} compact />
 
   return (
     <div ref={ref} className={`h-full w-full ${className}`}>

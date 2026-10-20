@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react'
-import { Pause, Play } from 'lucide-react'
+import { useState } from 'react'
 import Twin3D from '../../twin3d/index.jsx'
 import StoryCard from '../ui/StoryCard.jsx'
+import WeekGrid, { useWeekPlayer } from '../../charts/WeekGrid.jsx'
 import { RISK } from '../../../utils/risk.js'
 import { LOAD_LABEL, LOAD_NOTE, fmt, shortOrgan } from '../twinData.js'
 
 /**
  * "Your twin changes when you do." Scrub or play through the persona's week;
  * for every day the body, the organ grid, the load and the flags are
- * recomputed by the engine — the same code path the app runs.
+ * recomputed by the engine — the same code path the app runs. The grid and
+ * scrubber are the shared WeekGrid, which the in-app History page uses too.
  */
-const TRACKED = ['heart', 'liver', 'brain', 'kidneys']
 const CAFFEINE_LINE = 400
 const PARACETAMOL_LINE = 3000
 const PARACETAMOL_CEILING = 4000
@@ -37,31 +37,8 @@ function Meter({ label, value, note, pct, severity }) {
 
 export default function WeekCard({ story }) {
   const { days, firstName } = story
-  const last = days.length - 1
-  const [idx, setIdx] = useState(last)
-  const [playing, setPlaying] = useState(false)
+  const { idx, last, playing, toggle, pick, day } = useWeekPlayer(days)
   const [organ, setOrgan] = useState(null)
-  const day = days[idx]
-
-  useEffect(() => {
-    if (!playing) return undefined
-    const t = setInterval(() => setIdx((i) => Math.min(i + 1, last)), 1100)
-    return () => clearInterval(t)
-  }, [playing, last])
-
-  useEffect(() => {
-    if (playing && idx >= last) setPlaying(false)
-  }, [playing, idx, last])
-
-  const toggle = () => {
-    if (playing) return setPlaying(false)
-    if (idx >= last) setIdx(0)
-    setPlaying(true)
-  }
-  const pick = (i) => {
-    setPlaying(false)
-    setIdx(i)
-  }
 
   return (
     <StoryCard
@@ -83,90 +60,7 @@ export default function WeekCard({ story }) {
         </div>
 
         <div className="min-w-0">
-          {/* Organ-by-day grid; each cell carries its severity as text for screen readers. */}
-          <div className="grid grid-cols-[60px_1fr] gap-x-3 gap-y-1 sm:grid-cols-[80px_1fr]">
-            <div />
-            <div className="grid grid-cols-7 gap-1">
-              {days.map((d, i) => (
-                <button
-                  key={d.label}
-                  onClick={() => pick(i)}
-                  aria-pressed={i === idx}
-                  className={`rounded-full py-1 text-center text-[11px] font-semibold transition ${
-                    i === idx ? 'bg-brand-grad text-white' : 'text-slate-soft hover:bg-violet-50'
-                  }`}
-                >
-                  <span className="sm:hidden">{d.date.getDate()}</span>
-                  <span className="hidden sm:inline">{i === last ? 'Today' : d.dateLabel}</span>
-                </button>
-              ))}
-            </div>
-
-            {TRACKED.map((k) => (
-              <div key={k} className="contents">
-                <div className="flex items-center text-xs text-slate-soft">{shortOrgan(k)}</div>
-                <div className="grid grid-cols-7 gap-1">
-                  {days.map((d, i) => {
-                    const sev = d.state.organRisk[k]?.severity || 'calm'
-                    return (
-                      <div
-                        key={d.label}
-                        className={`flex h-7 items-center justify-center rounded-xl ${i === idx ? 'bg-violet-50' : ''}`}
-                        title={`${shortOrgan(k)} · ${d.dateLabel} · ${sev}`}
-                      >
-                        <span className="sr-only">{`${d.dateLabel}: ${sev}`}</span>
-                        <span
-                          aria-hidden="true"
-                          className="block rounded-full"
-                          style={{
-                            background: RISK[sev].hex,
-                            width: sev === 'calm' ? 6 : 11,
-                            height: sev === 'calm' ? 6 : 11,
-                            opacity: i === idx ? 1 : 0.55,
-                          }}
-                        />
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            ))}
-
-            <div className="flex items-center text-xs text-slate-soft">Load</div>
-            <div className="grid grid-cols-7 gap-1">
-              {days.map((d, i) => (
-                <div
-                  key={d.label}
-                  className={`flex h-7 items-center justify-center rounded-xl text-xs font-semibold ${
-                    i === idx ? 'bg-violet-50 text-ink' : 'text-slate-soft'
-                  }`}
-                >
-                  {d.bodyIndex}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-4 grid grid-cols-[60px_1fr] items-center gap-3 sm:grid-cols-[80px_1fr]">
-            <button
-              onClick={toggle}
-              aria-label={playing ? 'Pause the week' : 'Play the week'}
-              className="inline-flex items-center justify-center gap-1.5 rounded-full border border-violet-200 bg-white px-3 py-1.5 text-xs font-semibold transition hover:border-violet-400"
-            >
-              {playing ? <Pause className="h-3.5 w-3.5" aria-hidden="true" /> : <Play className="h-3.5 w-3.5" aria-hidden="true" />}
-              {playing ? 'Pause' : 'Play'}
-            </button>
-            <input
-              type="range"
-              min={0}
-              max={last}
-              value={idx}
-              onChange={(e) => pick(Number(e.target.value))}
-              className="w-full accent-violet-600"
-              aria-label={`Day of ${firstName}'s week`}
-              aria-valuetext={day.dateLabel}
-            />
-          </div>
+          <WeekGrid days={days} idx={idx} playing={playing} onPick={pick} onToggle={toggle} name={`${firstName}'s`} />
 
           <div className="mt-6 border-t border-ink/10 pt-5" aria-live="polite">
             <div className="flex items-baseline justify-between">

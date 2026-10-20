@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Menu, X } from 'lucide-react'
 import BrandMark from '../ui/BrandMark.jsx'
 import ShimmerButton from './ui/ShimmerButton.jsx'
 import { useStuck } from '../../utils/useStuck.js'
@@ -12,9 +14,25 @@ const LINKS = [
 /**
  * The floating pill header, restyled for the gradient look. Same .site-pill
  * material as the in-app header so product and site still read as one thing.
+ * Below md the section links fold into a menu button instead of vanishing.
  */
 export default function Nav({ latest, onResume, onBuild }) {
   const stuck = useStuck()
+  const [open, setOpen] = useState(false)
+
+  // Close the menu on Escape and whenever the viewport grows past the breakpoint.
+  useEffect(() => {
+    if (!open) return undefined
+    const onKey = (e) => e.key === 'Escape' && setOpen(false)
+    const mq = window.matchMedia('(min-width: 768px)')
+    const onChange = () => mq.matches && setOpen(false)
+    window.addEventListener('keydown', onKey)
+    mq.addEventListener('change', onChange)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      mq.removeEventListener('change', onChange)
+    }
+  }, [open])
 
   return (
     <header data-stuck={stuck} className="site-header sticky top-0 z-40 px-4 pt-3 sm:px-6 sm:pt-4">
@@ -64,8 +82,55 @@ export default function Nav({ latest, onResume, onBuild }) {
           <ShimmerButton onClick={onBuild} className="px-4 py-2">
             Build my twin
           </ShimmerButton>
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-expanded={open}
+            aria-controls="landing-menu"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            className="grid h-9 w-9 place-items-center rounded-full text-ink/80 transition hover:bg-white/60 md:hidden"
+          >
+            {open ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+          </button>
         </div>
       </div>
+
+      {open && (
+        <nav
+          id="landing-menu"
+          aria-label="Landing sections"
+          className="mx-auto mt-2 w-full max-w-[1200px] rounded-3xl border border-ink/10 bg-white/95 p-2 shadow-soft backdrop-blur md:hidden"
+        >
+          {LINKS.map(([href, label]) => (
+            <a
+              key={href}
+              href={href}
+              onClick={() => setOpen(false)}
+              className="block rounded-2xl px-4 py-3 text-sm font-semibold text-ink/80 transition hover:bg-violet-50 hover:text-ink"
+            >
+              {label}
+            </a>
+          ))}
+          <Link
+            to="/faq"
+            onClick={() => setOpen(false)}
+            className="block rounded-2xl px-4 py-3 text-sm font-semibold text-ink/80 transition hover:bg-violet-50 hover:text-ink"
+          >
+            FAQ
+          </Link>
+          {latest && (
+            <button
+              onClick={() => {
+                setOpen(false)
+                onResume(latest.key)
+              }}
+              className="block w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-violet-700 transition hover:bg-violet-50"
+            >
+              Resume {latest.name?.split(',')[0] || 'twin'}
+            </button>
+          )}
+        </nav>
+      )}
     </header>
   )
 }

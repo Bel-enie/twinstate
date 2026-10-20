@@ -26,12 +26,12 @@ export default function PlatformCredit({ className = '' }) {
           key={p.label}
           className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${
             p.on
-              ? 'border-brand-100 bg-brand-50 text-brand-700'
+              ? 'border-violet-100 bg-violet-50 text-violet-700'
               : 'border-ink/10 bg-cream text-slate-soft'
           }`}
         >
           <span
-            className={`h-1.5 w-1.5 rounded-full ${p.on ? 'bg-brand-500' : 'bg-slate-soft/40'}`}
+            className={`h-1.5 w-1.5 rounded-full ${p.on ? 'bg-violet-500' : 'bg-slate-soft/40'}`}
           />
           {p.label}
         </span>

@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Check, Plus } from 'lucide-react'
 import Panel from '../ui/Panel.jsx'
 import { useTwin } from '../../context/TwinContext.jsx'
 import { holon } from '../../services/index.js'
@@ -18,10 +19,15 @@ export default function LogDose() {
   const [flash, setFlash] = useState(null)
   const [customName, setCustomName] = useState('')
   const [resolving, setResolving] = useState(false)
+  const flashTimer = useRef(null)
 
   useEffect(() => {
     holon.getCatalog().then(setCatalog).catch(() => setCatalog([]))
   }, [])
+
+  // The confirmation timer is cleared on unmount and whenever a newer log
+  // replaces it, so an older timer can never cut a newer message short.
+  useEffect(() => () => clearTimeout(flashTimer.current), [])
 
   // Show the student's own substances first, then the rest of the catalog.
   const options = useMemo(() => {
@@ -75,6 +81,8 @@ export default function LogDose() {
         ])
         setCustomName('')
       }
+    } catch {
+      /* resolution failed: leave the name in the box so they can retry */
     } finally {
       setResolving(false)
     }
@@ -99,7 +107,8 @@ export default function LogDose() {
           : `Logged ${res.length} doses — ${res.map((r) => r.name).join(', ')}.`
       setFlash(`${summary} Twin updated.`)
       setQueue([])
-      setTimeout(() => setFlash(null), 3500)
+      clearTimeout(flashTimer.current)
+      flashTimer.current = setTimeout(() => setFlash(null), 3500)
     }
   }
 
@@ -113,7 +122,7 @@ export default function LogDose() {
           <select
             value={substanceId}
             onChange={(e) => setSubstanceId(e.target.value)}
-            className="input-glass w-full rounded-[12px] px-3 py-2 text-sm outline-none"
+            className="input-glass w-full rounded-xl px-3 py-2 text-sm outline-none"
           >
             {options.map((c) => (
               <option key={c.id} value={c.id}>
@@ -125,12 +134,13 @@ export default function LogDose() {
 
         <label>
           <span className="mb-1 block text-[11px] font-semibold text-slate-soft">Dose</span>
-          <div className="card-inset flex items-center gap-1 rounded-[12px] px-2 py-2">
+          <div className="card-inset flex items-center gap-1 rounded-xl px-2 py-2">
             <input
               type="number"
               min="0"
               value={dose}
               onChange={(e) => setDose(e.target.value)}
+              aria-label={`Dose${selected ? ` for ${selected.label.split(' (')[0]}` : ''}`}
               className="w-16 bg-transparent text-sm outline-none"
             />
             <span className="text-xs text-slate-soft">{selected?.unit || ''}</span>
@@ -140,15 +150,15 @@ export default function LogDose() {
         <button
           onClick={addToQueue}
           disabled={!selected}
-          className="btn-outline rounded-[10px] px-4 py-2 text-sm font-semibold transition disabled:opacity-40"
+          className="btn-outline inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold transition disabled:opacity-40"
         >
-          + Add
+          <Plus className="h-3.5 w-3.5" aria-hidden="true" /> Add
         </button>
 
         <button
           onClick={logAll}
           disabled={!selected && !count}
-          className="btn-solid rounded-[10px] px-4 py-2 text-sm font-semibold transition"
+          className="btn-solid rounded-full px-4 py-2 text-sm font-semibold transition"
         >
           {count ? `Log ${count} dose${count > 1 ? 's' : ''}` : 'Log dose'}
         </button>
@@ -156,23 +166,29 @@ export default function LogDose() {
 
       {/* Not in the list? Add anything by name (resolved via HOLON → AI). */}
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        <span className="text-[11px] text-slate-soft">Not listed?</span>
+        <label htmlFor="log-custom" className="text-[11px] text-slate-soft">
+          Not listed?
+        </label>
         <input
+          id="log-custom"
           value={customName}
           onChange={(e) => setCustomName(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addCustom())}
           placeholder="Type any substance…"
-          className="input-glass min-w-[8rem] flex-1 rounded-[12px] px-3 py-1.5 text-sm outline-none"
+          className="input-glass min-w-[8rem] flex-1 rounded-full px-3.5 py-1.5 text-sm outline-none"
         />
         <button
           onClick={addCustom}
           disabled={!customName.trim() || resolving}
-          className="inline-flex items-center gap-1.5 rounded-[10px] border border-brand-500 px-3 py-1.5 text-sm font-semibold text-brand-600 transition hover:bg-brand-50 disabled:opacity-40"
+          aria-label="Add the typed substance"
+          className="inline-flex items-center gap-1.5 rounded-full border border-violet-300 px-3.5 py-1.5 text-sm font-semibold text-violet-700 transition hover:bg-violet-50 disabled:opacity-40"
         >
           {resolving ? (
-            <span className="h-3 w-3 animate-spin rounded-full border-2 border-brand-500/40 border-t-brand-500" />
+            <span className="h-3 w-3 animate-spin rounded-full border-2 border-violet-300 border-t-violet-600" />
           ) : (
-            '+ Add'
+            <>
+              <Plus className="h-3.5 w-3.5" aria-hidden="true" /> Add custom
+            </>
           )}
         </button>
       </div>
@@ -183,7 +199,7 @@ export default function LogDose() {
           {queue.map((q, i) => (
             <span
               key={`${q.substanceId}-${i}`}
-              className="inline-flex items-center gap-1.5 rounded-full bg-shell px-3 py-1 text-xs font-medium"
+              className="inline-flex items-center gap-1.5 rounded-full bg-violet-50 px-3 py-1 text-xs font-medium text-violet-900"
             >
               {q.label}
               <span className="text-slate-soft">
@@ -203,8 +219,12 @@ export default function LogDose() {
       )}
 
       {flash && (
-        <p className="mt-2 rounded-[10px] bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800">
-          ✓ {flash}
+        <p
+          role="status"
+          aria-live="polite"
+          className="mt-2 inline-flex items-center gap-1.5 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-800"
+        >
+          <Check className="h-3.5 w-3.5" aria-hidden="true" /> {flash}
         </p>
       )}
     </Panel>

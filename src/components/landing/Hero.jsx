@@ -4,6 +4,7 @@ import { ArrowRight, Sparkles } from 'lucide-react'
 import AnimatedGradientText from './ui/AnimatedGradientText.jsx'
 import ShimmerButton from './ui/ShimmerButton.jsx'
 import Reveal from './ui/Reveal.jsx'
+import HeroTwin from './HeroTwin.jsx'
 import { useTwin } from '../../context/TwinContext.jsx'
 import { listProfiles, removeProfile } from '../../services/storage.js'
 
@@ -153,6 +154,8 @@ export default function Hero({ story, wantName, onBuild, demoBusy, onDemo }) {
       <p className="mt-8 text-xs text-slate-soft/80">
         Educational demo — not medical advice. Everything you log stays in this browser.
       </p>
+
+      <HeroTwin story={story} />
     </section>
   )
 }

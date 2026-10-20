@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Stethoscope } from 'lucide-react'
 
 /**
  * Medical safety framework for Twinstate.
@@ -91,7 +92,11 @@ export function ConsentGate({ children }) {
 
   return (
     <>
-      {children}
+      {/* `inert` takes the page behind the gate out of the tab order and away
+          from assistive tech while the dialog is open. */}
+      <div className="contents" inert={open ? '' : undefined}>
+        {children}
+      </div>
       {open && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm"
@@ -102,8 +107,8 @@ export function ConsentGate({ children }) {
           onKeyDown={trapFocus}
         >
           <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl bg-cream p-6 shadow-shell">
-            <div className="mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-brand-500/15 text-2xl">
-              🩺
+            <div className="mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-brand-grad text-white shadow-glow">
+              <Stethoscope className="h-6 w-6" aria-hidden="true" />
             </div>
             <h2 id="consent-title" className="text-lg font-extrabold">
               Before you start
@@ -116,11 +121,11 @@ export function ConsentGate({ children }) {
               </p>
               <ul className="mt-3 space-y-1.5 text-sm text-ink/75">
                 <li className="flex gap-2">
-                  <span className="text-brand-500">•</span> Flags are general information, not
+                  <span className="text-violet-500">•</span> Flags are general information, not
                   instructions to change a prescription.
                 </li>
                 <li className="flex gap-2">
-                  <span className="text-brand-500">•</span> Always confirm with a pharmacist or your
+                  <span className="text-violet-500">•</span> Always confirm with a pharmacist or your
                   health centre.
                 </li>
               </ul>
@@ -129,7 +134,7 @@ export function ConsentGate({ children }) {
             <button
               ref={buttonRef}
               onClick={accept}
-              className="mt-5 w-full rounded-full bg-brand-grad py-3 text-sm font-bold text-white shadow-soft transition hover:brightness-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+              className="mt-5 w-full rounded-full bg-brand-grad py-3 text-sm font-bold text-white shadow-soft transition hover:brightness-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
             >
               I understand — continue
             </button>

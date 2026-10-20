@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
+import { AlertTriangle, Sparkles } from 'lucide-react'
 import AppShell from '../components/layout/AppShell.jsx'
-import AnatomyModel from '../components/anatomy/AnatomyModel.jsx'
+import Twin3D from '../components/twin3d/index.jsx'
 import RiskLegend from '../components/anatomy/RiskLegend.jsx'
 import FlagCard from '../components/dashboard/FlagCard.jsx'
 import RiskBadge from '../components/ui/RiskBadge.jsx'
@@ -21,12 +22,15 @@ export default function Dashboard() {
   const { twin, items, history, flags, organRisk, overall, notes, bodyIndex, analyzing, statsSource } =
     useTwin()
   const coverage = coverageOf(items)
+  // `selected` filters the register (set by tapping an organ); `hovered` only
+  // lights the organ up while the pointer rests on a flag card.
   const [selected, setSelected] = useState(null)
+  const [hovered, setHovered] = useState(null)
   const [summary, setSummary] = useState(null)
   const [loadingSummary, setLoadingSummary] = useState(true)
 
-  // Change in the (AI-calculated) body-stress index since the start of the week.
-  // Uses the same anchored trend as the History page so the delta matches there.
+  // Change in the body-stress index since the start of the week. Uses the
+  // same anchored trend as the History page so the delta matches there.
   const weekDelta = useMemo(() => {
     if (!history?.length) return 0
     const trend = scaledBodyTrend(history, bodyIndex)
@@ -39,13 +43,13 @@ export default function Dashboard() {
     reasoning
       .summarizeTwin({ name: twin?.name, flags, overall })
       .then((s) => live && setSummary(s))
+      .catch(() => live && setSummary({ text: 'We could not write the plain-language summary just now. The flags below are still current.' }))
       .finally(() => live && setLoadingSummary(false))
     return () => {
       live = false
     }
   }, [twin, flags, overall])
 
-  // Flags for the currently hovered/selected organ.
   const shownFlags = useMemo(
     () => (selected ? flags.filter((f) => f.organ === selected) : flags),
     [selected, flags]
@@ -110,7 +114,7 @@ export default function Dashboard() {
       </div>
 
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_380px]">
-        {/* Left column: anatomy stage + log dose */}
+        {/* Left column: twin stage + log dose */}
         <div className="space-y-5">
           <Panel
             eyebrow="Anatomical view"
@@ -120,7 +124,7 @@ export default function Dashboard() {
               selected ? (
                 <button
                   onClick={() => setSelected(null)}
-                  className="rounded-[8px] border border-[color:var(--panel-line)] bg-white px-2.5 py-1 text-xs font-semibold text-slate-soft transition-colors hover:bg-shell"
+                  className="rounded-full border border-[color:var(--panel-line)] bg-white px-3 py-1 text-xs font-semibold text-slate-soft transition-colors hover:bg-violet-50"
                 >
                   Show all
                 </button>
@@ -128,18 +132,14 @@ export default function Dashboard() {
             }
             bodyClassName="flex flex-col"
           >
-            {/* The anatomy figure is drawn for a dark ground (white organ
-                strokes, pale mesh, neon glow), so the stage keeps its own dark
-                surface nested inside the white panel rather than inverting the
-                whole illustration. Inner radius steps down from the panel's. */}
-            <div className="stage-backdrop overflow-hidden rounded-[8px] p-4">
+            {/* The same WebGL twin the landing page shows, on the twin's live
+                organ-risk map. It falls back to the CSS figure without WebGL. */}
+            <div className="stage-backdrop overflow-hidden rounded-2xl p-4">
               <div className="mx-auto flex h-[38vh] min-h-[300px] w-full max-w-[420px] items-center justify-center">
-                <AnatomyModel
+                <Twin3D
                   organRisk={organRisk}
-                  selected={selected}
+                  selected={hovered ?? selected}
                   onSelect={(k) => setSelected((s) => (s === k ? null : k))}
-                  callouts
-                  scale={0.92}
                 />
               </div>
               <RiskLegend className="mt-2 justify-center" />
@@ -158,13 +158,13 @@ export default function Dashboard() {
             </p>
             <p className="mt-3 border-t border-[color:var(--panel-line)] pt-3 text-[11px] font-semibold">
               {analyzing ? (
-                <span className="inline-flex items-center gap-1.5 text-brand-600">
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand-500" />
-                  AI is analysing your data…
+                <span className="inline-flex items-center gap-1.5 text-violet-700">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet-500" />
+                  AI is reviewing your data…
                 </span>
               ) : statsSource === 'ai' ? (
-                <span className="inline-flex items-center gap-1 text-brand-700">
-                  <span>✦</span> Calculated by AI from your logged data
+                <span className="inline-flex items-center gap-1 text-violet-700">
+                  <Sparkles className="h-3 w-3" aria-hidden="true" /> Reviewed by AI · numbers from the rule engine
                 </span>
               ) : (
                 <span className="text-slate-soft">Baseline estimate (formula)</span>
@@ -201,7 +201,7 @@ export default function Dashboard() {
                 style={{ borderRadius: 'var(--panel-r)' }}
               >
                 <div className="flex items-center gap-2 font-bold text-ink">
-                  <span aria-hidden="true">⚠</span> Not checked ({coverage.unchecked.length})
+                  <AlertTriangle className="h-4 w-4 text-risk-caution" aria-hidden="true" /> Not checked ({coverage.unchecked.length})
                 </div>
                 <p className="mt-1 text-xs leading-relaxed text-ink/75">
                   We could not identify these, so no interaction rule ran against them. Ask a
@@ -211,7 +211,7 @@ export default function Dashboard() {
                   {coverage.unchecked.map((it, i) => (
                     <li
                       key={i}
-                      className="rounded-[6px] border border-[color:var(--panel-line)] bg-white/80 px-2.5 py-1 text-xs font-medium"
+                      className="rounded-md border border-[color:var(--panel-line)] bg-white/80 px-2.5 py-1 text-xs font-medium"
                     >
                       {labelOf(it)}
                     </li>
@@ -224,9 +224,9 @@ export default function Dashboard() {
               <FlagCard
                 key={flag.id}
                 flag={flag}
-                active={selected === flag.organ}
-                onHover={() => setSelected(flag.organ)}
-                onLeave={() => {}}
+                active={(hovered ?? selected) === flag.organ}
+                onHover={() => setHovered(flag.organ)}
+                onLeave={() => setHovered(null)}
               />
             ))}
           </Panel>

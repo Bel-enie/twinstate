@@ -1,17 +1,52 @@
-import { useEffect } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Suspense, lazy, useEffect } from 'react'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useTwin } from './context/TwinContext.jsx'
 import { ConsentGate } from './components/safety/SafetyLayer.jsx'
 import { initSpecularButtons } from './utils/specular.js'
 
-import Landing from './pages/Landing.jsx'
-import Intake from './pages/Intake.jsx'
-import FAQ from './pages/FAQ.jsx'
-import Dashboard from './pages/Dashboard.jsx'
-import InteractionDetail from './pages/InteractionDetail.jsx'
-import History from './pages/History.jsx'
-import WhatIf from './pages/WhatIf.jsx'
-import Recommendation from './pages/Recommendation.jsx'
+// Every screen is its own chunk, so a landing-page visitor downloads the
+// landing page — not the dashboard, intake, chat and What-If as well.
+const Landing = lazy(() => import('./pages/Landing.jsx'))
+const Intake = lazy(() => import('./pages/Intake.jsx'))
+const FAQ = lazy(() => import('./pages/FAQ.jsx'))
+const Dashboard = lazy(() => import('./pages/Dashboard.jsx'))
+const InteractionDetail = lazy(() => import('./pages/InteractionDetail.jsx'))
+const History = lazy(() => import('./pages/History.jsx'))
+const WhatIf = lazy(() => import('./pages/WhatIf.jsx'))
+const Recommendation = lazy(() => import('./pages/Recommendation.jsx'))
+
+const TITLES = {
+  '/': 'Twinstate — your living health twin',
+  '/intake': 'Build your twin · Twinstate',
+  '/dashboard': 'Your twin · Twinstate',
+  '/history': 'Last 7 days · Twinstate',
+  '/what-if': 'What-If · Twinstate',
+  '/recommendation': 'Next step · Twinstate',
+  '/faq': 'FAQ · Twinstate',
+}
+
+/**
+ * Route hygiene: every navigation starts at the top of the new page (unless
+ * it targets an in-page anchor) and names the page in the tab title.
+ */
+function RouteEffects() {
+  const { pathname, hash } = useLocation()
+  useEffect(() => {
+    if (!hash) window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    const key = pathname.startsWith('/interaction/') ? '/dashboard' : pathname
+    document.title = TITLES[key] || 'Twinstate'
+  }, [pathname, hash])
+  return null
+}
+
+function PageFallback() {
+  return (
+    <div className="grid min-h-[60vh] place-items-center" role="status" aria-live="polite">
+      <span className="h-2.5 w-2.5 animate-pulseGlow rounded-full bg-violet-500" />
+      <span className="sr-only">Loading</span>
+    </div>
+  )
+}
 
 /**
  * Home decision. The landing page is the single front door — it carries both the
@@ -50,58 +85,63 @@ export default function App() {
   useEffect(() => initSpecularButtons(), [])
 
   return (
-    <Routes>
-      <Route path="/faq" element={<FAQ />} />
-      <Route path="/" element={<Boot />} />
-      <Route
-        path="/intake"
-        element={
-          <RequireSession>
-            <Intake />
-          </RequireSession>
-        }
-      />
-      <Route
-        path="/dashboard"
-        element={
-          <RequireTwin>
-            <Dashboard />
-          </RequireTwin>
-        }
-      />
-      <Route
-        path="/interaction/:flagId"
-        element={
-          <RequireTwin>
-            <InteractionDetail />
-          </RequireTwin>
-        }
-      />
-      <Route
-        path="/history"
-        element={
-          <RequireTwin>
-            <History />
-          </RequireTwin>
-        }
-      />
-      <Route
-        path="/what-if"
-        element={
-          <RequireTwin>
-            <WhatIf />
-          </RequireTwin>
-        }
-      />
-      <Route
-        path="/recommendation"
-        element={
-          <RequireTwin>
-            <Recommendation />
-          </RequireTwin>
-        }
-      />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <RouteEffects />
+      <Suspense fallback={<PageFallback />}>
+        <Routes>
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/" element={<Boot />} />
+          <Route
+            path="/intake"
+            element={
+              <RequireSession>
+                <Intake />
+              </RequireSession>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <RequireTwin>
+                <Dashboard />
+              </RequireTwin>
+            }
+          />
+          <Route
+            path="/interaction/:flagId"
+            element={
+              <RequireTwin>
+                <InteractionDetail />
+              </RequireTwin>
+            }
+          />
+          <Route
+            path="/history"
+            element={
+              <RequireTwin>
+                <History />
+              </RequireTwin>
+            }
+          />
+          <Route
+            path="/what-if"
+            element={
+              <RequireTwin>
+                <WhatIf />
+              </RequireTwin>
+            }
+          />
+          <Route
+            path="/recommendation"
+            element={
+              <RequireTwin>
+                <Recommendation />
+              </RequireTwin>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    </>
   )
 }

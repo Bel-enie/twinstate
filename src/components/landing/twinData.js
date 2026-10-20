@@ -141,11 +141,13 @@ export function headlineChanges(changes, n = 3) {
   return changes.filter((c) => picked.includes(c)) // back in newest-first order
 }
 
-export function buildTwinStory(personaId = STORY_PERSONA, today = new Date()) {
-  const persona = PERSONAS.find((p) => p.id === personaId)
-  if (!persona) throw new Error(`No persona "${personaId}"`)
-
-  const days = persona.history.map((d, i) => {
+/**
+ * Run the engine over a 7-day history ([{ day, items }], oldest first) and
+ * return one fully derived object per day. Shared by the landing story and
+ * the in-app History page, so both show the same numbers for the same log.
+ */
+export function buildDays(historyDays = [], today = new Date()) {
+  return historyDays.map((d, i) => {
     const ctx = buildContext(d.items)
     const state = deriveTwinState(d.items)
     const date = new Date(today)
@@ -164,6 +166,13 @@ export function buildTwinStory(personaId = STORY_PERSONA, today = new Date()) {
       flagIds: state.flags.map((f) => f.id),
     }
   })
+}
+
+export function buildTwinStory(personaId = STORY_PERSONA, today = new Date()) {
+  const persona = PERSONAS.find((p) => p.id === personaId)
+  if (!persona) throw new Error(`No persona "${personaId}"`)
+
+  const days = buildDays(persona.history, today)
 
   const todayD = days[days.length - 1]
   const yesterday = days[days.length - 2]

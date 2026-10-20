@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Plus, X } from 'lucide-react'
 import AppShell from '../components/layout/AppShell.jsx'
 import Card from '../components/ui/Card.jsx'
 import Button from '../components/ui/Button.jsx'
@@ -10,9 +11,13 @@ import { CATEGORY_LABEL } from '../utils/risk.js'
 
 const FREQS = ['x1/day', 'x2/day', 'x3/day', 'x4+/day']
 
+const TOGGLE_ON = 'bg-brand-grad text-white shadow-card'
+const TOGGLE_OFF =
+  'border border-ink/10 bg-white text-slate-soft hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700'
+
 export default function Intake() {
   const navigate = useNavigate()
-  const { buildTwin, status } = useTwin()
+  const { buildTwin, status, error } = useTwin()
 
   const [catalog, setCatalog] = useState([])
   const [query, setQuery] = useState('')
@@ -71,9 +76,21 @@ export default function Intake() {
         ])
         setQuery('')
       }
+    } catch {
+      /* resolution failed: keep the query so they can retry or pick a suggestion */
     } finally {
       setResolving(false)
     }
+  }
+
+  // Enter in the search box picks the top suggestion (or adds the typed name)
+  // instead of submitting the whole form, which used to build the twin with
+  // the substance silently missing.
+  const onSearchKey = (e) => {
+    if (e.key !== 'Enter') return
+    e.preventDefault()
+    if (results.length) addItem(results[0])
+    else if (query.trim()) addCustom()
   }
 
   const removeItem = (id) => setItems((prev) => prev.filter((i) => i.substanceId !== id))
@@ -126,24 +143,25 @@ export default function Intake() {
                 id="substance-search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={onSearchKey}
                 placeholder="Search e.g. paracetamol, energy drink, ibuprofen…"
                 aria-label="Search substances to add"
-                className="input-glass w-full rounded-[10px] px-4 py-3 text-sm outline-none"
+                className="input-glass w-full rounded-full px-4 py-3 text-sm outline-none"
               />
               {(query || results.length > 0) && (
-                <div className="card-pearl mt-2 overflow-hidden rounded-[18px]">
+                <div className="card-pearl mt-2 overflow-hidden rounded-2xl">
                   {results.length === 0 && query.trim() && (
                     <button
                       type="button"
                       onClick={addCustom}
                       disabled={resolving}
-                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm hover:bg-brand-50 disabled:opacity-70"
+                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm hover:bg-violet-50 disabled:opacity-70"
                     >
-                      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand-500 text-white">
+                      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand-grad text-white">
                         {resolving ? (
                           <span className="h-3 w-3 animate-spin rounded-full border-2 border-white/40 border-t-white" />
                         ) : (
-                          '+'
+                          <Plus className="h-4 w-4" aria-hidden="true" />
                         )}
                       </span>
                       <span>
@@ -166,10 +184,10 @@ export default function Intake() {
                       key={c.id}
                       type="button"
                       onClick={() => addItem(c)}
-                      className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm hover:bg-brand-50"
+                      className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm hover:bg-violet-50"
                     >
                       <span className="font-medium">{c.label}</span>
-                      <span className="rounded-full bg-shell px-2 py-0.5 text-[11px] text-slate-soft">
+                      <span className="rounded-full bg-paper px-2 py-0.5 text-[11px] text-slate-soft">
                         {CATEGORY_LABEL[c.category]}
                       </span>
                     </button>
@@ -181,20 +199,20 @@ export default function Intake() {
             {/* chosen items */}
             <div className="mt-4 space-y-2">
               {items.length === 0 && (
-                <p className="card-inset rounded-[10px] px-4 py-3 text-sm text-slate-soft">
+                <p className="card-inset rounded-xl px-4 py-3 text-sm text-slate-soft">
                   Nothing added yet. Add at least one to build your twin.
                 </p>
               )}
               {items.map((it) => (
                 <div
                   key={it.substanceId}
-                  className="card-pearl flex flex-wrap items-center gap-2 rounded-[18px] px-3 py-2.5"
+                  className="card-pearl flex flex-wrap items-center gap-2 rounded-2xl px-3 py-2.5"
                 >
                   <span className="flex flex-1 flex-wrap items-center gap-1.5 text-sm font-semibold">
                     {it.label}
                     {it.def?.custom && (
                       <span
-                        className="rounded-full bg-brand-50 px-1.5 py-0.5 text-[10px] font-bold text-brand-700"
+                        className="rounded-full bg-violet-50 px-1.5 py-0.5 text-[10px] font-bold text-violet-700"
                         title={`Identified via ${
                           { holon: 'HOLON', ai: 'AI', generic: 'manual entry' }[it.source] || 'lookup'
                         }`}
@@ -203,7 +221,7 @@ export default function Intake() {
                       </span>
                     )}
                   </span>
-                  <div className="card-inset flex items-center gap-1 rounded-[12px] px-2 py-1">
+                  <div className="card-inset flex items-center gap-1 rounded-xl px-2 py-1">
                     <input
                       type="number"
                       min="0"
@@ -217,7 +235,8 @@ export default function Intake() {
                   <select
                     value={it.frequency}
                     onChange={(e) => updateItem(it.substanceId, { frequency: e.target.value })}
-                    className="card-inset rounded-[12px] px-2 py-1.5 text-sm outline-none"
+                    aria-label={`Frequency for ${it.label}`}
+                    className="card-inset rounded-xl px-2 py-1.5 text-sm outline-none"
                   >
                     {FREQS.map((f) => (
                       <option key={f} value={f}>
@@ -228,10 +247,10 @@ export default function Intake() {
                   <button
                     type="button"
                     onClick={() => removeItem(it.substanceId)}
-                    className="grid h-7 w-7 place-items-center rounded-lg text-slate-soft hover:bg-shell"
-                    aria-label="Remove"
+                    className="grid h-7 w-7 place-items-center rounded-full text-slate-soft transition hover:bg-rose-50 hover:text-rose-700"
+                    aria-label={`Remove ${it.label}`}
                   >
-                    ✕
+                    <X className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </div>
               ))}
@@ -240,8 +259,10 @@ export default function Intake() {
 
           {/* Symptoms */}
           <Card className="p-5">
-            <label className="text-sm font-bold">How are you feeling? <span className="font-normal text-slate-soft">(optional)</span></label>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <p id="symptoms-label" className="text-sm font-bold">
+              How are you feeling? <span className="font-normal text-slate-soft">(optional)</span>
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2" role="group" aria-labelledby="symptoms-label">
               {SYMPTOMS.map((s) => {
                 const on = symptoms.includes(s.id)
                 return (
@@ -249,11 +270,8 @@ export default function Intake() {
                     key={s.id}
                     type="button"
                     onClick={() => toggleSymptom(s.id)}
-                    className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
-                      on
-                        ? 'bg-ink text-white shadow-card'
-                        : 'border border-ink/10 bg-shell text-slate-soft hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700'
-                    }`}
+                    aria-pressed={on}
+                    className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${on ? TOGGLE_ON : TOGGLE_OFF}`}
                   >
                     {s.label}
                   </button>
@@ -266,7 +284,7 @@ export default function Intake() {
               rows={2}
               placeholder="Anything else? (free text, optional)"
               aria-label="Anything else (optional)"
-              className="input-glass mt-3 w-full rounded-[10px] px-4 py-3 text-sm outline-none"
+              className="input-glass mt-3 w-full rounded-2xl px-4 py-3 text-sm outline-none"
             />
           </Card>
 
@@ -274,32 +292,36 @@ export default function Intake() {
           <Card className="p-5">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex-1">
-                <label className="text-sm font-bold">Sleep last night</label>
+                <label htmlFor="sleep-hours" className="text-sm font-bold">
+                  Sleep last night
+                </label>
                 <div className="mt-2 flex items-center gap-3">
                   <input
+                    id="sleep-hours"
                     type="range"
                     min="2"
                     max="10"
                     value={sleep}
                     onChange={(e) => setSleep(Number(e.target.value))}
-                    aria-label={`Sleep last night: ${sleep} hours`}
-                    className="w-full accent-brand-500"
+                    aria-valuetext={`${sleep} hours`}
+                    className="w-full accent-violet-600"
                   />
                   <span className="w-16 text-right text-sm font-semibold">{sleep} hrs</span>
                 </div>
               </div>
               <div>
-                <label className="text-sm font-bold">Stress</label>
-                <div className="mt-2 flex gap-1">
+                <p id="stress-label" className="text-sm font-bold">
+                  Stress
+                </p>
+                <div className="mt-2 flex gap-1" role="group" aria-labelledby="stress-label">
                   {['low', 'medium', 'high'].map((lvl) => (
                     <button
                       key={lvl}
                       type="button"
                       onClick={() => setStress(lvl)}
-                      className={`rounded-xl px-3 py-1.5 text-sm font-medium capitalize ${
-                        stress === lvl
-                          ? 'bg-ink text-white shadow-card'
-                          : 'border border-ink/10 bg-shell text-slate-soft hover:text-ink'
+                      aria-pressed={stress === lvl}
+                      className={`rounded-full px-3 py-1.5 text-sm font-medium capitalize transition ${
+                        stress === lvl ? TOGGLE_ON : TOGGLE_OFF
                       }`}
                     >
                       {lvl}
@@ -309,6 +331,12 @@ export default function Intake() {
               </div>
             </div>
           </Card>
+
+          {status === 'error' && (
+            <p role="alert" className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+              {error || 'We could not build your twin just now. Please try again.'}
+            </p>
+          )}
 
           {/* Floating action bar: it scrolls over the cards above it, so it gets
               a soft fade behind it rather than colliding with their edges. */}

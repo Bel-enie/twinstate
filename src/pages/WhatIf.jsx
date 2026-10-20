@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
+import { AlertTriangle } from 'lucide-react'
 import AppShell from '../components/layout/AppShell.jsx'
-import AnatomyModel from '../components/anatomy/AnatomyModel.jsx'
+import Twin3D from '../components/twin3d/index.jsx'
 import Card from '../components/ui/Card.jsx'
 import Button from '../components/ui/Button.jsx'
 import { useTwin } from '../context/TwinContext.jsx'
@@ -17,6 +18,11 @@ function stressToEntry(v) {
 const toOrganRisk = (organStress = {}) =>
   Object.fromEntries(Object.entries(organStress).map(([k, v]) => [k, stressToEntry(v)]))
 
+const PATHS = [
+  { key: 'continue', label: 'Keep this pattern', color: '#EF8354' },
+  { key: 'safer', label: 'Rest + hydrate', color: '#3FB8A0' },
+]
+
 export default function WhatIf() {
   const { organRisk, items, twin } = useTwin()
   const who = twinNaming(twin?.name)
@@ -24,13 +30,16 @@ export default function WhatIf() {
   const [path, setPath] = useState('continue') // 'continue' | 'safer'
   const [sim, setSim] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [failed, setFailed] = useState(false)
 
   useEffect(() => {
     let live = true
     setLoading(true)
+    setFailed(false)
     analysis
       .project({ organRisk, items, weeks })
       .then((s) => live && setSim(s))
+      .catch(() => live && setFailed(true))
       .finally(() => live && setLoading(false))
     return () => {
       live = false
@@ -39,6 +48,8 @@ export default function WhatIf() {
 
   const active = sim?.[path]
   const shownRisk = useMemo(() => toOrganRisk(active?.organStress), [active])
+  const pathMeta = PATHS.find((p) => p.key === path)
+  const weeksLabel = `${weeks} week${weeks > 1 ? 's' : ''}`
 
   return (
     <AppShell wide>
@@ -50,8 +61,8 @@ export default function WhatIf() {
         {/* This is a trend sketch, not a prediction: a smooth drift applied to
             today's scores. Saying so plainly is more useful than confident
             copy over a straight line. */}
-        <p className="mt-2 inline-flex items-start gap-2 rounded-[12px] border border-risk-watch/30 bg-risk-watch/10 px-3 py-2 text-xs leading-relaxed text-ink/80">
-          <span aria-hidden="true">⚠</span>
+        <p className="mt-2 inline-flex items-start gap-2 rounded-2xl border border-risk-watch/30 bg-risk-watch/10 px-3 py-2 text-xs leading-relaxed text-ink/80">
+          <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-risk-caution" aria-hidden="true" />
           <span>
             <strong>Illustrative only — not a prediction.</strong> This projects today's scores
             forward along a simple trend to show the <em>direction</em> of each path. It is not
@@ -63,72 +74,64 @@ export default function WhatIf() {
       {/* Controls */}
       <Card className="mb-5 flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex-1">
-          <label className="text-sm font-bold">Look ahead</label>
+          <label htmlFor="lookahead" className="text-sm font-bold">
+            Look ahead
+          </label>
           <div className="mt-2 flex items-center gap-3">
             <input
+              id="lookahead"
               type="range"
               min="1"
               max="4"
               value={weeks}
               onChange={(e) => setWeeks(Number(e.target.value))}
-              aria-label={`Look ahead ${weeks} week${weeks > 1 ? 's' : ''}`}
-              className="w-full accent-brand-500"
+              aria-valuetext={weeksLabel}
+              className="w-full accent-violet-600"
             />
-            <span className="w-24 text-right text-sm font-semibold">
-              {weeks} week{weeks > 1 ? 's' : ''}
-            </span>
+            <span className="w-24 text-right text-sm font-semibold">{weeksLabel}</span>
           </div>
         </div>
 
-        <div className="flex rounded-[10px] bg-shell p-1">
-          <button
-            onClick={() => setPath('continue')}
-            className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
-              path === 'continue'
-                ? 'bg-white text-risk-caution shadow-card ring-1 ring-risk-caution/30'
-                : 'text-slate-soft hover:text-ink'
-            }`}
-          >
-            Keep this pattern
-          </button>
-          <button
-            onClick={() => setPath('safer')}
-            className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
-              path === 'safer'
-                ? 'bg-white text-risk-calm shadow-card ring-1 ring-risk-calm/30'
-                : 'text-slate-soft hover:text-ink'
-            }`}
-          >
-            Rest + hydrate
-          </button>
+        <div className="flex rounded-full border border-ink/10 bg-paper p-1" role="group" aria-label="Path">
+          {PATHS.map((p) => {
+            const on = path === p.key
+            return (
+              <button
+                key={p.key}
+                onClick={() => setPath(p.key)}
+                aria-pressed={on}
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  on ? 'bg-brand-grad text-white shadow-[0_8px_22px_-10px_rgba(124,92,240,0.7)]' : 'text-slate-soft hover:text-ink'
+                }`}
+              >
+                <span className="h-2 w-2 rounded-full" style={{ background: p.color }} aria-hidden="true" />
+                {p.label}
+              </button>
+            )
+          })}
         </div>
       </Card>
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_380px]">
         {/* Projected twin */}
-        <div className="stage-backdrop relative flex flex-col rounded-[12px] p-4">
+        <div className="stage-backdrop relative flex flex-col rounded-2xl p-4">
           <p className="text-sm font-semibold text-white/80">
-            {who.Possessive} twin in {weeks} week{weeks > 1 ? 's' : ''} ·{' '}
-            <span style={{ color: path === 'safer' ? '#3FB8A0' : '#EF8354' }}>
-              {path === 'safer' ? 'safer path' : 'if nothing changes'}
-            </span>
+            {who.Possessive} twin in {weeksLabel} ·{' '}
+            <span style={{ color: pathMeta.color }}>{path === 'safer' ? 'safer path' : 'if nothing changes'}</span>
           </p>
           <div className="mx-auto flex h-[46vh] min-h-[320px] w-full max-w-[320px] items-center justify-center">
-            <AnatomyModel organRisk={shownRisk} scale={0.82} />
+            <Twin3D organRisk={shownRisk} />
           </div>
           {/* body-stress index */}
           <div className="mx-auto w-full max-w-sm">
             <div className="mb-1 flex justify-between text-xs text-white/80">
               <span>Body-stress index</span>
-              <span className="font-semibold">{loading ? '…' : `${active?.bodyIndex}/100`}</span>
+              <span className="font-semibold">{loading ? '…' : `${active?.bodyIndex ?? '—'}/100`}</span>
             </div>
             <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/15">
               <div
                 className="h-full rounded-full transition-all duration-500"
-                style={{
-                  width: `${active?.bodyIndex || 0}%`,
-                  background: path === 'safer' ? '#3FB8A0' : '#EF8354',
-                }}
+                style={{ width: `${active?.bodyIndex || 0}%`, background: pathMeta.color }}
               />
             </div>
           </div>
@@ -137,30 +140,32 @@ export default function WhatIf() {
         {/* Narrative + per-organ compare */}
         <div className="space-y-4">
           <div
-            className="rounded-[12px] border p-4"
+            className="rounded-2xl border p-4"
             style={{
               borderColor: path === 'safer' ? '#bfe8df' : '#f7d6c6',
               background: path === 'safer' ? 'rgba(63,184,160,0.08)' : 'rgba(239,131,84,0.08)',
             }}
+            aria-live="polite"
           >
-            <h2 className="font-bold">{loading ? 'Mapping the two paths…' : active?.headline}</h2>
-            <p className="mt-2 text-sm text-ink/80">{!loading && active?.detail}</p>
+            <h2 className="font-bold">
+              {loading ? 'Mapping the two paths…' : failed ? 'The projection could not run' : active?.headline}
+            </h2>
+            <p className="mt-2 text-sm text-ink/80">
+              {!loading && (failed ? 'Try moving the slider again in a moment.' : active?.detail)}
+            </p>
           </div>
 
           {/* Side-by-side index */}
           <Card className="p-5">
-            <h3 className="mb-3 text-sm font-bold text-slate-soft">Same 2 weeks, two paths</h3>
+            <h3 className="mb-3 text-sm font-bold text-slate-soft">Same {weeksLabel}, two paths</h3>
             <div className="space-y-3">
-              {[
-                { key: 'continue', label: 'Keep pattern', color: '#EF8354' },
-                { key: 'safer', label: 'Rest + hydrate', color: '#3FB8A0' },
-              ].map((p) => (
+              {PATHS.map((p) => (
                 <div key={p.key}>
                   <div className="mb-1 flex justify-between text-xs">
                     <span className="font-semibold">{p.label}</span>
                     <span className="text-slate-soft">{sim?.[p.key]?.bodyIndex ?? '…'}/100</span>
                   </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-shell">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-paper">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${sim?.[p.key]?.bodyIndex || 0}%`, background: p.color }}
@@ -173,7 +178,9 @@ export default function WhatIf() {
 
           {/* Per-organ mini compare for active path */}
           <Card className="p-5">
-            <h3 className="mb-3 text-sm font-bold text-slate-soft">Organ by organ · {path === 'safer' ? 'safer path' : 'current path'}</h3>
+            <h3 className="mb-3 text-sm font-bold text-slate-soft">
+              Organ by organ · {path === 'safer' ? 'safer path' : 'current path'}
+            </h3>
             <div className="space-y-2.5">
               {Object.entries(ORGANS).map(([key, o]) => {
                 const v = active?.organStress?.[key] ?? 0
@@ -181,7 +188,7 @@ export default function WhatIf() {
                 return (
                   <div key={key} className="flex items-center gap-3">
                     <span className="w-28 shrink-0 text-xs font-medium">{o.label}</span>
-                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-shell">
+                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-paper">
                       <div
                         className="h-full rounded-full transition-all duration-500"
                         style={{ width: `${v}%`, background: r.hex }}
