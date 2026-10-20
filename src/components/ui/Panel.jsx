@@ -23,7 +23,7 @@ export default function Panel({
             <div className="min-w-0">
               {eyebrow && <p className="panel-eyebrow">{eyebrow}</p>}
               {title && (
-                <h2 className="mt-1.5 text-[17px] font-bold leading-tight tracking-tight text-ink">
+                <h2 className="mt-1.5 font-display text-[18px] font-bold leading-tight tracking-[-0.02em] text-ink">
                   {title}
                 </h2>
               )}

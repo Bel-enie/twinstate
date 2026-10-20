@@ -4,9 +4,9 @@ import Aurora from '../components/landing/ui/Aurora.jsx'
 import Nav from '../components/landing/Nav.jsx'
 import Hero from '../components/landing/Hero.jsx'
 import SubstanceMarquee from '../components/landing/SubstanceMarquee.jsx'
-import TwinBento from '../components/landing/TwinBento.jsx'
+import StoryStack from '../components/landing/StoryStack.jsx'
 import Moments from '../components/landing/Moments.jsx'
-import HowItWorks from '../components/landing/HowItWorks.jsx'
+import TwinBento from '../components/landing/TwinBento.jsx'
 import EarlyAccess from '../components/landing/EarlyAccess.jsx'
 import Footer from '../components/landing/Footer.jsx'
 import { buildTwinStory } from '../components/landing/twinData.js'
@@ -14,10 +14,11 @@ import { useTwin } from '../context/TwinContext.jsx'
 import { listProfiles } from '../services/storage.js'
 
 /**
- * The front door, rebuilt in a bold gradient bento style (Magic UI-school
- * primitives under components/landing/ui). The background is pure CSS — no
- * WebGL field — and every product number on the page is still computed by the
- * real rule engine from Ada's week (twinData.js).
+ * The front door, in a bold gradient bento style (Magic UI-school primitives
+ * under components/landing/ui). The story runs as three sticky cards — the
+ * problem, the living week, the questions — then real-week moments, a bento
+ * summary of today with the way into the demo, and early access. Every product
+ * number on the page is computed by the real rule engine from Ada's week.
  *
  * `Boot` in App.jsx sends users who already have a built twin straight to
  * their dashboard. The consent gate lives on the product routes, not here.
@@ -57,9 +58,9 @@ export default function Landing() {
         <Nav latest={latest} onResume={onResume} onBuild={onBuild} />
         <Hero story={story} wantName={wantName} onBuild={onBuild} demoBusy={demoBusy} onDemo={onDemo} />
         <SubstanceMarquee />
-        <TwinBento story={story} demoBusy={demoBusy} onDemo={onDemo} />
+        <StoryStack story={story} />
         <Moments />
-        <HowItWorks />
+        <TwinBento story={story} demoBusy={demoBusy} onDemo={onDemo} />
         <EarlyAccess onBuild={onBuild} />
         <Footer />
       </div>

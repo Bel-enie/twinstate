@@ -34,7 +34,7 @@ export default function Button({
   children,
   ...props
 }) {
-  const cls = `inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-all duration-150 focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none ${VARIANTS[variant]} ${SIZES[size]} ${className}`
+  const cls = `inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-150 focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none ${VARIANTS[variant]} ${SIZES[size]} ${className}`
 
   if (to) {
     return (

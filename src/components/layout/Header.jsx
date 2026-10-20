@@ -2,6 +2,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTwin } from '../../context/TwinContext.jsx'
 import { dataSourceLabel } from '../../services/index.js'
 import { useStuck } from '../../utils/useStuck.js'
+import BrandMark from '../ui/BrandMark.jsx'
+import Wordmark from '../ui/Wordmark.jsx'
 
 const TABS = [
   { to: '/dashboard', label: 'Twin' },
@@ -9,17 +11,6 @@ const TABS = [
   { to: '/what-if', label: 'What-If' },
   { to: '/recommendation', label: 'Next step' },
 ]
-
-/** Twinstate logo mark — a droplet in a rounded brand tile. Sized via className. */
-function BrandMark({ className = '' }) {
-  return (
-    <span className={`grid shrink-0 place-items-center rounded-xl bg-brand-500 text-white shadow-soft ${className}`}>
-      <svg viewBox="0 0 24 24" fill="none" className="h-1/2 w-1/2" aria-hidden="true">
-        <path d="M12 3c4 3 7 5 7 9a7 7 0 1 1-14 0c0-4 3-6 7-9Z" fill="currentColor" opacity=".9" />
-      </svg>
-    </span>
-  )
-}
 
 export default function Header() {
   const { hasTwin, session, signOut } = useTwin()
@@ -41,25 +32,28 @@ export default function Header() {
     >
       <div className="site-pill mx-auto w-full max-w-6xl justify-between gap-3 py-2 pl-3 pr-2 sm:pl-4 sm:pr-3">
         {/* brand */}
-        <Link to={hasTwin ? '/dashboard' : '/'} className="flex items-center gap-2">
+        <Link to={hasTwin ? '/dashboard' : '/'} className="flex items-center gap-2.5">
           <BrandMark className="h-9 w-9" />
-          <span className="text-lg font-extrabold tracking-tight">
-            <span className="text-brand-500">Twin</span>
-            <span className="text-risk-calm">state</span>
-          </span>
+          <Wordmark className="text-lg" />
         </Link>
 
         {/* center pill nav */}
         {hasTwin && (
-          <nav className="hidden items-center gap-1 rounded-full border border-ink/5 bg-white/80 p-1 shadow-card md:flex">
+          <nav
+            aria-label="Twin sections"
+            className="hidden items-center gap-1 rounded-full border border-violet-100 bg-white/85 p-1 shadow-card md:flex"
+          >
             {TABS.map((t) => {
               const active = pathname === t.to
               return (
                 <Link
                   key={t.to}
                   to={t.to}
+                  aria-current={active ? 'page' : undefined}
                   className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-semibold transition ${
-                    active ? 'bg-brand-grad text-white shadow-soft' : 'text-slate-soft hover:text-ink'
+                    active
+                      ? 'bg-brand-grad text-white shadow-[0_8px_22px_-10px_rgba(124,92,240,0.7)]'
+                      : 'text-slate-soft hover:bg-violet-50 hover:text-ink'
                   }`}
                 >
                   {active && <span className="h-1.5 w-1.5 rounded-full bg-white/90" />}
@@ -107,13 +101,17 @@ export default function Header() {
 
       {/* mobile tab bar */}
       {hasTwin && (
-        <nav className="mx-auto mt-2 flex w-full max-w-6xl gap-1.5 overflow-x-auto pb-1 no-scrollbar md:hidden">
+        <nav
+          aria-label="Twin sections"
+          className="mx-auto mt-2 flex w-full max-w-6xl gap-1.5 overflow-x-auto pb-1 no-scrollbar md:hidden"
+        >
           {TABS.map((t) => {
             const active = pathname === t.to
             return (
               <Link
                 key={t.to}
                 to={t.to}
+                aria-current={active ? 'page' : undefined}
                 className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold ${
                   active ? 'bg-brand-grad text-white shadow-soft' : 'bg-white/80 text-slate-soft'
                 }`}

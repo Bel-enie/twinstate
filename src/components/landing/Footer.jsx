@@ -21,8 +21,8 @@ export default function Footer() {
         <nav className="flex gap-12 text-sm" aria-label="Footer">
           <div className="space-y-2.5">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-frost/70">Explore</p>
+            <a href="#story" className="block transition hover:text-frost">Why a twin</a>
             <a href="#twin" className="block transition hover:text-frost">Live twin</a>
-            <a href="#how" className="block transition hover:text-frost">How it works</a>
             <a href="#access" className="block transition hover:text-frost">Early access</a>
           </div>
           <div className="space-y-2.5">

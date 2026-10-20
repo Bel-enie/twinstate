@@ -44,8 +44,8 @@ function MomentCard({ m }) {
   const Icon = m.icon
 
   return (
-    <article className="group overflow-hidden rounded-[26px] bg-[linear-gradient(140deg,rgba(58,102,216,0.28),rgba(124,92,240,0.16)_40%,rgba(217,70,126,0.22))] p-px transition duration-300 hover:bg-[linear-gradient(140deg,rgba(58,102,216,0.75),rgba(124,92,240,0.6)_40%,rgba(217,70,126,0.7))] hover:shadow-[0_18px_60px_-18px_rgba(124,92,240,0.45)]">
-      <div className="h-full overflow-hidden rounded-[25px] bg-white">
+    <article className="group h-full overflow-hidden rounded-[26px] bg-[linear-gradient(140deg,rgba(58,102,216,0.28),rgba(124,92,240,0.16)_40%,rgba(217,70,126,0.22))] p-px transition duration-300 hover:bg-[linear-gradient(140deg,rgba(58,102,216,0.75),rgba(124,92,240,0.6)_40%,rgba(217,70,126,0.7))] hover:shadow-[0_18px_60px_-18px_rgba(124,92,240,0.45)]">
+      <div className="flex h-full flex-col overflow-hidden rounded-[25px] bg-white">
         <div className="relative aspect-[4/5] overflow-hidden">
           {failed ? (
             <div
@@ -73,8 +73,8 @@ function MomentCard({ m }) {
             {m.tag}
           </span>
         </div>
-        <div className="p-5 sm:p-6">
-          <h3 className="font-display text-xl font-extrabold tracking-[-0.02em]">{m.title}</h3>
+        <div className="flex-1 p-5 sm:p-6">
+          <h3 className="text-balance font-display text-xl font-extrabold tracking-[-0.02em]">{m.title}</h3>
           <p className="mt-2 text-sm leading-relaxed text-slate-soft">{m.text}</p>
         </div>
       </div>
@@ -93,7 +93,7 @@ export default function Moments() {
       />
       <div className="mt-12 grid gap-5 md:grid-cols-3">
         {MOMENTS.map((m, i) => (
-          <Reveal key={m.src} delay={i * 0.08}>
+          <Reveal key={m.src} delay={i * 0.08} className="h-full">
             <MomentCard m={m} />
           </Reveal>
         ))}

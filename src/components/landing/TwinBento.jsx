@@ -6,25 +6,11 @@ import { BentoGrid, BentoCard } from './ui/BentoCard.jsx'
 import NumberTicker from './ui/NumberTicker.jsx'
 import SectionHeading from './ui/SectionHeading.jsx'
 import Reveal from './ui/Reveal.jsx'
+import Delta from './ui/Delta.jsx'
 import { LOAD_LABEL, LOAD_NOTE, shortOrgan, fmt, weekFlags } from './twinData.js'
 
 const SHOWN_ORGANS = ['heart', 'liver', 'brain']
 const CAFFEINE_LINE = 400
-
-/** Direction of a load number, where higher is worse. */
-function Delta({ prev, cur }) {
-  const diff = cur - prev
-  const tone = diff > 0 ? RISK.caution.hex : diff < 0 ? RISK.calm.hex : '#96A3BD'
-  return (
-    <span className="inline-flex items-center gap-1 text-xs opacity-80">
-      <span className="font-bold" style={{ color: tone }} aria-hidden="true">
-        {diff > 0 ? '↑' : diff < 0 ? '↓' : '→'}
-      </span>
-      <span className="sr-only">{diff > 0 ? 'up' : diff < 0 ? 'down' : 'unchanged'}</span>
-      {diff !== 0 && <span>{Math.abs(diff)}</span>}
-    </span>
-  )
-}
 
 /**
  * The product as a bento grid: the live twin in a dark 2x2 cell, with the
@@ -42,9 +28,9 @@ export default function TwinBento({ story, demoBusy, onDemo }) {
     <section id="twin" className="mx-auto max-w-[1200px] scroll-mt-24 px-5 py-20 sm:px-8">
       <SectionHeading
         eyebrow="Live demo"
-        title="Not a mockup."
-        gradientWord={`${firstName}'s real week.`}
-        sub={`Everything below is recomputed by the app's rule engine from ${firstName}'s logged week — the flags, the numbers, the glowing organs. Click the body.`}
+        title={`${firstName}'s twin,`}
+        gradientWord="at a glance."
+        sub={`Today's load, what changed this week and the evidence behind each flag — all computed by the app's rule engine from ${firstName}'s log. Then open the real dashboard.`}
       />
 
       <Reveal delay={0.1} className="mt-12">

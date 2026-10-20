@@ -1,24 +1,26 @@
+import { useId } from 'react'
+
 /**
  * Twinstate logo mark — a gradient human figure overlaid with a connected
  * node-network ("digital twin"). Pure inline SVG so it stays crisp from the
  * 16px footer up to the hero header, with no image asset to ship.
  *
- * `size` sets the rounded card; the figure scales to fill it. Each instance
- * gets a unique gradient id so multiple marks on a page never clash.
+ * `className` sizes the rounded card; the figure scales to fill it. useId gives
+ * each instance a stable, unique gradient id (the old module counter changed
+ * the id on every re-render).
  */
-let uid = 0
-
 export default function BrandMark({ className = 'h-8 w-8' }) {
-  const gid = `twinGrad-${(uid += 1)}`
+  const gid = `twinGrad-${useId().replace(/:/g, '')}`
   return (
     <span
       className={`grid shrink-0 place-items-center rounded-xl bg-white shadow-soft ring-1 ring-ink/5 ${className}`}
     >
       <svg viewBox="0 0 48 48" className="h-[72%] w-[72%]" fill="none" aria-hidden="true">
         <defs>
-          <linearGradient id={gid} x1="24" y1="6" x2="24" y2="42" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor="#4B84F0" />
-            <stop offset="1" stopColor="#3FB8A0" />
+          <linearGradient id={gid} x1="12" y1="6" x2="36" y2="42" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#3A66D8" />
+            <stop offset="0.6" stopColor="#7C5CF0" />
+            <stop offset="1" stopColor="#D9467E" />
           </linearGradient>
         </defs>
 

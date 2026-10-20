@@ -56,7 +56,9 @@ export default {
         halo: '0 0 60px -12px rgba(75, 132, 240, 0.45)',
       },
       backgroundImage: {
-        'brand-grad': 'linear-gradient(180deg, #2F4796 0%, #263B80 48%, #1C2C63 100%)',
+        // The one brand gradient (blue → violet → pink), shared by the landing
+        // page and the app: active tabs, avatars, primary fills.
+        'brand-grad': 'linear-gradient(110deg, #3A66D8 0%, #7C5CF0 55%, #D9467E 100%)',
       },
       keyframes: {
         pulseGlow: {

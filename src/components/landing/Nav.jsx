@@ -4,8 +4,8 @@ import ShimmerButton from './ui/ShimmerButton.jsx'
 import { useStuck } from '../../utils/useStuck.js'
 
 const LINKS = [
+  ['#story', 'Why a twin'],
   ['#twin', 'Live twin'],
-  ['#how', 'How it works'],
   ['#access', 'Early access'],
 ]
 

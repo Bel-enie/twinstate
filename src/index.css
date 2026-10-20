@@ -16,7 +16,7 @@
 
     /* One edge language for the whole app. Every panel corner and every
        separating line resolves to these two values, so nothing drifts. */
-    --panel-r: 12px;
+    --panel-r: 18px;
     --panel-line: rgb(31 44 96 / 0.1);
   }
 
@@ -41,6 +41,11 @@
   body {
     @apply bg-shell text-ink antialiased;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Page titles use the display grotesque everywhere (landing and app). */
+  h1 {
+    @apply font-display tracking-[-0.03em];
   }
 }
 
@@ -107,15 +112,12 @@
     position: relative;
     isolation: isolate;
     color: #fff;
-    background: linear-gradient(180deg, #2f4796 0%, #263b80 48%, #1c2c63 100%);
+    background: linear-gradient(110deg, #3a66d8 0%, #7c5cf0 55%, #d9467e 100%);
     border: 1px solid rgba(255, 255, 255, 0.24);
     box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.4),
-      0 0 14px 6px rgba(246, 248, 252, 0.5),
-      0 10px 24px rgba(20, 32, 74, 0.26),
-      0 1px 2px rgba(20, 32, 74, 0.24),
-      inset 0 1px 0 rgba(255, 255, 255, 0.28),
-      inset 0 -1px 0 rgba(10, 18, 48, 0.4);
+      0 10px 28px -10px rgba(124, 92, 240, 0.65),
+      0 1px 2px rgba(20, 32, 74, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28);
     transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
   }
   .btn-specular::before {
@@ -143,41 +145,28 @@
   }
   .btn-specular:hover:not(:disabled) {
     transform: translateY(-1px);
-    filter: brightness(1.08);
+    filter: brightness(1.06);
     box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.5),
-      0 0 16px 7px rgba(246, 248, 252, 0.58),
-      0 14px 30px rgba(20, 32, 74, 0.3),
-      0 1px 2px rgba(20, 32, 74, 0.26),
-      inset 0 1px 0 rgba(255, 255, 255, 0.34),
-      inset 0 -1px 0 rgba(10, 18, 48, 0.42);
+      0 14px 36px -10px rgba(124, 92, 240, 0.8),
+      0 1px 2px rgba(20, 32, 74, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.34);
   }
   .btn-specular:active:not(:disabled) {
     transform: translateY(0.5px);
-    filter: brightness(0.94);
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.36),
-      0 0 10px 4px rgba(246, 248, 252, 0.44),
-      0 4px 12px rgba(20, 32, 74, 0.24),
-      inset 0 1px 0 rgba(255, 255, 255, 0.22),
-      inset 0 -1px 0 rgba(10, 18, 48, 0.4);
+    filter: brightness(0.95);
   }
   .btn-specular:focus-visible {
     outline: none;
     box-shadow:
       0 0 0 2px #fff,
-      0 0 0 5px rgba(38, 59, 128, 0.8),
-      0 10px 24px rgba(20, 32, 74, 0.28),
-      inset 0 1px 0 rgba(255, 255, 255, 0.28);
+      0 0 0 5px rgba(124, 92, 240, 0.7),
+      0 10px 28px -10px rgba(124, 92, 240, 0.65);
   }
-  /* Disabled: stay recognisably the same button (a muted slate, not a washed
-     lavender), so "unavailable" reads as state rather than a different control. */
+  /* Disabled: stay recognisably the same button (a muted slate), so
+     "unavailable" reads as state rather than a different control. */
   .btn-specular:disabled {
-    background: linear-gradient(180deg, #8f98b5 0%, #7d87a6 48%, #6c7693 100%);
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.35),
-      0 2px 6px rgba(31, 44, 96, 0.12),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    background: linear-gradient(110deg, #9aa3bd 0%, #a39cc4 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
     opacity: 0.75;
     transform: none;
   }
@@ -189,25 +178,29 @@
      app's flat white panels that halo reads as noise, so product controls
      use solid fills and the same hairline as the panels around them. */
   .btn-solid {
-    background: #24356f;
+    background: linear-gradient(110deg, #3a66d8 0%, #7c5cf0 55%, #d9467e 100%);
     color: #fff;
-    border: 1px solid #24356f;
-    transition: background 0.15s ease, border-color 0.15s ease;
+    border: 1px solid transparent;
+    box-shadow: 0 8px 22px -10px rgba(124, 92, 240, 0.6);
+    transition: filter 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
   }
   .btn-solid:hover:not(:disabled) {
-    background: #1b2a5c;
-    border-color: #1b2a5c;
+    filter: brightness(1.06);
+    box-shadow: 0 12px 30px -10px rgba(124, 92, 240, 0.75);
   }
   .btn-solid:active:not(:disabled) {
-    background: #16224c;
+    filter: brightness(0.95);
+    transform: translateY(0.5px);
   }
   .btn-solid:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(82, 120, 237, 0.32);
+    box-shadow:
+      0 0 0 2px #fff,
+      0 0 0 5px rgba(124, 92, 240, 0.6);
   }
   .btn-solid:disabled {
     background: #9aa3bd;
-    border-color: #9aa3bd;
+    box-shadow: none;
   }
 
   .btn-outline {
@@ -217,12 +210,12 @@
     transition: background 0.15s ease, border-color 0.15s ease;
   }
   .btn-outline:hover:not(:disabled) {
-    background: #f4f6fa;
-    border-color: rgb(31 44 96 / 0.2);
+    background: #f7f5ff;
+    border-color: rgb(124 92 240 / 0.35);
   }
   .btn-outline:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(82, 120, 237, 0.28);
+    box-shadow: 0 0 0 3px rgba(124, 92, 240, 0.28);
   }
 
   .btn-glass {
@@ -379,10 +372,23 @@
      radius (--panel-r). The dashboard used to mix six radii (16/22/24/36px,
      2xl, 3xl, full) and leaned on tinted fills and drop shadows to tell
      panels apart, which read as loose. Structure does that job here. */
+  /* Panels share the landing bento's edge: a quiet blue→violet→pink hairline
+     (a gradient border-box under a white padding-box), one radius. */
   .panel {
-    background: #fff;
-    border: 1px solid var(--panel-line);
+    border: 1px solid transparent;
     border-radius: var(--panel-r);
+    background:
+      linear-gradient(#fff, #fff) padding-box,
+      linear-gradient(140deg, rgba(58, 102, 216, 0.26), rgba(124, 92, 240, 0.14) 40%, rgba(217, 70, 126, 0.2)) border-box;
+  }
+
+  /* The floating app card: same gradient edge, softer and larger. */
+  .app-card {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(#fcfdff, #fcfdff) padding-box,
+      linear-gradient(140deg, rgba(58, 102, 216, 0.35), rgba(124, 92, 240, 0.2) 40%, rgba(217, 70, 126, 0.3)) border-box;
+    box-shadow: 0 40px 120px -50px rgba(76, 58, 160, 0.45);
   }
   /* The eyebrow + title block that opens a panel, closed by a hairline. */
   .panel-head {
@@ -394,12 +400,11 @@
   }
   /* Small uppercase mono label above a panel title. */
   .panel-eyebrow {
-    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: rgb(100 116 139 / 0.95);
+    color: #6d3fe0;
   }
   /* Rows inside a panel body, divided by the same hairline as everything
      else so a list never needs its own card per item. */
@@ -416,9 +421,9 @@
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
   .input-glass:focus-within {
-    border-color: #5278ed;
+    border-color: #7c5cf0;
     box-shadow:
-      0 0 0 3px rgba(82, 120, 237, 0.18),
+      0 0 0 3px rgba(124, 92, 240, 0.18),
       inset 0 1px 0 rgba(255, 255, 255, 0.85);
   }
 
