@@ -14,7 +14,7 @@ export default function Footer() {
             </span>
           </div>
           <p className="mt-3 text-sm leading-relaxed">
-            A digital twin that brings scattered medication data into one picture — built on
+            A digital twin that brings scattered medication data into one picture. Built on
             Ontomorph DTP + HOLON for a one-week university hackathon.
           </p>
         </div>
@@ -30,7 +30,6 @@ export default function Footer() {
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-frost/70">More</p>
             <Link to="/faq" className="block transition hover:text-frost">FAQ</Link>
             <Link to="/limits" className="block transition hover:text-frost">How it works &amp; limits</Link>
-            <a href="https://github.com/Bel-enie/twinstate" target="_blank" rel="noopener noreferrer" className="block transition hover:text-frost">Code on GitHub</a>
             <a href="#top" className="block transition hover:text-frost">Back to top</a>
           </div>
         </nav>

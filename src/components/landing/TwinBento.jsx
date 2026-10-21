@@ -155,7 +155,7 @@ export default function TwinBento({ story, demoBusy, onDemo }) {
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-300">Go deeper</p>
               <p className="mt-3 text-lg font-bold leading-snug text-frost">
-                Open {firstName}'s full dashboard — history, what-if futures and the next step.
+                Open {firstName}'s full dashboard: history, what-if futures and the next step.
               </p>
             </div>
             <button

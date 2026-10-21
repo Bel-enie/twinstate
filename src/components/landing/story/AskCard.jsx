@@ -81,7 +81,7 @@ export default function AskCard({ story }) {
       eyebrow="Ask your twin"
       title="Not a chat box."
       gradient="Answers from your own data."
-      sub="Ask about something you logged and the twin answers from that log — and simulates it when the answer lies in the future."
+      sub="Ask about something you logged and the twin answers from that log, and simulates it when the answer lies in the future."
     >
       <div className="flex flex-wrap gap-2" role="group" aria-label="Questions">
         {QUESTIONS.map((x) => (

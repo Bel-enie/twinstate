@@ -49,7 +49,7 @@ export default function EarlyAccess() {
                 <AnimatedGradientText>before it adds up.</AnimatedGradientText>
               </h2>
               <p className="mt-4 max-w-md text-base leading-relaxed text-slate-soft">
-                Build a twin right now — no signup needed. Or leave an email for when Twinstate
+                Build a twin right now, no signup needed. Or leave an email for when Twinstate
                 opens up beyond the demo.
               </p>
               <BuildTwinCta className="mt-7" />

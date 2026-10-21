@@ -36,3 +36,6 @@ Thumbs.db
 NUL
 NUL.*
 *.tmp
+
+# Notes from the dev-only annotate mode (npm run notes)
+.annotations/

@@ -11,7 +11,8 @@
     "proxy": "node server/proxy.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check:secrets": "node scripts/check-bundle-secrets.mjs"
+    "check:secrets": "node scripts/check-bundle-secrets.mjs",
+    "notes": "node scripts/notes.mjs"
   },
   "dependencies": {
     "@ontomorph/dtp-sdk": "^0.1.4",
