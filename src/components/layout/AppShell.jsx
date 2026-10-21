@@ -1,4 +1,5 @@
 import Header from './Header.jsx'
+import SideNav from './SideNav.jsx'
 import BrandMark from '../ui/BrandMark.jsx'
 import Wordmark from '../ui/Wordmark.jsx'
 import Aurora from '../landing/ui/Aurora.jsx'
@@ -16,9 +17,12 @@ export default function AppShell({ children, wide = false }) {
       <Aurora />
       <div className="app-card relative mx-auto flex min-h-full max-w-6xl flex-col sm:min-h-[calc(100vh-2rem)] sm:rounded-[2.25rem] lg:min-h-[calc(100vh-3rem)]">
         <Header />
-        <main className={`mx-auto w-full flex-1 px-4 py-7 sm:px-6 lg:px-8 ${wide ? 'max-w-6xl' : 'max-w-5xl'}`}>
-          {children}
-        </main>
+        <div className="flex flex-1 items-start md:pt-4">
+          <SideNav />
+          <main className={`mx-auto w-full min-w-0 flex-1 px-4 py-7 sm:px-6 lg:px-8 ${wide ? 'max-w-6xl' : 'max-w-5xl'}`}>
+            {children}
+          </main>
+        </div>
         <footer className="mx-auto w-full max-w-5xl px-6 py-7">
           <div className="flex flex-col items-center justify-between gap-2 text-xs text-slate-soft sm:flex-row">
             <span className="flex items-center gap-1.5 font-semibold">

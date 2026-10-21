@@ -85,9 +85,9 @@ function VitalCard({ caffeine, paracetamol }) {
 
   return (
     <div className="hero-card rounded-2xl p-5 text-frost">
-      <div className="flex items-center justify-between gap-2">
-        <span className="flex items-center gap-2.5 text-sm font-bold">
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-white/15">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="flex items-center gap-2.5 whitespace-nowrap text-sm font-bold">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/15">
             <Activity className="h-4 w-4" aria-hidden="true" />
           </span>
           Vital stats
@@ -126,11 +126,11 @@ function VitalCard({ caffeine, paracetamol }) {
         <span>{fmt(max)}</span>
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-2 text-sm">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm">
         <span className="text-mist">
           {v.label} · {v.lineLabel} {fmt(v.line)} {v.unit}
         </span>
-        <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold text-white" style={{ background: `${RISK[status.sev].hex}33` }}>
+        <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold text-white" style={{ background: `${RISK[status.sev].hex}33` }}>
           <span className="h-1.5 w-1.5 rounded-full" style={{ background: RISK[status.sev].hex }} aria-hidden="true" />
           {status.text}
         </span>
@@ -233,8 +233,8 @@ export default function Dashboard() {
       )}
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,44%)_minmax(0,1fr)]">
-        {/* ── Left: the twin ─────────────────────────────────────────── */}
-        <div className="min-w-0">
+        {/* ── Left: the twin (stays in view while the right column scrolls) ── */}
+        <div className="min-w-0 lg:sticky lg:top-28 lg:self-start">
           <div className="relative">
             <div className="stage-backdrop h-[360px] overflow-hidden rounded-[28px] sm:h-[460px] lg:h-[520px]">
               <div className="h-full w-full transition-transform duration-300" style={{ transform: `scale(${zoom})` }}>
@@ -257,7 +257,7 @@ export default function Dashboard() {
 
             {/* floating organ card */}
             <div className="mt-3 w-full rounded-2xl border border-ink/10 bg-white/95 p-4 shadow-soft backdrop-blur sm:absolute sm:bottom-4 sm:right-4 sm:mt-0 sm:w-[260px] sm:border-white/60">
-              <div className="flex items-center justify-between gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="flex items-center gap-2 text-sm font-bold">
                   <span className="grid h-8 w-8 place-items-center rounded-full" style={{ background: `${RISK[focusRisk.severity].hex}22`, color: RISK[focusRisk.severity].hex }}>
                     <Activity className="h-4 w-4" aria-hidden="true" />
@@ -366,7 +366,7 @@ export default function Dashboard() {
             </div>
           </Panel>
 
-          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 2xl:grid-cols-2">
             {/* Medication list */}
             <Panel
               icon={Pill}
@@ -478,7 +478,7 @@ export default function Dashboard() {
             </Panel>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 2xl:grid-cols-2">
             {/* Plain words */}
             <Panel icon={MessageSquareText} title="In plain words" info="A short read of the twin, grounded in the flags.">
               <p className="text-sm leading-relaxed text-ink/80">{loadingSummary ? 'Reading your twin…' : summary?.text}</p>

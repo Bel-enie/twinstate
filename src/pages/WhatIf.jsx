@@ -95,7 +95,7 @@ export default function WhatIf() {
           </div>
         </div>
 
-        <div className="flex rounded-full border border-ink/10 bg-paper p-1" role="group" aria-label="Path">
+        <div className="flex w-full rounded-full border border-ink/10 bg-paper p-1 sm:w-auto" role="group" aria-label="Path">
           {PATHS.map((p) => {
             const on = path === p.key
             return (
@@ -103,7 +103,7 @@ export default function WhatIf() {
                 key={p.key}
                 onClick={() => setPath(p.key)}
                 aria-pressed={on}
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
+                className={`inline-flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold transition sm:flex-none sm:px-4 ${
                   on ? 'bg-brand-grad text-white shadow-[0_8px_22px_-10px_rgba(124,92,240,0.7)]' : 'text-slate-soft hover:text-ink'
                 }`}
               >

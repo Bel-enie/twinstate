@@ -7,6 +7,8 @@
 import { coverageOf } from '../services/analysis/coverage.js'
 
 const short = (label = '') => String(label).split(' (')[0]
+// In a sentence, common substance names are lowercase ("take paracetamol with coffee").
+const inSentence = (label = '') => short(label).toLowerCase()
 
 /** 'rule' | 'ai' | 'holon' */
 export function originOfFlag(flag) {
@@ -45,7 +47,7 @@ export function confidenceOf(flag, items = []) {
 
 /** The one question to ask a pharmacist about this flag. */
 export function pharmacistQuestion(flag) {
-  const names = (flag?.substances || []).map((s) => short(s.label)).filter(Boolean)
+  const names = (flag?.substances || []).map((s) => inSentence(s.label)).filter(Boolean)
   if (names.length >= 2) {
     const list = names.length === 2 ? `${names[0]} with ${names[1]}` : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`
     return `Is it safe for me to take ${list} together, and how should I space them?`

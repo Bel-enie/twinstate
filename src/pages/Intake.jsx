@@ -47,6 +47,14 @@ export default function Intake() {
       .slice(0, 6)
   }, [query, catalog, items])
 
+  // "Add something not in the list" is offered whenever the typed name isn't
+  // an exact catalog match — not only when nothing matches at all.
+  const typed = query.trim().toLowerCase()
+  const exact = catalog.some(
+    (c) => c.label.toLowerCase() === typed || c.label.split(' (')[0].toLowerCase() === typed || (c.aliases || []).some((a) => a.toLowerCase() === typed)
+  )
+  const showCustom = Boolean(typed) && !exact
+
   const addItem = (c) => {
     setItems((prev) => [
       ...prev,
@@ -90,8 +98,11 @@ export default function Intake() {
   const onSearchKey = (e) => {
     if (e.key !== 'Enter') return
     e.preventDefault()
-    if (results.length) addItem(results[0])
-    else if (query.trim()) addCustom()
+    const hit = results.find((c) => c.label.toLowerCase() === typed || c.label.split(' (')[0].toLowerCase() === typed)
+    if (hit) addItem(hit)
+    else if (results.length && !showCustom) addItem(results[0])
+    else if (showCustom && !results.length) addCustom()
+    else if (results.length) addItem(results[0])
   }
 
   const removeItem = (id) => setItems((prev) => prev.filter((i) => i.substanceId !== id))
@@ -135,6 +146,7 @@ export default function Intake() {
             <label htmlFor="substance-search" className="text-sm font-bold">What are you taking right now?</label>
             <p className="mb-3 text-xs text-slate-soft">
               Meds, painkillers, energy drinks, supplements, herbal tonics — add anything.
+              Not in the list? Type its name and choose <span className="font-semibold text-violet-700">Add</span>.
             </p>
 
             <div className="relative">
@@ -149,12 +161,25 @@ export default function Intake() {
               />
               {(query || results.length > 0) && (
                 <div className="card-pearl mt-2 overflow-hidden rounded-2xl">
-                  {results.length === 0 && query.trim() && (
+                  {results.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => addItem(c)}
+                      className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm hover:bg-violet-50"
+                    >
+                      <span className="font-medium">{c.label}</span>
+                      <span className="shrink-0 whitespace-nowrap rounded-full bg-paper px-2 py-0.5 text-[11px] text-slate-soft">
+                        {CATEGORY_LABEL[c.category]}
+                      </span>
+                    </button>
+                  ))}
+                  {showCustom && (
                     <button
                       type="button"
                       onClick={addCustom}
                       disabled={resolving}
-                      className="flex w-full items-center gap-3 px-4 py-3 text-left text-sm hover:bg-violet-50 disabled:opacity-70"
+                      className="flex w-full items-center gap-3 border-t border-ink/5 px-4 py-3 text-left text-sm hover:bg-violet-50 disabled:opacity-70"
                     >
                       <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-brand-grad text-white">
                         {resolving ? (
@@ -178,19 +203,6 @@ export default function Intake() {
                       </span>
                     </button>
                   )}
-                  {results.map((c) => (
-                    <button
-                      key={c.id}
-                      type="button"
-                      onClick={() => addItem(c)}
-                      className="flex w-full items-center justify-between px-4 py-2.5 text-left text-sm hover:bg-violet-50"
-                    >
-                      <span className="font-medium">{c.label}</span>
-                      <span className="rounded-full bg-paper px-2 py-0.5 text-[11px] text-slate-soft">
-                        {CATEGORY_LABEL[c.category]}
-                      </span>
-                    </button>
-                  ))}
                 </div>
               )}
             </div>

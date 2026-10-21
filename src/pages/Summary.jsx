@@ -61,7 +61,7 @@ export default function Summary() {
             <h1 className="mt-3 text-2xl font-extrabold">Medicines summary{name && name !== 'You' ? ` · ${name}` : ''}</h1>
             <p className="mt-1 text-sm text-slate-soft">Prepared {date}, from what the person logged in Twinstate.</p>
           </div>
-          <div className="text-right text-sm">
+          <div className="text-sm sm:text-right">
             <div className="text-slate-soft">Overall</div>
             <div className="font-bold" style={{ color: RISK[overall]?.hex }}>
               {RISK[overall]?.label || overall}

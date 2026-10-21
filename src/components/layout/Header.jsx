@@ -46,6 +46,15 @@ export default function Header() {
   const [menu, setMenu] = useState(false)
   const [q, setQ] = useState('')
   const menuRef = useRef(null)
+  const tabsRef = useRef(null)
+
+  // On phones the tab bar scrolls sideways: bring the current tab into view.
+  useEffect(() => {
+    const bar = tabsRef.current
+    const active = bar?.querySelector('[aria-current="page"]')
+    if (!bar || !active) return
+    bar.scrollLeft = active.offsetLeft - (bar.clientWidth - active.offsetWidth) / 2
+  }, [pathname])
 
   const firstName = session?.name?.split(',')[0]
   const isPersona = Boolean(session?.personaId)
@@ -84,27 +93,8 @@ export default function Header() {
           <Wordmark className="text-xl" />
         </Link>
 
-        {/* centre tab pill */}
-        {hasTwin && (
-          <nav aria-label="Twin sections" className="hidden items-center rounded-full bg-paper p-1 md:flex">
-            {TABS.map(({ to, label, icon: Icon, match }) => {
-              const active = match ? match(pathname) : pathname === to
-              return (
-                <Link
-                  key={to}
-                  to={to}
-                  aria-current={active ? 'page' : undefined}
-                  className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition ${
-                    active ? 'bg-white text-ink shadow-card' : 'text-slate-soft hover:text-ink'
-                  }`}
-                >
-                  <Icon className={`h-4 w-4 ${active ? 'text-violet-600' : 'text-slate-soft/80'}`} aria-hidden="true" />
-                  {label}
-                </Link>
-              )
-            })}
-          </nav>
-        )}
+        {/* Screen navigation lives in the vertical SideNav from md up; phones
+            use the scrolling tab bar below. */}
 
         {/* right: search, bell, settings, account */}
         <div className="flex items-center gap-2">
@@ -161,8 +151,8 @@ export default function Header() {
                   {firstName?.[0]?.toUpperCase() || '?'}
                 </span>
                 <span className="hidden text-left sm:block">
-                  <span className="block max-w-[110px] truncate text-sm font-semibold leading-tight">{firstName}</span>
-                  <span className="block text-[11px] leading-tight text-slate-soft">{isPersona ? 'Demo persona' : 'Student'}</span>
+                  <span className="block max-w-[110px] truncate whitespace-nowrap text-sm font-semibold leading-tight">{firstName}</span>
+                  <span className="block whitespace-nowrap text-[11px] leading-tight text-slate-soft">{isPersona ? 'Demo persona' : 'Student'}</span>
                 </span>
                 <ChevronDown className="h-4 w-4 text-slate-soft" aria-hidden="true" />
               </button>
@@ -208,8 +198,8 @@ export default function Header() {
 
       {/* mobile tab bar */}
       {hasTwin && (
-        <nav aria-label="Twin sections" className="mx-auto mt-2 flex w-full max-w-6xl gap-1 overflow-x-auto rounded-full border border-ink/10 bg-white/90 p-1 shadow-card backdrop-blur no-scrollbar md:hidden">
-          {[...TABS, { to: '/faq', label: 'FAQ', icon: HelpCircle }].map(({ to, label, icon: Icon, match }) => {
+        <nav ref={tabsRef} aria-label="Twin sections" className="mx-auto mt-2 flex w-full max-w-6xl gap-1 overflow-x-auto rounded-full border border-ink/10 bg-white/90 p-1 shadow-card backdrop-blur no-scrollbar md:hidden">
+          {[...TABS, { to: '/limits', label: 'How it works', icon: Info }, { to: '/faq', label: 'FAQ', icon: HelpCircle }].map(({ to, label, icon: Icon, match }) => {
             const active = match ? match(pathname) : pathname === to
             return (
               <Link
