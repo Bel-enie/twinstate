@@ -3,6 +3,7 @@ import { addSignup } from '../../services/earlyAccess.js'
 import ShimmerButton from './ui/ShimmerButton.jsx'
 import Reveal from './ui/Reveal.jsx'
 import AnimatedGradientText from './ui/AnimatedGradientText.jsx'
+import BuildTwinCta from './BuildTwinCta.jsx'
 
 const ROLES = [
   { id: 'student', label: 'Student' },
@@ -15,7 +16,7 @@ const ROLES = [
  * persist to localStorage and the confirmation says so honestly — there is no
  * server or mailing list behind it.
  */
-export default function EarlyAccess({ onBuild }) {
+export default function EarlyAccess({ demoName, demoBusy, onDemo }) {
   const [email, setEmail] = useState('')
   const [role, setRole] = useState('student')
   const [state, setState] = useState({ status: 'idle', message: '' })
@@ -48,15 +49,10 @@ export default function EarlyAccess({ onBuild }) {
                 <AnimatedGradientText>before it adds up.</AnimatedGradientText>
               </h2>
               <p className="mt-4 max-w-md text-base leading-relaxed text-slate-soft">
-                Build a twin right now — no signup needed — or leave an email for when Twinstate
+                Build a twin right now — no signup needed. Or leave an email for when Twinstate
                 opens up beyond the demo.
               </p>
-              <button
-                onClick={onBuild}
-                className="mt-6 text-sm font-bold text-violet-600 transition hover:text-violet-700"
-              >
-                Skip the list, build my twin now →
-              </button>
+              <BuildTwinCta demoName={demoName} demoBusy={demoBusy} onDemo={onDemo} className="mt-7" />
             </div>
 
             {state.status === 'done' ? (

@@ -61,7 +61,7 @@ export default function Landing() {
         <StoryStack story={story} />
         <Moments />
         <TwinBento story={story} demoBusy={demoBusy} onDemo={onDemo} />
-        <EarlyAccess onBuild={onBuild} />
+        <EarlyAccess demoName={story.firstName} demoBusy={demoBusy} onDemo={onDemo} />
         <Footer />
       </div>
     </div>
