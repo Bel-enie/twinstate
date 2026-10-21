@@ -16,7 +16,7 @@
 
     /* One edge language for the whole app. Every panel corner and every
        separating line resolves to these two values, so nothing drifts. */
-    --panel-r: 18px;
+    --panel-r: 24px;
     --panel-line: rgb(31 44 96 / 0.1);
   }
 

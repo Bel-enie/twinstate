@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AlertTriangle, Check, CheckCircle2, Eye, Stethoscope } from 'lucide-react'
+import PageHeader, { Chip } from '../components/ui/PageHeader.jsx'
 import AppShell from '../components/layout/AppShell.jsx'
 import Card from '../components/ui/Card.jsx'
 import Button from '../components/ui/Button.jsx'
@@ -58,10 +59,11 @@ export default function Recommendation() {
   return (
     <AppShell>
       <div className="mx-auto max-w-2xl">
-        <div className="mb-4">
-          <h1 className="text-2xl font-extrabold tracking-tight">{title}</h1>
-          <p className="text-sm text-slate-soft">One clear next step, based on everything in {who.possessive} twin.</p>
-        </div>
+        <PageHeader
+          title={title}
+          sub={`One clear next step, based on everything in ${who.possessive} twin.`}
+          actions={<Chip icon={Stethoscope}>{flags.length} flag{flags.length === 1 ? '' : 's'}</Chip>}
+        />
 
         {/* Headline action. While it loads nothing is coloured or labelled,
             so a triage level never shows before it has been decided. */}

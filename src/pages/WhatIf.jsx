@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, Clock } from 'lucide-react'
+import PageHeader, { Chip } from '../components/ui/PageHeader.jsx'
 import AppShell from '../components/layout/AppShell.jsx'
 import Twin3D from '../components/twin3d/index.jsx'
 import Card from '../components/ui/Card.jsx'
@@ -54,10 +55,12 @@ export default function WhatIf() {
   return (
     <AppShell wide>
       <div className="mb-4">
-        <h1 className="text-2xl font-extrabold tracking-tight">What-If</h1>
-        <p className="text-sm text-slate-soft">
-          Two futures for the same body. Slide the time, flip the path, watch the twin change.
-        </p>
+        <PageHeader
+          className="mb-0"
+          title="What-If"
+          sub="Two futures for the same body. Slide the time, flip the path, watch the twin change."
+          actions={<Chip icon={Clock}>{weeksLabel} ahead</Chip>}
+        />
         {/* This is a trend sketch, not a prediction: a smooth drift applied to
             today's scores. Saying so plainly is more useful than confident
             copy over a straight line. */}

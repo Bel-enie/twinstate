@@ -1,4 +1,18 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import {
+  Bell,
+  CalendarDays,
+  ChevronDown,
+  ClipboardCheck,
+  FlaskConical,
+  HelpCircle,
+  LayoutGrid,
+  LogOut,
+  Search,
+  Settings,
+  UserRoundPen,
+} from 'lucide-react'
 import { useTwin } from '../../context/TwinContext.jsx'
 import { dataSourceLabel } from '../../services/index.js'
 import { useStuck } from '../../utils/useStuck.js'
@@ -6,94 +20,167 @@ import BrandMark from '../ui/BrandMark.jsx'
 import Wordmark from '../ui/Wordmark.jsx'
 
 const TABS = [
-  { to: '/dashboard', label: 'Twin' },
-  { to: '/history', label: 'History' },
-  { to: '/what-if', label: 'What-If' },
-  { to: '/recommendation', label: 'Next step' },
+  { to: '/dashboard', label: 'Twin', icon: LayoutGrid, match: (p) => p === '/dashboard' || p.startsWith('/interaction/') },
+  { to: '/history', label: 'History', icon: CalendarDays },
+  { to: '/what-if', label: 'What-If', icon: FlaskConical },
+  { to: '/recommendation', label: 'Next step', icon: ClipboardCheck },
 ]
 
+const ROUND = 'grid h-11 w-11 place-items-center rounded-full border border-ink/10 bg-white text-ink/80 shadow-card transition hover:border-violet-300 hover:text-violet-700'
+
+/**
+ * Dashboard header: brand, a centre tab pill (the active tab is a white pill
+ * with its icon), then search, the flag bell, settings and the account block
+ * with a menu. Phones get a scrolling tab bar underneath instead.
+ */
 export default function Header() {
-  const { hasTwin, session, signOut } = useTwin()
+  const { hasTwin, session, flags, signOut } = useTwin()
   const stuck = useStuck()
   const { pathname } = useLocation()
   const navigate = useNavigate()
+  const [menu, setMenu] = useState(false)
+  const [q, setQ] = useState('')
+  const menuRef = useRef(null)
 
   const firstName = session?.name?.split(',')[0]
+  const isPersona = Boolean(session?.personaId)
+  const flagCount = flags?.length || 0
+
+  useEffect(() => {
+    if (!menu) return undefined
+    const onDoc = (e) => menuRef.current && !menuRef.current.contains(e.target) && setMenu(false)
+    const onKey = (e) => e.key === 'Escape' && setMenu(false)
+    document.addEventListener('mousedown', onDoc)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDoc)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [menu])
 
   const onSwitch = () => {
+    setMenu(false)
     signOut()
     navigate('/')
   }
 
+  const onSearch = (e) => {
+    e.preventDefault()
+    const term = q.trim()
+    navigate(term ? `/dashboard?q=${encodeURIComponent(term)}` : '/dashboard')
+  }
+
   return (
-    <header
-      data-stuck={stuck}
-      className="site-header sticky top-0 z-30 px-3 pt-3 sm:px-4 sm:pt-4"
-    >
-      <div className="site-pill mx-auto w-full max-w-6xl justify-between gap-3 py-2 pl-3 pr-2 sm:pl-4 sm:pr-3">
+    <header data-stuck={stuck} className="site-header sticky top-0 z-30 px-3 pt-3 sm:px-4 sm:pt-4">
+      <div className="site-pill mx-auto w-full max-w-6xl justify-between gap-3 py-2 pl-3 pr-2 sm:pl-5 sm:pr-3">
         {/* brand */}
-        <Link to={hasTwin ? '/dashboard' : '/'} className="flex items-center gap-2.5">
-          <BrandMark className="h-9 w-9" />
-          <Wordmark className="text-lg" />
+        <Link to={hasTwin ? '/dashboard' : '/'} className="flex shrink-0 items-center gap-2.5">
+          <BrandMark className="h-10 w-10" />
+          <Wordmark className="text-xl" />
         </Link>
 
-        {/* center pill nav */}
+        {/* centre tab pill */}
         {hasTwin && (
-          <nav
-            aria-label="Twin sections"
-            className="hidden items-center gap-1 rounded-full border border-violet-100 bg-white/85 p-1 shadow-card md:flex"
-          >
-            {TABS.map((t) => {
-              const active = pathname === t.to
+          <nav aria-label="Twin sections" className="hidden items-center rounded-full bg-paper p-1 md:flex">
+            {TABS.map(({ to, label, icon: Icon, match }) => {
+              const active = match ? match(pathname) : pathname === to
               return (
                 <Link
-                  key={t.to}
-                  to={t.to}
+                  key={to}
+                  to={to}
                   aria-current={active ? 'page' : undefined}
-                  className={`flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-semibold transition ${
-                    active
-                      ? 'bg-brand-grad text-white shadow-[0_8px_22px_-10px_rgba(124,92,240,0.7)]'
-                      : 'text-slate-soft hover:bg-violet-50 hover:text-ink'
+                  className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition ${
+                    active ? 'bg-white text-ink shadow-card' : 'text-slate-soft hover:text-ink'
                   }`}
                 >
-                  {active && <span className="h-1.5 w-1.5 rounded-full bg-white/90" />}
-                  {t.label}
+                  {active && <Icon className="h-4 w-4 text-violet-600" aria-hidden="true" />}
+                  {label}
                 </Link>
               )
             })}
           </nav>
         )}
 
-        {/* right actions */}
+        {/* right: search, bell, settings, account */}
         <div className="flex items-center gap-2">
-          <Link
-            to="/faq"
-            className={`hidden rounded-full px-3.5 py-1.5 text-sm font-semibold sm:inline ${
-              pathname === '/faq' ? 'bg-brand-grad text-white shadow-soft' : 'text-slate-soft hover:text-ink'
-            }`}
-          >
-            FAQ
-          </Link>
+          {hasTwin && (
+            <form onSubmit={onSearch} role="search" className="hidden lg:block">
+              <label className="flex h-11 items-center gap-2 rounded-full border border-ink/10 bg-white pl-4 pr-3 shadow-card focus-within:border-violet-400">
+                <Search className="h-4 w-4 text-slate-soft" aria-hidden="true" />
+                <input
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                  placeholder="Search your log"
+                  aria-label="Search substances and flags in your twin"
+                  className="w-36 bg-transparent text-sm outline-none placeholder:text-slate-soft/70 xl:w-44"
+                />
+              </label>
+            </form>
+          )}
 
-          {dataSourceLabel === 'live' && (
-            <span className="hidden rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 lg:inline">
-              ● live data
-            </span>
+          {hasTwin && (
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard#flags')}
+              aria-label={flagCount ? `${flagCount} active flag${flagCount === 1 ? '' : 's'}` : 'No active flags'}
+              className={`relative hidden sm:grid ${ROUND}`}
+            >
+              <Bell className="h-[18px] w-[18px]" aria-hidden="true" />
+              {flagCount > 0 && (
+                <span className="absolute right-3 top-3 h-2 w-2 rounded-full bg-risk-caution ring-2 ring-white" aria-hidden="true" />
+              )}
+            </button>
           )}
 
           {session && (
-            <div className="flex items-center gap-1.5 rounded-full border border-ink/10 bg-white py-1 pl-1 pr-1.5 shadow-card">
-              <span className="grid h-7 w-7 place-items-center rounded-full bg-brand-grad text-[11px] font-bold text-white">
-                {firstName?.[0]?.toUpperCase() || '?'}
-              </span>
-              <span className="hidden max-w-[80px] truncate text-sm font-semibold sm:inline">{firstName}</span>
+            <div ref={menuRef} className="relative flex items-center gap-2">
               <button
-                onClick={onSwitch}
-                title="Switch user"
-                className="rounded-full px-2 py-1 text-xs font-semibold text-slate-soft transition hover:bg-shell hover:text-brand-600"
+                type="button"
+                onClick={() => setMenu((m) => !m)}
+                aria-expanded={menu}
+                aria-haspopup="menu"
+                aria-label="Settings"
+                className={`hidden sm:grid ${ROUND}`}
               >
-                Switch
+                <Settings className="h-[18px] w-[18px]" aria-hidden="true" />
               </button>
+
+              <button
+                type="button"
+                onClick={() => setMenu((m) => !m)}
+                aria-expanded={menu}
+                aria-haspopup="menu"
+                className="flex items-center gap-2 rounded-full border border-ink/10 bg-white py-1 pl-1 pr-2.5 shadow-card transition hover:border-violet-300"
+              >
+                <span className="grid h-9 w-9 place-items-center rounded-full bg-brand-grad text-xs font-bold text-white">
+                  {firstName?.[0]?.toUpperCase() || '?'}
+                </span>
+                <span className="hidden text-left sm:block">
+                  <span className="block max-w-[110px] truncate text-sm font-semibold leading-tight">{firstName}</span>
+                  <span className="block text-[11px] leading-tight text-slate-soft">{isPersona ? 'Demo persona' : 'Student'}</span>
+                </span>
+                <ChevronDown className="h-4 w-4 text-slate-soft" aria-hidden="true" />
+              </button>
+
+              {menu && (
+                <div
+                  role="menu"
+                  className="absolute right-0 top-full z-40 mt-2 w-60 overflow-hidden rounded-2xl border border-ink/10 bg-white p-1.5 shadow-soft"
+                >
+                  <Link to="/intake" role="menuitem" onClick={() => setMenu(false)} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold hover:bg-violet-50">
+                    <UserRoundPen className="h-4 w-4 text-violet-600" aria-hidden="true" /> Edit my twin
+                  </Link>
+                  <Link to="/faq" role="menuitem" onClick={() => setMenu(false)} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold hover:bg-violet-50">
+                    <HelpCircle className="h-4 w-4 text-violet-600" aria-hidden="true" /> FAQ
+                  </Link>
+                  <button type="button" role="menuitem" onClick={onSwitch} className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold hover:bg-violet-50">
+                    <LogOut className="h-4 w-4 text-violet-600" aria-hidden="true" /> Switch user
+                  </button>
+                  <p className="border-t border-ink/5 px-3 pb-1 pt-2 text-[11px] text-slate-soft">
+                    Data source: {dataSourceLabel === 'mock' ? 'demo rules' : dataSourceLabel}
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -101,23 +188,20 @@ export default function Header() {
 
       {/* mobile tab bar */}
       {hasTwin && (
-        <nav
-          aria-label="Twin sections"
-          className="mx-auto mt-2 flex w-full max-w-6xl gap-1.5 overflow-x-auto pb-1 no-scrollbar md:hidden"
-        >
-          {TABS.map((t) => {
-            const active = pathname === t.to
+        <nav aria-label="Twin sections" className="mx-auto mt-2 flex w-full max-w-6xl gap-1.5 overflow-x-auto pb-1 no-scrollbar md:hidden">
+          {[...TABS, { to: '/faq', label: 'FAQ', icon: HelpCircle }].map(({ to, label, icon: Icon, match }) => {
+            const active = match ? match(pathname) : pathname === to
             return (
               <Link
-                key={t.to}
-                to={t.to}
+                key={to}
+                to={to}
                 aria-current={active ? 'page' : undefined}
                 className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold ${
-                  active ? 'bg-brand-grad text-white shadow-soft' : 'bg-white/80 text-slate-soft'
+                  active ? 'bg-white text-ink shadow-card' : 'bg-white/60 text-slate-soft'
                 }`}
               >
-                {active && <span className="h-1.5 w-1.5 rounded-full bg-white/90" />}
-                {t.label}
+                {active && <Icon className="h-4 w-4 text-violet-600" aria-hidden="true" />}
+                {label}
               </Link>
             )
           })}

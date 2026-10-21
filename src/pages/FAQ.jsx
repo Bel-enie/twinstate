@@ -3,6 +3,7 @@ import { Plus } from 'lucide-react'
 import AppShell from '../components/layout/AppShell.jsx'
 import Card from '../components/ui/Card.jsx'
 import Button from '../components/ui/Button.jsx'
+import PageHeader from '../components/ui/PageHeader.jsx'
 import { useTwin } from '../context/TwinContext.jsx'
 
 const FAQ = [
@@ -121,13 +122,10 @@ export default function FAQPage() {
   return (
     <AppShell>
       <div className="mx-auto max-w-2xl">
-        <div className="mb-5">
-          <h1 className="text-2xl font-extrabold tracking-tight">Questions people actually ask</h1>
-          <p className="text-sm text-slate-soft">
-            Plain-language answers to the things students often wonder about — the kind of stuff you'd
-            ask at the clinic desk.
-          </p>
-        </div>
+        <PageHeader
+          title="Questions people actually ask"
+          sub="Plain-language answers to the things students often wonder about — the kind of stuff you'd ask at the clinic desk."
+        />
 
         <div className="space-y-5">
           {FAQ.map((section, si) => (

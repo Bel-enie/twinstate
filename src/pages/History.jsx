@@ -3,6 +3,8 @@ import AppShell from '../components/layout/AppShell.jsx'
 import Card from '../components/ui/Card.jsx'
 import Panel from '../components/ui/Panel.jsx'
 import Button from '../components/ui/Button.jsx'
+import PageHeader, { Chip } from '../components/ui/PageHeader.jsx'
+import { CalendarDays } from 'lucide-react'
 import StatCard from '../components/charts/StatCard.jsx'
 import TrendArea from '../components/charts/TrendArea.jsx'
 import WeekGrid, { useWeekPlayer } from '../components/charts/WeekGrid.jsx'
@@ -52,12 +54,11 @@ export default function History() {
 
   return (
     <AppShell>
-      <div className="mb-4">
-        <h1 className="text-2xl font-extrabold tracking-tight">{who.Possessive} last 7 days</h1>
-        <p className="text-sm text-slate-soft">
-          Risk isn't one dose — it's the pattern. Here's how {who.possessive} intake has built up.
-        </p>
-      </div>
+      <PageHeader
+        title={`${who.Possessive} last 7 days`}
+        sub={`Risk isn't one dose — it's the pattern. Here's how ${who.possessive} intake has built up.`}
+        actions={<Chip icon={CalendarDays}>{days.length ? `${days[0].dateLabel} – ${days[days.length - 1].dateLabel}` : 'This week'}</Chip>}
+      />
 
       {/* Body-stress trend */}
       <StatCard
@@ -81,7 +82,7 @@ export default function History() {
       {days.length > 0 && day && (
         <Panel
           className="mb-5"
-          eyebrow="Day by day"
+          icon={CalendarDays}
           title="How the week built up"
           sub="Play or drag through the week. The body, the organ grid and the flags are recomputed for each day."
         >

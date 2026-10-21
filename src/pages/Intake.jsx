@@ -4,6 +4,7 @@ import { Plus, X } from 'lucide-react'
 import AppShell from '../components/layout/AppShell.jsx'
 import Card from '../components/ui/Card.jsx'
 import Button from '../components/ui/Button.jsx'
+import PageHeader from '../components/ui/PageHeader.jsx'
 import { useTwin } from '../context/TwinContext.jsx'
 import { holon } from '../services/index.js'
 import { SYMPTOMS } from '../services/mock/mockData.js'
@@ -123,12 +124,10 @@ export default function Intake() {
   return (
     <AppShell>
       <div className="mx-auto max-w-2xl">
-        <div className="mb-5">
-          <h1 className="text-2xl font-extrabold tracking-tight">Build your twin</h1>
-          <p className="text-sm text-slate-soft">
-            Add what you're currently taking. Takes under two minutes — you can be rough with doses.
-          </p>
-        </div>
+        <PageHeader
+          title="Build your twin"
+          sub="Add what you're currently taking. Takes under two minutes — you can be rough with doses."
+        />
 
         <form onSubmit={onSubmit} className="space-y-5">
           {/* Substances */}
