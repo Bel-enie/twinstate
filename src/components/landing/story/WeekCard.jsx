@@ -46,7 +46,7 @@ export default function WeekCard({ story }) {
       eyebrow="Your week"
       title="Your twin changes"
       gradient="when you do."
-      sub={`Play or drag through ${firstName}'s week. The body, the flags and the figures are recomputed for every day by the same engine that runs the app — not an animation.`}
+      sub={`Play or drag through ${firstName}'s week. The body, the flags and the figures are recomputed for every day by the same rules the app uses.`}
     >
       <div className="grid gap-8 lg:grid-cols-[300px_1fr] lg:gap-10">
         <div className="min-w-0">

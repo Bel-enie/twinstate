@@ -44,7 +44,7 @@ export default function TrendArea({ data = [], color = '#4B84F0', max = 100, hei
         {suffix}
       </div>
 
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height }} role="img" aria-label="Body-stress trend">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height }} role="img" aria-label="Interaction load over the week">
         <defs>
           <linearGradient id={`fill-${uid}`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={color} stopOpacity="0.3" />

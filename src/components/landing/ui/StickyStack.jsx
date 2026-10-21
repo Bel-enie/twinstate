@@ -4,34 +4,33 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 /**
  * Scroll-stack (the 21st.dev / Aceternity "sticky cards" pattern): each card
  * pins below the floating nav and the next one slides up over it, while the
- * covered card eases back (scale + a soft veil).
+ * covered card eases back (scale + a soft veil). Works on phones too, with a
+ * shorter offset under the smaller nav.
  *
  *  - A card taller than the viewport pins only once its BOTTOM is visible
  *    (top = min(offset, viewport - height)), so no content is ever hidden
- *    under the next card.
- *  - Below md the cards simply stack: pinning tall cards on a phone fights
- *    the scroll.
+ *    under the next card — which matters most on phones, where every card is
+ *    taller than the screen.
  *  - Under prefers-reduced-motion the cards still pin, but nothing scales.
  */
-const BASE_TOP = 96 // clears the floating nav pill
-const STEP = 18 // each later card pins a little lower, so the edges show
-const MARGIN = 20
+const MARGIN = 16
 
-function useDesktop() {
+function useMetrics() {
   const query = '(min-width: 768px)'
-  const [ok, setOk] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches)
+  const read = () => (typeof window !== 'undefined' && window.matchMedia(query).matches)
+  const [desktop, setDesktop] = useState(read)
   useEffect(() => {
     const mq = window.matchMedia(query)
-    const on = () => setOk(mq.matches)
+    const on = () => setDesktop(mq.matches)
     on()
     mq.addEventListener('change', on)
     return () => mq.removeEventListener('change', on)
   }, [])
-  return ok
+  // Desktop clears the floating nav pill; phones clear the shorter one.
+  return desktop ? { base: 96, step: 18, shrink: 0.94 } : { base: 76, step: 10, shrink: 0.96 }
 }
 
-function useStickyTop(ref, index) {
-  const want = BASE_TOP + index * STEP
+function useStickyTop(ref, want) {
   const [top, setTop] = useState(want)
   useEffect(() => {
     const el = ref.current
@@ -49,22 +48,23 @@ function useStickyTop(ref, index) {
   return top
 }
 
-function StackItem({ index, selfRef, nextRef, desktop, children }) {
+function StackItem({ index, selfRef, nextRef, metrics, children }) {
   const reduce = useReducedMotion()
-  const top = useStickyTop(selfRef, index)
-  const animate = desktop && !reduce && Boolean(nextRef)
+  const want = metrics.base + index * metrics.step
+  const top = useStickyTop(selfRef, want)
+  const animate = !reduce && Boolean(nextRef)
 
   // Progress = how far the NEXT card has travelled from the bottom of the
   // viewport to its own pinned line.
   const { scrollYProgress } = useScroll({
     target: nextRef || selfRef,
-    offset: ['start end', `start ${BASE_TOP + (index + 1) * STEP}px`],
+    offset: ['start end', `start ${metrics.base + (index + 1) * metrics.step}px`],
   })
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.94])
+  const scale = useTransform(scrollYProgress, [0, 1], [1, metrics.shrink])
   const veil = useTransform(scrollYProgress, [0, 1], [0, 0.45])
 
   return (
-    <div ref={selfRef} className="md:sticky" style={desktop ? { top } : undefined}>
+    <div ref={selfRef} className="sticky" style={{ top }}>
       <motion.div className="relative" style={animate ? { scale, transformOrigin: '50% 0%' } : undefined}>
         {children}
         {animate && (
@@ -82,12 +82,12 @@ function StackItem({ index, selfRef, nextRef, desktop, children }) {
 export default function StickyStack({ children, className = '' }) {
   const items = Children.toArray(children)
   const refs = useMemo(() => items.map(() => createRef()), [items.length])
-  const desktop = useDesktop()
+  const metrics = useMetrics()
 
   return (
     <div className={`space-y-6 md:space-y-10 ${className}`}>
       {items.map((child, i) => (
-        <StackItem key={i} index={i} selfRef={refs[i]} nextRef={refs[i + 1]} desktop={desktop}>
+        <StackItem key={i} index={i} selfRef={refs[i]} nextRef={refs[i + 1]} metrics={metrics}>
           {child}
         </StackItem>
       ))}

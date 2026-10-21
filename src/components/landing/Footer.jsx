@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { privacyLine } from '../../services/privacy.js'
 import BrandMark from '../ui/BrandMark.jsx'
 
 export default function Footer() {
@@ -13,7 +14,7 @@ export default function Footer() {
             </span>
           </div>
           <p className="mt-3 text-sm leading-relaxed">
-            A living digital twin that turns scattered medication data into one picture — built on
+            A digital twin that brings scattered medication data into one picture — built on
             Ontomorph DTP + HOLON for a one-week university hackathon.
           </p>
         </div>
@@ -28,6 +29,8 @@ export default function Footer() {
           <div className="space-y-2.5">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-frost/70">More</p>
             <Link to="/faq" className="block transition hover:text-frost">FAQ</Link>
+            <Link to="/limits" className="block transition hover:text-frost">How it works &amp; limits</Link>
+            <a href="https://github.com/Bel-enie/twinstate" target="_blank" rel="noopener noreferrer" className="block transition hover:text-frost">Code on GitHub</a>
             <a href="#top" className="block transition hover:text-frost">Back to top</a>
           </div>
         </nav>
@@ -37,8 +40,7 @@ export default function Footer() {
           <p className="shrink-0 text-mist">© 2026 Twinstate · OAU, Ontomorph Hackathon</p>
           <p className="max-w-2xl text-mist md:text-right">
             An educational tool, not a medical device. It does not diagnose or make prescription
-            decisions. In an emergency, contact local emergency services. Everything you log stays in
-            your browser.
+            decisions. In an emergency, contact local emergency services. {privacyLine()}
           </p>
         </div>
       </div>

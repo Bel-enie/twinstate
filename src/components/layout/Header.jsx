@@ -5,17 +5,22 @@ import {
   CalendarDays,
   ChevronDown,
   ClipboardCheck,
+  Download,
+  FileText,
+  Info,
   FlaskConical,
   HelpCircle,
   LayoutGrid,
   LogOut,
   Search,
   Settings,
+  Trash2,
   UserRoundPen,
 } from 'lucide-react'
 import { useTwin } from '../../context/TwinContext.jsx'
 import { dataSourceLabel } from '../../services/index.js'
 import { useStuck } from '../../utils/useStuck.js'
+import { deleteAllData, exportAllData } from '../../services/privacy.js'
 import BrandMark from '../ui/BrandMark.jsx'
 import Wordmark from '../ui/Wordmark.jsx'
 
@@ -170,11 +175,26 @@ export default function Header() {
                   <Link to="/intake" role="menuitem" onClick={() => setMenu(false)} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold hover:bg-violet-50">
                     <UserRoundPen className="h-4 w-4 text-violet-600" aria-hidden="true" /> Edit my twin
                   </Link>
+                  {hasTwin && (
+                    <Link to="/summary" role="menuitem" onClick={() => setMenu(false)} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold hover:bg-violet-50">
+                      <FileText className="h-4 w-4 text-violet-600" aria-hidden="true" /> Summary for a pharmacist
+                    </Link>
+                  )}
+                  <Link to="/limits" role="menuitem" onClick={() => setMenu(false)} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold hover:bg-violet-50">
+                    <Info className="h-4 w-4 text-violet-600" aria-hidden="true" /> How it works &amp; limits
+                  </Link>
                   <Link to="/faq" role="menuitem" onClick={() => setMenu(false)} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold hover:bg-violet-50">
                     <HelpCircle className="h-4 w-4 text-violet-600" aria-hidden="true" /> FAQ
                   </Link>
+                  <div className="my-1 border-t border-ink/5" />
+                  <button type="button" role="menuitem" onClick={() => { setMenu(false); exportAllData() }} className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold hover:bg-violet-50">
+                    <Download className="h-4 w-4 text-violet-600" aria-hidden="true" /> Export my data
+                  </button>
                   <button type="button" role="menuitem" onClick={onSwitch} className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold hover:bg-violet-50">
                     <LogOut className="h-4 w-4 text-violet-600" aria-hidden="true" /> Switch user
+                  </button>
+                  <button type="button" role="menuitem" onClick={() => { setMenu(false); deleteAllData() }} className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-rose-700 hover:bg-rose-50">
+                    <Trash2 className="h-4 w-4" aria-hidden="true" /> Delete all my data
                   </button>
                   <p className="border-t border-ink/5 px-3 pb-1 pt-2 text-[11px] text-slate-soft">
                     Data source: {dataSourceLabel === 'mock' ? 'demo rules' : dataSourceLabel}
@@ -188,7 +208,7 @@ export default function Header() {
 
       {/* mobile tab bar */}
       {hasTwin && (
-        <nav aria-label="Twin sections" className="mx-auto mt-2 flex w-full max-w-6xl gap-1.5 overflow-x-auto pb-1 no-scrollbar md:hidden">
+        <nav aria-label="Twin sections" className="mx-auto mt-2 flex w-full max-w-6xl gap-1 overflow-x-auto rounded-full border border-ink/10 bg-white/90 p-1 shadow-card backdrop-blur no-scrollbar md:hidden">
           {[...TABS, { to: '/faq', label: 'FAQ', icon: HelpCircle }].map(({ to, label, icon: Icon, match }) => {
             const active = match ? match(pathname) : pathname === to
             return (
@@ -196,11 +216,11 @@ export default function Header() {
                 key={to}
                 to={to}
                 aria-current={active ? 'page' : undefined}
-                className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold ${
-                  active ? 'bg-white text-ink shadow-card' : 'bg-white/60 text-slate-soft'
+                className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-[13px] font-semibold ${
+                  active ? 'bg-brand-grad text-white shadow-card' : 'text-slate-soft'
                 }`}
               >
-                <Icon className={`h-4 w-4 ${active ? 'text-violet-600' : 'text-slate-soft/80'}`} aria-hidden="true" />
+                <Icon className={`h-4 w-4 ${active ? 'text-white' : 'text-slate-soft/80'}`} aria-hidden="true" />
                 {label}
               </Link>
             )

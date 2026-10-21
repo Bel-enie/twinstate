@@ -64,7 +64,7 @@ function Fusion() {
         <BrandMark className="h-11 w-11" />
         <div>
           <Wordmark className="text-lg" />
-          <div className="text-xs text-slate-soft">one model of your body</div>
+          <div className="text-xs text-slate-soft">everything you take, checked together</div>
         </div>
       </div>
     </div>
@@ -78,7 +78,7 @@ export default function ProblemCard() {
       eyebrow="The problem"
       title="Your health data is fragmented."
       gradient="Your body isn't."
-      sub="Everything a student takes lives somewhere different — a prescription, a pharmacy receipt, a fridge, a memory. Twinstate puts it on one timeline and models how it adds up inside you."
+      sub="Everything a student takes lives somewhere different — a prescription, a pharmacy receipt, a fridge, a memory. Twinstate puts it on one timeline and checks how it adds up across your week."
     >
       <div className="grid gap-4 border-y border-ink/10 py-5 sm:grid-cols-2">
         <div>
@@ -88,7 +88,7 @@ export default function ProblemCard() {
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-violet-600">Twinstate</p>
           <p className="mt-1.5 font-display text-xl font-bold tracking-[-0.02em] sm:text-2xl">
-            Builds a model of <em>you</em> from it.
+            Checks it <em>together</em>, as one picture.
           </p>
         </div>
       </div>

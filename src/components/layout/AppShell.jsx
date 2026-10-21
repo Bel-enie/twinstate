@@ -2,6 +2,7 @@ import Header from './Header.jsx'
 import BrandMark from '../ui/BrandMark.jsx'
 import Wordmark from '../ui/Wordmark.jsx'
 import Aurora from '../landing/ui/Aurora.jsx'
+import { Link } from 'react-router-dom'
 import { MedicalDisclaimer } from '../safety/SafetyLayer.jsx'
 
 /**
@@ -23,9 +24,14 @@ export default function AppShell({ children, wide = false }) {
             <span className="flex items-center gap-1.5 font-semibold">
               <BrandMark className="h-5 w-5 rounded-md" />
               <Wordmark />
-              <span className="font-normal text-slate-soft/80">· your living health twin</span>
+              <span className="font-normal text-slate-soft/80">· see how what you take adds up</span>
             </span>
-            <span className="text-center sm:text-right">Powered by Ontomorph DTP + HOLON.</span>
+            <span className="text-center sm:text-right">
+              <Link to="/limits" className="font-semibold text-violet-600 hover:underline">
+                How it works &amp; limits
+              </Link>{' '}
+              · Built on Ontomorph
+            </span>
           </div>
           <MedicalDisclaimer className="mt-4 border-t border-ink/10 pt-4 text-center sm:text-left" />
         </footer>

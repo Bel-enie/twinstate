@@ -25,9 +25,10 @@ combined load. Secondarily, the campus health centre that sees the fallout.
 3. **Real drug-safety check** — the full list is screened with
    `HOLON.interactions.checkList()`; each known interaction (severity, mechanism,
    clinical effect, management, evidence grade) is mapped onto the organ it affects.
-4. **AI-calculated stats** — organ scores, a 0–100 body-stress index, and the
-   plain-language reasoning are computed by AI over the student's actual data
-   (with a deterministic engine as an instant baseline + fallback).
+4. **Rule-based numbers, AI-written explanations** — organ scores and the 0–100
+   interaction load come from a fixed rule engine, so the same log always gives
+   the same number. When AI is on it can only raise a severity and write the
+   plain-language explanation; it never sets or lowers a number.
 5. **What-If coach** — two futures for the same body ("keep this pattern" vs "rest +
    hydrate") projected over the coming weeks.
 6. **Ask-about-health chat** — grounded in the student's twin, with a hard safety

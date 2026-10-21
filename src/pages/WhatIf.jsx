@@ -128,7 +128,7 @@ export default function WhatIf() {
           {/* body-stress index */}
           <div className="mx-auto w-full max-w-sm">
             <div className="mb-1 flex justify-between text-xs text-white/80">
-              <span>Body-stress index</span>
+              <span>Interaction load</span>
               <span className="font-semibold">{loading ? '…' : `${active?.bodyIndex ?? '—'}/100`}</span>
             </div>
             <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/15">

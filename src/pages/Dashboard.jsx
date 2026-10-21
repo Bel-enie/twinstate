@@ -10,8 +10,10 @@ import {
   ChevronDown,
   ChevronRight,
   Clock,
+  FileText,
   FlaskConical,
   Leaf,
+  Lock,
   Maximize2,
   MessageSquareText,
   Pill,
@@ -31,6 +33,9 @@ import Gauge from '../components/charts/Gauge.jsx'
 import HealthChat from '../components/chat/HealthChat.jsx'
 import LogDose from '../components/dashboard/LogDose.jsx'
 import PlatformCredit from '../components/ui/PlatformCredit.jsx'
+import FlagEvidence from '../components/ui/FlagEvidence.jsx'
+import { privacyLine } from '../services/privacy.js'
+import { LOAD_LABEL } from '../components/landing/twinData.js'
 import { useTwin } from '../context/TwinContext.jsx'
 import { reasoning } from '../services/index.js'
 import { buildContext, scaledBodyTrend } from '../services/mock/engine.js'
@@ -210,7 +215,7 @@ export default function Dashboard() {
         actions={
           <>
             <Chip icon={CalendarDays}>{today}</Chip>
-            <Chip icon={Clock}>{analyzing ? 'Updating…' : 'Live'}</Chip>
+            <Chip icon={Clock}>{analyzing ? 'Updating…' : 'Up to date'}</Chip>
             <Button to="/what-if" className="px-5 py-2.5">
               What-If <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Button>
@@ -227,11 +232,11 @@ export default function Dashboard() {
         </p>
       )}
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,44%)_1fr]">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,44%)_minmax(0,1fr)]">
         {/* ── Left: the twin ─────────────────────────────────────────── */}
-        <div>
+        <div className="min-w-0">
           <div className="relative">
-            <div className="stage-backdrop h-[520px] overflow-hidden rounded-[28px]">
+            <div className="stage-backdrop h-[360px] overflow-hidden rounded-[28px] sm:h-[460px] lg:h-[520px]">
               <div className="h-full w-full transition-transform duration-300" style={{ transform: `scale(${zoom})` }}>
                 <Twin3D organRisk={organRisk} selected={selected} onSelect={(k) => setSelected((s) => (s === k ? null : k))} />
               </div>
@@ -251,7 +256,7 @@ export default function Dashboard() {
             </div>
 
             {/* floating organ card */}
-            <div className="absolute bottom-4 right-4 w-[min(260px,calc(100%-2rem))] rounded-2xl border border-white/60 bg-white/95 p-4 shadow-soft backdrop-blur">
+            <div className="mt-3 w-full rounded-2xl border border-ink/10 bg-white/95 p-4 shadow-soft backdrop-blur sm:absolute sm:bottom-4 sm:right-4 sm:mt-0 sm:w-[260px] sm:border-white/60">
               <div className="flex items-center justify-between gap-2">
                 <span className="flex items-center gap-2 text-sm font-bold">
                   <span className="grid h-8 w-8 place-items-center rounded-full" style={{ background: `${RISK[focusRisk.severity].hex}22`, color: RISK[focusRisk.severity].hex }}>
@@ -273,7 +278,7 @@ export default function Dashboard() {
           </div>
 
           {/* organ thumbnails */}
-          <div className="mt-4 grid grid-cols-5 gap-2 sm:gap-3" role="group" aria-label="Organs">
+          <div className="mt-4 grid grid-cols-5 gap-1.5 sm:gap-3" role="group" aria-label="Organs">
             {Object.keys(ORGANS).map((k) => {
               const sev = organRisk[k]?.severity || 'calm'
               const on = selected === k
@@ -283,16 +288,16 @@ export default function Dashboard() {
                   type="button"
                   onClick={() => setSelected((s) => (s === k ? null : k))}
                   aria-pressed={on}
-                  className={`flex flex-col items-center gap-2 rounded-2xl border px-2 py-3 text-center transition ${
+                  className={`flex min-w-0 flex-col items-center gap-1.5 rounded-2xl border px-1 py-2.5 text-center transition sm:gap-2 sm:px-2 sm:py-3 ${
                     on ? 'border-violet-400 bg-violet-50 shadow-card' : 'border-ink/10 bg-white hover:border-violet-300'
                   }`}
                 >
                   <span
-                    className="h-10 w-10 rounded-full"
+                    className="h-8 w-8 rounded-full sm:h-10 sm:w-10"
                     style={{ background: `radial-gradient(circle at 35% 35%, #fff 0%, ${RISK[sev].hex} 55%, ${RISK[sev].hex}99 100%)`, boxShadow: `0 8px 18px -8px ${RISK[sev].hex}` }}
                     aria-hidden="true"
                   />
-                  <span className="text-xs font-semibold leading-tight">{shortOrgan(k)}</span>
+                  <span className="w-full truncate text-[11px] font-semibold leading-tight sm:text-xs">{shortOrgan(k)}</span>
                   <span className="text-[10px] capitalize text-slate-soft">{sev}</span>
                 </button>
               )
@@ -300,36 +305,46 @@ export default function Dashboard() {
           </div>
 
           <PlatformCredit className="mt-4" />
+          <p className="mt-3 flex items-start gap-2 text-xs leading-relaxed text-slate-soft">
+            <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0 text-violet-500" aria-hidden="true" />
+            <span>
+              {privacyLine()}{' '}
+              <Link to="/limits" className="font-semibold text-violet-600 hover:underline">
+                How it works and its limits
+              </Link>
+            </span>
+          </p>
         </div>
 
         {/* ── Right: analysis, lists, next step ─────────────────────── */}
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-6">
           <Panel
             icon={BarChart3}
             title="Body analysis"
-            info="Every number here comes from the deterministic rule engine; the AI may only raise a severity band and write prose."
+            info="Every number here comes from Twinstate’s fixed rules, so the same log always gives the same number. AI can only raise a warning and write the wording."
             aside={
               <>
                 <Chip icon={Activity} className="px-3 py-1.5 text-xs">
-                  {analyzing ? 'Updating…' : statsSource === 'ai' ? 'AI reviewed' : 'Real time'}
+                  {analyzing ? 'Updating…' : statsSource === 'ai' ? 'AI reviewed' : 'Rules only'}
                 </Chip>
               </>
             }
           >
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Dark vital-stats card: one intake metric against its line. */}
               <VitalCard caffeine={caffeine} paracetamol={paracetamol} />
 
               {/* Gauge: the body-stress index with its week delta and flag counts. */}
               <div className="rounded-2xl border border-ink/10 bg-white p-4">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-semibold">Body-stress index</span>
+                  <span className="text-sm font-semibold">{LOAD_LABEL}</span>
                   <Link to="/history" className="rounded-full bg-paper px-3 py-1 text-[11px] font-semibold transition hover:bg-violet-50 hover:text-violet-700">
                     Detail
                   </Link>
                 </div>
                 <div className="mt-2">
                   <Gauge value={bodyIndex} max={100} color={r.hex} label={r.label} />
+                  <p className="mt-2 text-center text-[11px] text-slate-soft">For comparing your own days — not a medical measurement.</p>
                 </div>
                 <div className="mt-4 grid grid-cols-3 gap-2 border-t border-ink/5 pt-3 text-center">
                   <div>
@@ -351,7 +366,7 @@ export default function Dashboard() {
             </div>
           </Panel>
 
-          <div className="grid gap-6 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
             {/* Medication list */}
             <Panel
               icon={Pill}
@@ -444,23 +459,26 @@ export default function Dashboard() {
                   <Link
                     key={f.id}
                     to={`/interaction/${f.id}`}
-                    className="flex items-center gap-3 rounded-2xl border border-ink/10 bg-white p-3 transition hover:border-violet-300 hover:bg-violet-50/40"
+                    className="block rounded-2xl border border-ink/10 bg-white p-3 transition hover:border-violet-300 hover:bg-violet-50/40"
                   >
-                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full" style={{ background: `${RISK[f.severity].hex}22`, color: RISK[f.severity].hex }}>
-                      <AlertTriangle className="h-4 w-4" aria-hidden="true" />
+                    <span className="flex items-center gap-3">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full" style={{ background: `${RISK[f.severity].hex}22`, color: RISK[f.severity].hex }}>
+                        <AlertTriangle className="h-4 w-4" aria-hidden="true" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-semibold">{f.title}</span>
+                        <span className="block text-xs text-slate-soft">{shortOrgan(f.organ)} · {RISK[f.severity].label}</span>
+                      </span>
+                      <ChevronRight className="h-4 w-4 shrink-0 text-slate-soft" aria-hidden="true" />
                     </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-semibold">{f.title}</span>
-                      <span className="block text-xs text-slate-soft">{shortOrgan(f.organ)} · {RISK[f.severity].label}</span>
-                    </span>
-                    <ChevronRight className="h-4 w-4 shrink-0 text-slate-soft" aria-hidden="true" />
+                    <FlagEvidence flag={f} items={items} className="mt-2.5 pl-[52px]" />
                   </Link>
                 ))}
               </div>
             </Panel>
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
             {/* Plain words */}
             <Panel icon={MessageSquareText} title="In plain words" info="A short read of the twin, grounded in the flags.">
               <p className="text-sm leading-relaxed text-ink/80">{loadingSummary ? 'Reading your twin…' : summary?.text}</p>
@@ -499,6 +517,12 @@ export default function Dashboard() {
                 ))}
                 {!flags.length && <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold">Keep logging</span>}
               </div>
+              <Link
+                to="/summary"
+                className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-frost transition hover:bg-white/20"
+              >
+                <FileText className="h-3.5 w-3.5" aria-hidden="true" /> Summary to show a pharmacist
+              </Link>
             </div>
           </div>
         </div>

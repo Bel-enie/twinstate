@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, Check, ExternalLink } from 'lucide-react'
+import { ArrowLeft, Check, ExternalLink, FileText, MessageCircleQuestion } from 'lucide-react'
+import FlagEvidence from '../components/ui/FlagEvidence.jsx'
+import { ORIGIN_HELP, originOfFlag, pharmacistQuestion } from '../utils/flagEvidence.js'
 import AppShell from '../components/layout/AppShell.jsx'
 import AnatomyModel from '../components/anatomy/AnatomyModel.jsx'
 import Card from '../components/ui/Card.jsx'
@@ -13,7 +15,7 @@ import { EmergencyNote } from '../components/safety/SafetyLayer.jsx'
 
 export default function InteractionDetail() {
   const { flagId } = useParams()
-  const { flags, analyzing } = useTwin()
+  const { flags, analyzing, items } = useTwin()
   const flag = flags.find((f) => f.id === flagId)
 
   const [explain, setExplain] = useState(null)
@@ -76,6 +78,8 @@ export default function InteractionDetail() {
               <RiskBadge severity={flag.severity} />
             </div>
             {explain?.tone && <p className="mt-1 text-sm font-medium" style={{ color: r.hex }}>{explain.tone}</p>}
+            <FlagEvidence flag={flag} items={items} className="mt-3" />
+            <p className="mt-2 text-xs text-slate-soft">{ORIGIN_HELP[originOfFlag(flag)]}</p>
           </div>
 
           {/* What's interacting */}
@@ -104,6 +108,18 @@ export default function InteractionDetail() {
             </h2>
             <p className="mt-2 leading-relaxed text-emerald-900/85">{explain?.safer || flag.saferAlternative}</p>
           </div>
+
+          {/* What to do next */}
+          <Card className="p-5">
+            <h2 className="flex items-center gap-2 text-sm font-bold text-slate-soft">
+              <MessageCircleQuestion className="h-4 w-4 text-violet-600" aria-hidden="true" /> What to do next
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-ink/85">Ask a pharmacist:</p>
+            <p className="mt-1 rounded-2xl bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-900">“{pharmacistQuestion(flag)}”</p>
+            <Link to="/summary" className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-violet-600 hover:underline">
+              <FileText className="h-4 w-4" aria-hidden="true" /> Print a summary to show them
+            </Link>
+          </Card>
 
           {/* Evidence & sources */}
           <Card className="p-5">

@@ -63,7 +63,7 @@ export default function History() {
       {/* Body-stress trend */}
       <StatCard
         className="mb-5"
-        label="Body-stress index this week"
+        label={`${LOAD_LABEL} this week`}
         value={current}
         unit="/100"
         delta={delta}

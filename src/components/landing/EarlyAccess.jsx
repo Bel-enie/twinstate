@@ -44,8 +44,8 @@ export default function EarlyAccess({ onBuild }) {
           <div className="grid gap-10 rounded-[29px] bg-white/95 p-8 sm:p-12 lg:grid-cols-2 lg:items-center">
             <div>
               <h2 className="text-balance font-display text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">
-                Your health has a past. Give it a{' '}
-                <AnimatedGradientText>living present.</AnimatedGradientText>
+                Know what your mix is doing{' '}
+                <AnimatedGradientText>before it adds up.</AnimatedGradientText>
               </h2>
               <p className="mt-4 max-w-md text-base leading-relaxed text-slate-soft">
                 Build a twin right now — no signup needed — or leave an email for when Twinstate

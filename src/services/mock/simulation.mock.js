@@ -73,11 +73,11 @@ export const simulationMock = {
       continue: {
         ...cont,
         headline: `In ${weeks} weeks, the ${worstOrganLabel.toLowerCase()} takes the most strain`,
-        detail: `Keeping this pattern pushes the body-stress index to ${cont.bodyIndex}/100. The climb is gradual, which is exactly why it's easy to miss until symptoms show up.`,
+        detail: `Keeping this pattern pushes the interaction load to ${cont.bodyIndex}/100. The climb is gradual, which is exactly why it's easy to miss until symptoms show up.`,
       },
       safer: {
         ...safe,
-        headline: `The safer path pulls that stress back down to ${safe.bodyIndex}/100`,
+        headline: `The safer path pulls the load back down to ${safe.bodyIndex}/100`,
         detail: `Switching to rest, hydration and cutting to one painkiller + less caffeine lets the organs recover. Same two weeks — very different twin.`,
       },
     }

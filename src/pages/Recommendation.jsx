@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { AlertTriangle, Check, CheckCircle2, Eye, Stethoscope } from 'lucide-react'
+import { AlertTriangle, Check, CheckCircle2, Eye, FileText, MessageCircleQuestion, Stethoscope } from 'lucide-react'
+import { pharmacistQuestion } from '../utils/flagEvidence.js'
 import PageHeader, { Chip } from '../components/ui/PageHeader.jsx'
 import AppShell from '../components/layout/AppShell.jsx'
 import Card from '../components/ui/Card.jsx'
@@ -182,6 +183,20 @@ export default function Recommendation() {
           </Card>
         )}
 
+        {/* Questions to take to a pharmacist, one per flag */}
+        {flags.length > 0 && (
+          <Card className="mt-5 p-5">
+            <h3 className="flex items-center gap-2 text-sm font-bold text-slate-soft">
+              <MessageCircleQuestion className="h-4 w-4 text-violet-600" aria-hidden="true" /> Questions to ask a pharmacist
+            </h3>
+            <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-sm text-ink/85">
+              {[...new Set(flags.map(pharmacistQuestion))].map((q) => (
+                <li key={q}>{q}</li>
+              ))}
+            </ol>
+          </Card>
+        )}
+
         {/* Emergency note for high risk */}
         {level === 'seek_care' && (
           <p className="mt-4 rounded-2xl bg-rose-50 p-4 text-sm text-rose-800">
@@ -193,6 +208,9 @@ export default function Recommendation() {
         <div className="mt-5 flex flex-wrap gap-2">
           <Button to="/dashboard">
             Back to {who.possessive} twin
+          </Button>
+          <Button to="/summary" variant="ghost">
+            <FileText className="h-4 w-4" aria-hidden="true" /> Summary for your clinician
           </Button>
           <Button to="/what-if" variant="ghost">
             Compare the two paths

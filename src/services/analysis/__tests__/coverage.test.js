@@ -88,3 +88,18 @@ describe('clearanceCopy — never overclaims', () => {
     expect(copy.note).toMatch(/not a full medication review/i)
   })
 })
+
+describe('resolver-shaped definitions (resolvedBy)', () => {
+  // substanceResolver.makeDef writes the origin as `resolvedBy`, not `source`.
+  const aiResolved = { substanceId: 'custom-x', def: { label: 'Sertraline', tags: ['serotonergic'], resolvedBy: 'ai' } }
+  const genericResolved = { substanceId: 'custom-y', def: { label: 'Mystery tea', tags: [], resolvedBy: 'generic' } }
+
+  it('flags an AI-resolved item as unverified', () => {
+    expect(isUnverified(aiResolved)).toBe(true)
+    expect(coverageOf([aiResolved]).hasUnverified).toBe(true)
+  })
+
+  it('treats a generic-resolved item as not checked', () => {
+    expect(isChecked(genericResolved)).toBe(false)
+  })
+})

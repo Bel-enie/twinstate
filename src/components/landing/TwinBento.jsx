@@ -1,4 +1,7 @@
-import { ArrowRight, Lock, Flame, Moon } from 'lucide-react'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { ArrowRight, Download, Lock, Flame, Moon, Trash2 } from 'lucide-react'
+import { deleteAllData, exportAllData, hasStoredData, privacyLine } from '../../services/privacy.js'
 import { RISK } from '../../utils/risk.js'
 import { BentoGrid, BentoCard } from './ui/BentoCard.jsx'
 import NumberTicker from './ui/NumberTicker.jsx'
@@ -17,6 +20,7 @@ const CAFFEINE_LINE = 400
 export default function TwinBento({ story, demoBusy, onDemo }) {
   const { persona, firstName, today, weekDelta, headline, caffeineSources } = story
   const barMax = Math.max(CAFFEINE_LINE, ...caffeineSources.map((s) => s.mg), 1)
+  const [canManage] = useState(() => hasStoredData())
   const symptomLabels = (persona.symptoms || [])
     .map((id) => SYMPTOMS.find((s) => s.id === id)?.label || id)
     .slice(0, 4)
@@ -128,9 +132,21 @@ export default function TwinBento({ story, demoBusy, onDemo }) {
               <Lock className="h-3.5 w-3.5" aria-hidden="true" /> Where your data lives
             </p>
             <p className="mt-4 text-sm leading-relaxed text-slate-soft">
-              Your log stays in this browser — there is no Twinstate server holding it. A first name is
-              the whole sign-in, and you can delete a saved twin from this page any time.
+              {privacyLine()} A first name is the whole sign-in.
             </p>
+            {canManage && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button onClick={exportAllData} className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1.5 text-xs font-semibold transition hover:border-violet-300 hover:text-violet-700">
+                  <Download className="h-3.5 w-3.5" aria-hidden="true" /> Export my data
+                </button>
+                <button onClick={deleteAllData} className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-50">
+                  <Trash2 className="h-3.5 w-3.5" aria-hidden="true" /> Delete everything
+                </button>
+              </div>
+            )}
+            <Link to="/limits" className="mt-3 inline-block text-xs font-semibold text-violet-600 hover:underline">
+              How it works and what it can’t do →
+            </Link>
             <p className="mt-3 text-xs text-slate-soft/80">Educational demo, not medical advice or a diagnosis.</p>
           </BentoCard>
 

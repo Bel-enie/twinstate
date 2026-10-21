@@ -14,15 +14,19 @@ const InteractionDetail = lazy(() => import('./pages/InteractionDetail.jsx'))
 const History = lazy(() => import('./pages/History.jsx'))
 const WhatIf = lazy(() => import('./pages/WhatIf.jsx'))
 const Recommendation = lazy(() => import('./pages/Recommendation.jsx'))
+const Summary = lazy(() => import('./pages/Summary.jsx'))
+const Limits = lazy(() => import('./pages/Limits.jsx'))
 
 const TITLES = {
-  '/': 'Twinstate — your living health twin',
+  '/': 'Twinstate — every pill, drink and dose, checked together',
   '/intake': 'Build your twin · Twinstate',
   '/dashboard': 'Your twin · Twinstate',
   '/history': 'Last 7 days · Twinstate',
   '/what-if': 'What-If · Twinstate',
   '/recommendation': 'Next step · Twinstate',
   '/faq': 'FAQ · Twinstate',
+  '/summary': 'Summary for your clinician · Twinstate',
+  '/limits': 'How it works and its limits · Twinstate',
 }
 
 /**
@@ -90,6 +94,15 @@ export default function App() {
       <Suspense fallback={<PageFallback />}>
         <Routes>
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/limits" element={<Limits />} />
+          <Route
+            path="/summary"
+            element={
+              <RequireTwin>
+                <Summary />
+              </RequireTwin>
+            }
+          />
           <Route path="/" element={<Boot />} />
           <Route
             path="/intake"

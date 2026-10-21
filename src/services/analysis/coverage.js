@@ -24,17 +24,24 @@ function defOf(item) {
   return item.def || SUBSTANCE_BY_ID[item.substanceId] || null
 }
 
+/**
+ * Where a definition came from. The resolver writes `resolvedBy`; older
+ * records (and hand-built ones) use `source`. Reading only `source` meant
+ * every real AI-identified item was silently treated as verified.
+ */
+const originOf = (def) => def?.resolvedBy ?? def?.source ?? null
+
 /** An item is "checked" only if it carries tags the rules can actually match. */
 export function isChecked(item) {
   const def = defOf(item)
   if (!def) return false
-  if (def.source === 'generic') return false
+  if (originOf(def) === 'generic') return false
   return Array.isArray(def.tags) && def.tags.length > 0
 }
 
 /** An item identified by the model rather than a curated/HOLON definition. */
 export function isUnverified(item) {
-  return defOf(item)?.source === 'ai'
+  return originOf(defOf(item)) === 'ai'
 }
 
 /**

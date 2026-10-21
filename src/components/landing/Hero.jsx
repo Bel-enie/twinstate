@@ -5,6 +5,7 @@ import AnimatedGradientText from './ui/AnimatedGradientText.jsx'
 import ShimmerButton from './ui/ShimmerButton.jsx'
 import Reveal from './ui/Reveal.jsx'
 import HeroTwin from './HeroTwin.jsx'
+import { privacyLine } from '../../services/privacy.js'
 import { useTwin } from '../../context/TwinContext.jsx'
 import { listProfiles, removeProfile } from '../../services/storage.js'
 
@@ -56,22 +57,22 @@ export default function Hero({ story, wantName, onBuild, demoBusy, onDemo }) {
       <Reveal>
         <span className="inline-flex items-center gap-2 rounded-full border border-violet-200/80 bg-white/70 px-4 py-1.5 text-xs font-semibold shadow-card backdrop-blur">
           <Sparkles className="h-3.5 w-3.5 text-violet-500" aria-hidden="true" />
-          <AnimatedGradientText>A living digital twin for student health</AnimatedGradientText>
+          <AnimatedGradientText>A digital twin of what you take</AnimatedGradientText>
         </span>
       </Reveal>
 
       <Reveal delay={0.08}>
         <h1 className="mx-auto mt-6 max-w-[18ch] text-balance pb-1 font-display text-5xl font-extrabold leading-[1.02] tracking-[-0.035em] sm:text-6xl lg:text-[80px]">
           Every pill, drink and dose.{' '}
-          <AnimatedGradientText>One living picture of you.</AnimatedGradientText>
+          <AnimatedGradientText>Checked together.</AnimatedGradientText>
         </h1>
       </Reveal>
 
       <Reveal delay={0.16}>
         <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-soft sm:text-lg">
           Log what you take — prescriptions, painkillers, energy drinks, supplements. Twinstate
-          screens the combination, lights it up on a 3D body, and shows what changed, why, and what
-          to do next.
+          checks the combination against known interactions, shows where it adds up on a 3D body,
+          and tells you what to ask a pharmacist.
         </p>
       </Reveal>
 
@@ -152,7 +153,7 @@ export default function Hero({ story, wantName, onBuild, demoBusy, onDemo }) {
       )}
 
       <p className="mt-8 text-xs text-slate-soft/80">
-        Educational demo — not medical advice. Everything you log stays in this browser.
+        Educational demo — not medical advice. {privacyLine()}
       </p>
 
       <HeroTwin story={story} />

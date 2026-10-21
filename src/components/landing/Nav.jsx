@@ -63,10 +63,10 @@ export default function Nav({ latest, onResume, onBuild }) {
             </a>
           ))}
           <Link
-            to="/faq"
+            to="/limits"
             className="rounded-full px-2.5 py-1 text-sm font-semibold text-ink/70 transition hover:bg-white/60 hover:text-ink"
           >
-            FAQ
+            How it works
           </Link>
         </nav>
 
@@ -111,6 +111,13 @@ export default function Nav({ latest, onResume, onBuild }) {
               {label}
             </a>
           ))}
+          <Link
+            to="/limits"
+            onClick={() => setOpen(false)}
+            className="block rounded-2xl px-4 py-3 text-sm font-semibold text-ink/80 transition hover:bg-violet-50 hover:text-ink"
+          >
+            How it works
+          </Link>
           <Link
             to="/faq"
             onClick={() => setOpen(false)}

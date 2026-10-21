@@ -9,10 +9,13 @@ const PILLARS = [
   { label: 'Digital twin', on: true },
   { label: '3D anatomy', on: true },
   {
-    label: hasHolon ? 'HOLON drug interactions' : 'HOLON-ready interactions',
-    on: hasHolon,
+    label: hasHolon ? 'HOLON drug database' : 'Built-in interaction rules',
+    on: true,
+    title: hasHolon
+      ? 'HOLON is Ontomorph’s clinical drug-interaction database. Your substances are checked against it.'
+      : 'HOLON (Ontomorph’s clinical drug-interaction database) is not switched on, so Twinstate’s own rules are used.',
   },
-  { label: 'AI reasoning', on: hasAIChat },
+  { label: hasAIChat ? 'AI explanations on' : 'AI explanations off', on: hasAIChat },
 ]
 
 export default function PlatformCredit({ className = '' }) {
@@ -24,6 +27,7 @@ export default function PlatformCredit({ className = '' }) {
       {PILLARS.map((p) => (
         <span
           key={p.label}
+          title={p.title}
           className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${
             p.on
               ? 'border-violet-100 bg-violet-50 text-violet-700'
