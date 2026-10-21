@@ -56,39 +56,7 @@
     <meta name="twitter:image" content="https://twinstate.vercel.app/og-image.png" />
   </head>
   <body>
-    <!-- Pre-render fallback. React replaces everything inside #root on mount,
-         so this is never seen by a normal visitor — but a crawler that doesn't
-         run JavaScript, a slow connection, or a JS-disabled browser gets the
-         actual pitch instead of a blank page. Keep it in sync with the hero. -->
-    <div id="root">
-      <div style="max-width:52rem;margin:0 auto;padding:4rem 1.5rem;font-family:Inter,system-ui,sans-serif;color:#1F2430">
-        <p style="font-size:.78rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#3A66D8">
-          A digital twin of what you take
-        </p>
-        <h1 style="margin:.75rem 0 0;font-family:'Bricolage Grotesque',Inter,system-ui,sans-serif;font-weight:800;font-size:3rem;line-height:1.05;letter-spacing:-0.03em">
-          Every pill, drink and dose. Checked together.
-        </h1>
-        <p style="margin-top:1.25rem;font-size:1.125rem;line-height:1.6;color:#48505F">
-          Log what you take: prescriptions, painkillers, energy drinks, supplements, how you slept.
-          Twinstate checks the combination against known interactions, shows where it adds up,
-          and tells you what to ask a pharmacist.
-        </p>
-        <ul style="margin-top:1.5rem;padding-left:1.1rem;font-size:1rem;line-height:1.9;color:#48505F">
-          <li>A 3D twin that updates as you log your week</li>
-          <li>A scrubbable timeline, with every figure recomputed per day by the engine</li>
-          <li>Evidence behind every interaction flag, screened against HOLON clinical knowledge</li>
-          <li>Your data stays in your browser; there is no account server</li>
-        </ul>
-        <p style="margin-top:2rem;font-size:.875rem;color:#5B6472">
-          Twinstate needs JavaScript to run the interactive twin.
-          Built at the Ontomorph Hackathon · Powered by Ontomorph DTP + HOLON.
-        </p>
-        <p style="margin-top:1rem;font-size:.8125rem;color:#5B6472">
-          An educational tool, not a medical device. It does not diagnose or make prescription
-          decisions. In an emergency, contact local emergency services.
-        </p>
-      </div>
-    </div>
+    <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
