@@ -7,6 +7,7 @@ import {
   ArrowUpRight,
   BarChart3,
   CalendarDays,
+  ChevronDown,
   ChevronRight,
   Clock,
   FlaskConical,
@@ -26,6 +27,7 @@ import Button from '../components/ui/Button.jsx'
 import Panel from '../components/ui/Panel.jsx'
 import PageHeader, { Chip } from '../components/ui/PageHeader.jsx'
 import Meter from '../components/charts/Meter.jsx'
+import Gauge from '../components/charts/Gauge.jsx'
 import HealthChat from '../components/chat/HealthChat.jsx'
 import LogDose from '../components/dashboard/LogDose.jsx'
 import PlatformCredit from '../components/ui/PlatformCredit.jsx'
@@ -48,45 +50,85 @@ function greeting() {
   return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'
 }
 
-/** Seven little bars, newest on the right and highlighted. */
-function Bars({ values, max = 100 }) {
-  return (
-    <div className="flex h-10 items-end gap-[3px]" aria-hidden="true">
-      {values.map((v, i) => (
-        <span
-          key={i}
-          className={`w-1.5 rounded-full ${i === values.length - 1 ? 'bg-brand-grad' : 'bg-brand-200/70'}`}
-          style={{ height: `${Math.max(8, Math.min(100, (v / max) * 100))}%` }}
-        />
-      ))}
-    </div>
-  )
+const VITALS = {
+  caffeine: { label: 'Caffeine', unit: 'mg', line: CAFFEINE_LINE, lineLabel: 'daily line' },
+  paracetamol: { label: 'Paracetamol', unit: 'mg', line: PARACETAMOL_CEILING, lineLabel: 'daily ceiling' },
 }
 
-/** One metric in the body-analysis panel: label, Detail link, goal line, hero number, chart. */
-function MetricTile({ label, detailTo, goal, goalValue, value, unit, children }) {
+/**
+ * The dark "vital stats" card: one intake metric (switchable) shown as
+ * value / limit, a strip of thin bars filled to the value, a 0-max scale and
+ * a status pill. The twin's two threshold rules are the two metrics.
+ */
+function VitalCard({ caffeine, paracetamol }) {
+  const [key, setKey] = useState('caffeine')
+  const v = VITALS[key]
+  const value = key === 'caffeine' ? caffeine : paracetamol
+  const max = Math.max(v.line, Math.ceil(value / 100) * 100)
+  const bars = 28
+  const filled = Math.round(Math.min(1, value / max) * bars)
+  let status
+  if (key === 'caffeine') {
+    status = value >= CAFFEINE_LINE ? { text: 'Over the line', sev: 'caution' } : value > 0 ? { text: 'Within the line', sev: 'calm' } : { text: 'None logged', sev: 'calm' }
+  } else {
+    status =
+      value >= PARACETAMOL_CEILING ? { text: 'Over the ceiling', sev: 'urgent' }
+      : value >= 3000 ? { text: 'At the line', sev: 'caution' }
+      : value > 0 ? { text: 'Within the ceiling', sev: 'calm' }
+      : { text: 'None logged', sev: 'calm' }
+  }
+
   return (
-    <div className="rounded-2xl border border-ink/10 bg-white p-4">
+    <div className="hero-card rounded-2xl p-5 text-frost">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-semibold">{label}</span>
-        {detailTo && (
-          <Link to={detailTo} className="rounded-full bg-paper px-3 py-1 text-[11px] font-semibold transition hover:bg-violet-50 hover:text-violet-700">
-            Detail
-          </Link>
-        )}
-      </div>
-      <div className="mt-3 rounded-xl border border-ink/5 bg-paper/70 p-3">
-        <div className="flex items-center justify-between gap-2 text-[11px] text-slate-soft">
-          <span>{goal}</span>
-          <span className="rounded-full bg-white px-2 py-0.5 font-semibold text-ink">{goalValue}</span>
-        </div>
-        <div className="mt-2 flex items-end justify-between gap-3">
-          <span className="font-display text-4xl font-extrabold leading-none tracking-[-0.03em]">
-            <span className="bg-brand-grad bg-clip-text text-transparent">{value}</span>
-            {unit && <span className="ml-0.5 text-sm font-semibold text-slate-soft">{unit}</span>}
+        <span className="flex items-center gap-2.5 text-sm font-bold">
+          <span className="grid h-9 w-9 place-items-center rounded-full bg-white/15">
+            <Activity className="h-4 w-4" aria-hidden="true" />
           </span>
-          <div className="flex-1">{children}</div>
-        </div>
+          Vital stats
+        </span>
+        <label className="relative">
+          <span className="sr-only">Metric</span>
+          <select
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+            className="appearance-none rounded-full border border-white/20 bg-white/10 py-1.5 pl-3 pr-8 text-xs font-semibold text-frost outline-none focus:border-white/50"
+          >
+            {Object.entries(VITALS).map(([k, m]) => (
+              <option key={k} value={k} className="text-ink">
+                {m.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-frost/80" aria-hidden="true" />
+        </label>
+      </div>
+
+      <div className="mt-5 font-display text-4xl font-extrabold leading-none tracking-[-0.03em]">
+        {fmt(value)}
+        <span className="text-mist">/{fmt(v.line)}</span>
+        <span className="ml-1.5 text-sm font-semibold text-mist">{v.unit}</span>
+      </div>
+
+      <div className="mt-4 flex h-14 items-end gap-[3px]" aria-hidden="true">
+        {Array.from({ length: bars }, (_, i) => (
+          <span key={i} className={`h-full flex-1 rounded-full ${i < filled ? 'bg-white' : 'bg-white/25'}`} />
+        ))}
+      </div>
+      <div className="mt-1.5 flex justify-between text-[11px] text-mist">
+        <span>0</span>
+        <span>{fmt(max / 2)}</span>
+        <span>{fmt(max)}</span>
+      </div>
+
+      <div className="mt-4 flex items-center justify-between gap-2 text-sm">
+        <span className="text-mist">
+          {v.label} · {v.lineLabel} {fmt(v.line)} {v.unit}
+        </span>
+        <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold text-white" style={{ background: `${RISK[status.sev].hex}33` }}>
+          <span className="h-1.5 w-1.5 rounded-full" style={{ background: RISK[status.sev].hex }} aria-hidden="true" />
+          {status.text}
+        </span>
       </div>
     </div>
   )
@@ -274,19 +316,38 @@ export default function Dashboard() {
               </>
             }
           >
-            <div className="grid gap-3 sm:grid-cols-3">
-              <MetricTile label="Body-stress index" detailTo="/history" goal="vs start of week" goalValue={`${weekDelta > 0 ? '+' : ''}${weekDelta}`} value={bodyIndex} unit="/100">
-                <Bars values={trend.length ? trend.map((t) => t.value) : [bodyIndex]} />
-              </MetricTile>
-              <MetricTile label="Caffeine today" detailTo="/history" goal="Daily line" goalValue={`~${CAFFEINE_LINE} mg`} value={fmt(caffeine)} unit="mg">
-                <Meter value={caffeine} max={Math.max(CAFFEINE_LINE * 2, caffeine)} color={caffeine >= CAFFEINE_LINE ? RISK.caution.hex : RISK.calm.hex} height={10} />
-              </MetricTile>
-              <MetricTile label="Paracetamol today" detailTo="/history" goal="Daily ceiling" goalValue={`${fmt(PARACETAMOL_CEILING)} mg`} value={fmt(paracetamol)} unit="mg">
-                <div className="flex h-10 items-end justify-end gap-2" aria-hidden="true">
-                  <span className="w-5 rounded-md bg-brand-grad" style={{ height: `${Math.max(8, Math.min(100, (paracetamol / PARACETAMOL_CEILING) * 100))}%` }} />
-                  <span className="h-full w-5 rounded-md bg-brand-200/60" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              {/* Dark vital-stats card: one intake metric against its line. */}
+              <VitalCard caffeine={caffeine} paracetamol={paracetamol} />
+
+              {/* Gauge: the body-stress index with its week delta and flag counts. */}
+              <div className="rounded-2xl border border-ink/10 bg-white p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-semibold">Body-stress index</span>
+                  <Link to="/history" className="rounded-full bg-paper px-3 py-1 text-[11px] font-semibold transition hover:bg-violet-50 hover:text-violet-700">
+                    Detail
+                  </Link>
                 </div>
-              </MetricTile>
+                <div className="mt-2">
+                  <Gauge value={bodyIndex} max={100} color={r.hex} label={r.label} />
+                </div>
+                <div className="mt-4 grid grid-cols-3 gap-2 border-t border-ink/5 pt-3 text-center">
+                  <div>
+                    <div className="text-[11px] text-slate-soft">vs week start</div>
+                    <div className="mt-0.5 text-lg font-extrabold" style={{ color: weekDelta > 0 ? RISK.caution.hex : weekDelta < 0 ? RISK.calm.hex : undefined }}>
+                      {weekDelta > 0 ? '+' : ''}{weekDelta}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[11px] text-slate-soft">active flags</div>
+                    <div className="mt-0.5 text-lg font-extrabold">{flags.length}</div>
+                  </div>
+                  <div>
+                    <div className="text-[11px] text-slate-soft">organs affected</div>
+                    <div className="mt-0.5 text-lg font-extrabold">{new Set(flags.map((f) => f.organ)).size}</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </Panel>
 

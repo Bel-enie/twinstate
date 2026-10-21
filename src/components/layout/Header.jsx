@@ -93,7 +93,7 @@ export default function Header() {
                     active ? 'bg-white text-ink shadow-card' : 'text-slate-soft hover:text-ink'
                   }`}
                 >
-                  {active && <Icon className="h-4 w-4 text-violet-600" aria-hidden="true" />}
+                  <Icon className={`h-4 w-4 ${active ? 'text-violet-600' : 'text-slate-soft/80'}`} aria-hidden="true" />
                   {label}
                 </Link>
               )
@@ -200,7 +200,7 @@ export default function Header() {
                   active ? 'bg-white text-ink shadow-card' : 'bg-white/60 text-slate-soft'
                 }`}
               >
-                {active && <Icon className="h-4 w-4 text-violet-600" aria-hidden="true" />}
+                <Icon className={`h-4 w-4 ${active ? 'text-violet-600' : 'text-slate-soft/80'}`} aria-hidden="true" />
                 {label}
               </Link>
             )
