@@ -59,7 +59,7 @@ export default function EarlyAccess() {
               <div className="rounded-[20px] border border-emerald-200 bg-emerald-50/60 p-5" role="status" aria-live="polite">
                 <p className="text-sm font-semibold">{state.message}</p>
                 <p className="mt-1 text-xs text-slate-soft">
-                  Saved in this browser only — Twinstate has no server collecting emails. You can
+                  Saved in this browser only. Twinstate has no server collecting emails. You can
                   build a twin right now; no signup needed.
                 </p>
                 <button
@@ -107,14 +107,11 @@ export default function EarlyAccess() {
                   </ShimmerButton>
                 </div>
 
-                <p
-                  className={`mt-2 text-xs ${state.status === 'error' ? 'text-rose-700' : 'text-slate-soft'}`}
-                  role={state.status === 'error' ? 'alert' : undefined}
-                >
-                  {state.status === 'error'
-                    ? state.message
-                    : 'Stored in your browser only. No mailing list, no third party.'}
-                </p>
+                {state.status === 'error' && (
+                  <p className="mt-2 text-xs text-rose-700" role="alert">
+                    {state.message}
+                  </p>
+                )}
               </form>
             )}
           </div>

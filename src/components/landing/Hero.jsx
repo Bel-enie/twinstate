@@ -70,7 +70,7 @@ export default function Hero({ story, wantName, onBuild, demoBusy, onDemo }) {
 
       <Reveal delay={0.16}>
         <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-slate-soft sm:text-lg">
-          Log what you take — prescriptions, painkillers, energy drinks, supplements. Twinstate
+          Log what you take: prescriptions, painkillers, energy drinks, supplements. Twinstate
           checks the combination against known interactions, shows where it adds up on a 3D body,
           and tells you what to ask a pharmacist.
         </p>
@@ -99,7 +99,7 @@ export default function Hero({ story, wantName, onBuild, demoBusy, onDemo }) {
               </div>
             </div>
             <p className="mt-2 text-xs text-slate-soft">
-              No account, no password — a first name is all it takes, and it stays in this browser.
+              No account, no password. A first name is all it takes, and it stays in this browser.
             </p>
           </form>
         ) : (
@@ -153,7 +153,7 @@ export default function Hero({ story, wantName, onBuild, demoBusy, onDemo }) {
       )}
 
       <p className="mt-8 text-xs text-slate-soft/80">
-        Educational demo — not medical advice. {privacyLine()}
+        Educational demo, not medical advice. {privacyLine()}
       </p>
 
       <HeroTwin story={story} />

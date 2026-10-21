@@ -67,7 +67,7 @@ export default function WhatIf() {
         <p className="mt-2 inline-flex items-start gap-2 rounded-2xl border border-risk-watch/30 bg-risk-watch/10 px-3 py-2 text-xs leading-relaxed text-ink/80">
           <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-risk-caution" aria-hidden="true" />
           <span>
-            <strong>Illustrative only — not a prediction.</strong> This projects today's scores
+            <strong>Illustrative only, not a prediction.</strong> This projects today's scores
             forward along a simple trend to show the <em>direction</em> of each path. It is not
             modelled on clinical outcome data and cannot tell you what will actually happen to you.
           </span>
@@ -129,7 +129,7 @@ export default function WhatIf() {
           <div className="mx-auto w-full max-w-sm">
             <div className="mb-1 flex justify-between text-xs text-white/80">
               <span>Interaction load</span>
-              <span className="font-semibold">{loading ? '…' : `${active?.bodyIndex ?? '—'}/100`}</span>
+              <span className="font-semibold">{loading ? '…' : `${active?.bodyIndex ?? '…'}/100`}</span>
             </div>
             <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/15">
               <div

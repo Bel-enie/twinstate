@@ -112,7 +112,7 @@ export default function AskCard({ story }) {
               ]}
             />
             <p className="mt-5 max-w-3xl text-sm leading-relaxed">
-              {firstName}'s logged paracetamol reached <strong>{fmt(today.paracetamol)} mg</strong> today — the line
+              {firstName}'s logged paracetamol reached <strong>{fmt(today.paracetamol)} mg</strong> today: the line
               where the engine raises a liver flag, and close to the usual adult ceiling of 4,000 mg. The flag is
               about that total alone; nothing else in the log feeds it.
             </p>
@@ -182,7 +182,7 @@ export default function AskCard({ story }) {
             <p className="mt-5 max-w-3xl text-sm leading-relaxed">
               {firstName} logged <strong>insomnia and fatigue</strong> alongside about{' '}
               <strong>{persona.profile.sleepHours} hours of sleep</strong> and{' '}
-              <strong>{fmt(today.caffeine)} mg of caffeine</strong> — well over the ~400 mg line. High caffeine is
+              <strong>{fmt(today.caffeine)} mg of caffeine</strong>, well over the ~400 mg line. High caffeine is
               associated with disrupted sleep, and short sleep with daytime tiredness (FDA and EFSA guidance).
             </p>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-soft">

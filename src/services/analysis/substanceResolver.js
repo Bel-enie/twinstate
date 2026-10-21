@@ -127,7 +127,7 @@ export const substanceResolver = {
       def: makeDef({ name: clean, category: 'otc', tags: [], source: 'generic' }),
       source: 'generic',
       recognised: false,
-      note: 'Added manually — limited interaction data available.',
+      note: 'Added manually, with limited interaction data.',
     }
   },
 }

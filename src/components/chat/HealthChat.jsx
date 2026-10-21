@@ -10,7 +10,7 @@ import { buildTwinContext, suggestedQuestions } from '../../utils/twinContext.js
 const GREETING = {
   role: 'assistant',
   text:
-    "Hi — I'm your health helper. Ask me anything about what you've logged (your meds, energy drinks, symptoms) or general health. I'll ground answers in your twin where I can. I'm not a doctor, so for anything serious I'll point you to real care.",
+    "Hi, I'm your health helper. Ask me anything about what you've logged (your meds, energy drinks, symptoms) or general health. I'll ground answers in your twin where I can. I'm not a doctor, so for anything serious I'll point you to real care.",
   meta: {},
 }
 
@@ -68,7 +68,7 @@ export default function HealthChat() {
         ...m,
         {
           role: 'assistant',
-          text: "Sorry — I couldn't answer just now. If this is urgent, please contact your campus health centre or a doctor.",
+          text: "Sorry, I couldn't answer just now. If this is urgent, please contact your campus health centre or a doctor.",
           meta: { urgent: false },
         },
       ])

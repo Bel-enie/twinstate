@@ -103,8 +103,8 @@ export default function LogDose() {
     if (res?.length) {
       const summary =
         res.length === 1
-          ? `Logged ${res[0].name} — ${res[0].todayTimes}× today.`
-          : `Logged ${res.length} doses — ${res.map((r) => r.name).join(', ')}.`
+          ? `Logged ${res[0].name}: ${res[0].todayTimes}× today.`
+          : `Logged ${res.length} doses: ${res.map((r) => r.name).join(', ')}.`
       setFlash(`${summary} Twin updated.`)
       setQueue([])
       clearTimeout(flashTimer.current)

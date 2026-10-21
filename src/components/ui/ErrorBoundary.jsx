@@ -39,7 +39,7 @@ export default class ErrorBoundary extends Component {
             Your logged data is safe. You can reload and pick up where you left off.
           </p>
           <div className="mt-4 rounded-2xl border border-risk-urgent/30 bg-risk-urgent/5 p-3 text-left text-xs text-ink/80">
-            <span className="font-bold">Medical emergency?</span> Don’t wait on an app — call your
+            <span className="font-bold">Medical emergency?</span> Don’t wait on an app. Call your
             local emergency number or go to the nearest emergency department.
           </div>
           <div className="mt-4 flex justify-center gap-2">

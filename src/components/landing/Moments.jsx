@@ -89,7 +89,7 @@ export default function Moments() {
         eyebrow="Built for real weeks"
         title="The risky part is"
         gradientWord="the combination."
-        sub="Nobody plans a dangerous mix. It builds up across an ordinary week — and that's exactly what the twin watches."
+        sub="Nobody plans a dangerous mix. It builds up across an ordinary week, and that's exactly what the twin watches."
       />
       <div className="mt-12 grid gap-5 md:grid-cols-3">
         {MOMENTS.map((m, i) => (

@@ -12,7 +12,7 @@ const FAQ = [
     items: [
       {
         q: "What's the difference between prescription, over-the-counter, and supplements?",
-        a: 'Prescription meds are given to you by a clinician for your specific situation. Over-the-counter (OTC) ones — like paracetamol or ibuprofen — you can buy without a prescription, but they still have real limits. Supplements (vitamins, herbal tonics) are the least regulated, so "you can buy it freely" does not mean "it can\'t affect you".',
+        a: 'Prescription meds are given to you by a clinician for your specific situation. Over-the-counter (OTC) ones, like paracetamol or ibuprofen, you can buy without a prescription, but they still have real limits. Supplements (vitamins, herbal tonics) are the least regulated, so "you can buy it freely" does not mean "it can\'t affect you".',
       },
       {
         q: 'What does "take with food" actually mean, and why?',
@@ -29,23 +29,23 @@ const FAQ = [
     items: [
       {
         q: 'What is a "drug interaction"?',
-        a: "It's when two or more things you take change how each other work in your body — sometimes making effects stronger, weaker, or adding up in a harmful way. It isn't only about prescription drugs: energy drinks, alcohol and herbal tonics all count.",
+        a: "It's when two or more things you take change how each other work in your body, sometimes making effects stronger, weaker, or adding up in a harmful way. It isn't only about prescription drugs: energy drinks, alcohol and herbal tonics all count.",
       },
       {
         q: 'Can I take paracetamol and ibuprofen at the same time?',
-        a: 'They work differently and are often used together safely for short periods — but each has its own daily limit, and doubling up on two of the SAME type (e.g. ibuprofen + aspirin) is the risky part. If you\'re reaching for painkillers every day, that\'s the sign to get checked rather than keep dosing.',
+        a: 'They work differently and are often used together safely for short periods, but each has its own daily limit, and doubling up on two of the SAME type (e.g. ibuprofen + aspirin) is the risky part. If you\'re reaching for painkillers every day, that\'s the sign to get checked rather than keep dosing.',
       },
       {
         q: 'How much paracetamol is too much in a day?',
-        a: 'For most adults the ceiling is about 4000 mg (often eight 500 mg tablets) in 24 hours — and problems can start below that if you also drink alcohol or take other liver-stressing things. Space doses at least 6 hours apart and count everything, including combined cold/flu sachets that also contain paracetamol.',
+        a: 'For most adults the ceiling is about 4000 mg (often eight 500 mg tablets) in 24 hours, and problems can start below that if you also drink alcohol or take other liver-stressing things. Space doses at least 6 hours apart and count everything, including combined cold/flu sachets that also contain paracetamol.',
       },
       {
         q: 'Why do energy drinks make my heart race?',
-        a: 'They\'re packed with caffeine, a stimulant. Above roughly 400 mg of caffeine a day (a few energy drinks plus coffee gets there fast) you can feel a pounding or racing heart, jitteriness and broken sleep — which is the opposite of what you need in exam season.',
+        a: 'They\'re packed with caffeine, a stimulant. Above roughly 400 mg of caffeine a day (a few energy drinks plus coffee gets there fast) you can feel a pounding or racing heart, jitteriness and broken sleep, which is the opposite of what you need in exam season.',
       },
       {
         q: 'Are herbal or "natural" supplements automatically safe?',
-        a: 'No. "Natural" doesn\'t mean harmless — some herbal and "detox" tonics are hard on the liver, and because they\'re unregulated, the actual contents and strength can vary a lot. Always tell a clinician about them, just like any medicine.',
+        a: 'No. "Natural" doesn\'t mean harmless: some herbal and "detox" tonics are hard on the liver, and because they\'re unregulated, the actual contents and strength can vary a lot. Always tell a clinician about them, just like any medicine.',
       },
       {
         q: 'Is it bad to mix alcohol with my medicines?',
@@ -62,11 +62,11 @@ const FAQ = [
       },
       {
         q: 'Why does the doctor always ask what else I\'m taking?',
-        a: "Because the risk is usually in the combination, not one item. Everything you take — prescriptions, OTC, energy drinks, supplements — helps them spot interactions and pick something safe. Twinstate is basically that list, ready to show them.",
+        a: "Because the risk is usually in the combination, not one item. Everything you take (prescriptions, OTC, energy drinks, supplements) helps them spot interactions and pick something safe. Twinstate is basically that list, ready to show them.",
       },
       {
         q: 'What does it mean when my urine is very dark?',
-        a: 'Often it just means you\'re dehydrated — drink water and see if it clears. But persistently dark urine can also signal your liver or kidneys are under strain, so if it doesn\'t improve with fluids, get it checked.',
+        a: 'Often it just means you\'re dehydrated, so drink water and see if it clears. But persistently dark urine can also signal your liver or kidneys are under strain, so if it doesn\'t improve with fluids, get it checked.',
       },
     ],
   },
@@ -75,11 +75,11 @@ const FAQ = [
     items: [
       {
         q: 'What do the colours on my twin mean?',
-        a: 'They\'re a warm scale, not an alarm: teal = nothing flagged among what we could check (not a clean bill of health — anything we could not identify is listed separately as “not checked”), amber = keep an eye on it, coral = time to change something, rose = act on it soon. Each highlighted organ links to a plain-language explanation of why it\'s flagged.',
+        a: 'They\'re a warm scale, not an alarm: teal = nothing flagged among what we could check (not a clean bill of health; anything we could not identify is listed separately as “not checked”), amber = keep an eye on it, coral = time to change something, rose = act on it soon. Each highlighted organ links to a plain-language explanation of why it\'s flagged.',
       },
       {
         q: 'Is Twinstate medical advice?',
-        a: 'No — it\'s a way to see and understand what you\'re taking, grounded in reference data. It helps you ask better questions and know when to get help, but a real clinician is always the final word.',
+        a: 'No. It\'s a way to see and understand what you\'re taking, grounded in reference data. It helps you ask better questions and know when to get help, but a real clinician is always the final word.',
       },
     ],
   },
@@ -124,7 +124,7 @@ export default function FAQPage() {
       <div className="mx-auto max-w-2xl">
         <PageHeader
           title="Questions people actually ask"
-          sub="Plain-language answers to the things students often wonder about — the kind of stuff you'd ask at the clinic desk."
+          sub="Plain-language answers to the things students often wonder about: the kind of stuff you'd ask at the clinic desk."
         />
 
         <div className="space-y-5">
@@ -154,7 +154,7 @@ export default function FAQPage() {
         <div className="mt-6 rounded-2xl border border-violet-100 bg-violet-50/60 p-5 text-center">
           <p className="text-sm font-semibold">Still wondering about something specific to you?</p>
           <p className="mt-1 text-sm text-slate-soft">
-            Ask the health helper right on your twin — it grounds answers in what you've logged.
+            Ask the health helper right on your twin. It grounds answers in what you've logged.
           </p>
           <Button to={hasTwin ? '/dashboard' : isSignedIn ? '/intake' : '/'} className="mt-3">
             {hasTwin ? 'Open my twin' : 'Build my twin'}

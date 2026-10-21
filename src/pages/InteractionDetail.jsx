@@ -39,7 +39,7 @@ export default function InteractionDetail() {
           {analyzing ? (
             <>
               <span className="mx-auto block h-2 w-2 animate-pulse rounded-full bg-violet-500" aria-hidden="true" />
-              <p className="mt-3 text-sm text-slate-soft">Updating your twin — one moment.</p>
+              <p className="mt-3 text-sm text-slate-soft">Updating your twin, one moment.</p>
             </>
           ) : (
             <p className="text-sm text-slate-soft">That interaction isn't in your current twin.</p>
@@ -97,7 +97,7 @@ export default function InteractionDetail() {
 
           {/* Why it's risky */}
           <Card className="p-5">
-            <h2 className="text-sm font-bold text-slate-soft">Why it's risky — in plain English</h2>
+            <h2 className="text-sm font-bold text-slate-soft">Why it's risky, in plain English</h2>
             <p className="mt-2 leading-relaxed text-ink/85">{explain?.plain || flag.reason}</p>
           </Card>
 
@@ -144,7 +144,7 @@ export default function InteractionDetail() {
               </ul>
             )}
             <p className="mt-3 text-[11px] text-slate-soft">
-              Cross-referenced against public clinical guidance. General information only — not a
+              Cross-referenced against public clinical guidance. General information only, not a
               substitute for advice about your specific medicines.
             </p>
           </Card>

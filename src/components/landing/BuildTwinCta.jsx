@@ -55,7 +55,7 @@ export default function BuildTwinCta({ demoName, demoBusy, onDemo, align = 'star
           </div>
         </div>
         <p className="mt-2 text-xs text-slate-soft">
-          No account, no password — a first name is all it takes, and it stays in this browser.
+          No account, no password. A first name is all it takes, and it stays in this browser.
         </p>
       </form>
     )

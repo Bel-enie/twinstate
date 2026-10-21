@@ -80,7 +80,7 @@ export default function Annotator() {
         setNotes(list)
         setError('')
       })
-      .catch(() => setError('Could not reach the notes store — restart the dev server.'))
+      .catch(() => setError('Could not reach the notes store. Restart the dev server.'))
   }, [])
 
   useEffect(load, [load, pathname])
@@ -185,7 +185,7 @@ export default function Annotator() {
       setText('')
       load()
     } catch {
-      setError('Saving failed — is the dev server running?')
+      setError('Saving failed. Is the dev server running?')
     }
   }
 

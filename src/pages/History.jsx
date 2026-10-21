@@ -56,8 +56,8 @@ export default function History() {
     <AppShell>
       <PageHeader
         title={`${who.Possessive} last 7 days`}
-        sub={`Risk isn't one dose — it's the pattern. Here's how ${who.possessive} intake has built up.`}
-        actions={<Chip icon={CalendarDays}>{days.length ? `${days[0].dateLabel} – ${days[days.length - 1].dateLabel}` : 'This week'}</Chip>}
+        sub={`Risk isn't one dose, it's the pattern. Here's how ${who.possessive} intake has built up.`}
+        actions={<Chip icon={CalendarDays}>{days.length ? `${days[0].dateLabel} to ${days[days.length - 1].dateLabel}` : 'This week'}</Chip>}
       />
 
       {/* Body-stress trend */}
@@ -69,9 +69,9 @@ export default function History() {
         delta={delta}
         footer={
           delta > 0
-            ? 'Trending up — the pattern is adding load. Small changes now pay off.'
+            ? 'Trending up: the pattern is adding load. Small changes now pay off.'
             : delta < 0
-              ? 'Trending down — recovery is working. Keep it up.'
+              ? 'Trending down: recovery is working. Keep it up.'
               : 'Holding steady over the week.'
         }
       >
@@ -116,7 +116,7 @@ export default function History() {
                       <li key={f.id} className="flex items-center gap-2 text-sm">
                         <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: RISK[f.severity].hex }} aria-hidden="true" />
                         <span className="font-semibold">{shortOrgan(f.organ)}</span>
-                        <span className="min-w-0 truncate text-slate-soft">— {f.title}</span>
+                        <span className="min-w-0 truncate text-slate-soft">· {f.title}</span>
                       </li>
                     ))}
                   </ul>

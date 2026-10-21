@@ -91,14 +91,14 @@ function buildMessages({ question, context = {}, history = [] }) {
   const urgent = RED_FLAGS.some((k) => (question || '').toLowerCase().includes(k))
 
   const system = [
-    "You are Twinstate's health assistant for university students — a knowledgeable, friendly explainer of health, medicines, supplements, energy drinks and drug interactions. Answer with the depth and quality of a great ChatGPT reply.",
+    "You are Twinstate's health assistant for university students: a knowledgeable, friendly explainer of health, medicines, supplements, energy drinks and drug interactions. Answer with the depth and quality of a great ChatGPT reply.",
     '',
-    'FORMAT (GitHub-flavored Markdown): open with a 1–2 sentence direct answer; use ## headings + bullets for multi-part answers; bold key numbers/terms; define jargon; be thorough on substantive questions, short on simple ones.',
+    'FORMAT (GitHub-flavored Markdown): open with a 1 or 2 sentence direct answer; use ## headings + bullets for multi-part answers; bold key numbers/terms; define jargon; be thorough on substantive questions, short on simple ones.',
     '',
     'GROUNDING: the student has a digital twin of what they currently take (below). When the question relates to anything they logged, weave in that specific data and name the items explicitly.',
     '',
-    'SAFETY: you are NOT a doctor; this is general information, not a diagnosis; never give exact prescription dose changes — point to a clinician. If anything suggests an emergency (chest pain, trouble breathing, fainting, possible overdose, self-harm, severe/worsening symptoms), LEAD with a clear, calm instruction to seek care now (campus health centre, a doctor, or emergency services). End with a brief italic disclaimer.',
-    urgent ? 'THIS MESSAGE IS FLAGGED POTENTIALLY URGENT — start with the care recommendation.' : '',
+    'SAFETY: you are NOT a doctor; this is general information, not a diagnosis; never give exact prescription dose changes; point to a clinician. Do not use em dashes or en dashes in anything you write; use commas, colons or full stops instead. If anything suggests an emergency (chest pain, trouble breathing, fainting, possible overdose, self-harm, severe/worsening symptoms), LEAD with a clear, calm instruction to seek care now (campus health centre, a doctor, or emergency services). End with a brief italic disclaimer.',
+    urgent ? 'THIS MESSAGE IS FLAGGED POTENTIALLY URGENT. Start with the care recommendation.' : '',
     '',
     `TWIN DATA:\n${JSON.stringify(twin, null, 2)}`,
   ].join('\n')
@@ -158,7 +158,7 @@ const server = http.createServer(async (req, res) => {
       req.url === '/api/recommend')
   ) {
     if (!API_KEY) return json(res, 503, { error: 'Server is missing OPENAI_API_KEY.' })
-    if (rateLimited(ip)) return json(res, 429, { error: 'Too many requests — slow down a moment.' })
+    if (rateLimited(ip)) return json(res, 429, { error: 'Too many requests. Please slow down a moment.' })
 
     let payload
     try {
@@ -211,7 +211,7 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'POST' && req.url === '/api/chat') {
     if (!API_KEY) return json(res, 503, { error: 'Server is missing OPENAI_API_KEY.' })
-    if (rateLimited(ip)) return json(res, 429, { error: 'Too many requests — slow down a moment.' })
+    if (rateLimited(ip)) return json(res, 429, { error: 'Too many requests. Please slow down a moment.' })
 
     let payload
     try {

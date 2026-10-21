@@ -106,7 +106,7 @@ export default function Recommendation() {
             </h3>
             <p className="mt-1 text-xs leading-relaxed text-slate-soft">
               We could not identify these, so no interaction rule ran against them. Their absence
-              from the flags above means nothing either way — ask a pharmacist about them.
+              from the flags above means nothing either way, so ask a pharmacist about them.
             </p>
             <ul className="mt-3 flex flex-wrap gap-2">
               {coverage.unchecked.map((it, i) => (
@@ -200,8 +200,8 @@ export default function Recommendation() {
         {/* Emergency note for high risk */}
         {level === 'seek_care' && (
           <p className="mt-4 rounded-2xl bg-rose-50 p-4 text-sm text-rose-800">
-            If you feel very unwell — chest pain, trouble breathing, confusion, or you can't keep
-            fluids down — treat it as an emergency and get help immediately.
+            If you feel very unwell (chest pain, trouble breathing, confusion, or you can't keep
+            fluids down), treat it as an emergency and get help immediately.
           </p>
         )}
 

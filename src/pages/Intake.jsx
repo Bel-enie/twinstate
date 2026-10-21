@@ -137,7 +137,7 @@ export default function Intake() {
       <div className="mx-auto max-w-2xl">
         <PageHeader
           title="Build your twin"
-          sub="Add what you're currently taking. Takes under two minutes — you can be rough with doses."
+          sub="Add what you're currently taking. Takes under two minutes, and you can be rough with doses."
         />
 
         <form onSubmit={onSubmit} className="space-y-5">
@@ -145,7 +145,7 @@ export default function Intake() {
           <Card className="p-5">
             <label htmlFor="substance-search" className="text-sm font-bold">What are you taking right now?</label>
             <p className="mb-3 text-xs text-slate-soft">
-              Meds, painkillers, energy drinks, supplements, herbal tonics — add anything.
+              Meds, painkillers, energy drinks, supplements, herbal tonics. Add anything.
               Not in the list? Type its name and choose <span className="font-semibold text-violet-700">Add</span>.
             </p>
 
@@ -196,7 +196,7 @@ export default function Intake() {
                             Add <span className="font-semibold">“{query.trim()}”</span>
                             <span className="text-slate-soft">
                               {' '}
-                              — {holon.canResolveWithAI ? 'we’ll identify it and its risks' : 'as a tracked item'}
+                              ({holon.canResolveWithAI ? 'we’ll identify it and its risks' : 'as a tracked item'})
                             </span>
                           </>
                         )}

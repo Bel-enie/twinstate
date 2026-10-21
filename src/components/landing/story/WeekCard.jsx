@@ -98,7 +98,7 @@ export default function WeekCard({ story }) {
                     <li key={f.id} className="flex items-center gap-2 text-sm">
                       <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: RISK[f.severity].hex }} aria-hidden="true" />
                       <span className="font-semibold">{shortOrgan(f.organ)}</span>
-                      <span className="min-w-0 truncate text-slate-soft">— {f.title}</span>
+                      <span className="min-w-0 truncate text-slate-soft">· {f.title}</span>
                     </li>
                   ))}
                 </ul>

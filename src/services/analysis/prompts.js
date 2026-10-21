@@ -14,10 +14,10 @@ const ORGAN_LIST = ORGAN_KEYS.map((k) => `"${k}" (${ORGANS[k].label})`).join(', 
 // Severity → intensity bands the model must stay inside, so AI scores map onto
 // the same colours/thresholds the deterministic engine uses.
 const BANDS =
-  'calm = 6–33, watch = 34–57, caution = 58–77, urgent = 78–100'
+  'calm = 6 to 33, watch = 34 to 57, caution = 58 to 77, urgent = 78 to 100'
 
 const SAFETY =
-  'You are not a doctor and this is not a diagnosis. Base every score ONLY on the data given — never invent substances or symptoms. Be calibrated: a single low dose is usually calm/watch; genuine stacking or known dangerous combinations earn caution/urgent.'
+  'You are not a doctor and this is not a diagnosis. Base every score ONLY on the data given. Never invent substances or symptoms. Be calibrated: a single low dose is usually calm/watch; genuine stacking or known dangerous combinations earn caution/urgent. Do not use em dashes or en dashes in anything you write; use commas, colons or full stops instead.'
 
 /** Build the chat messages that ask the model to SCORE a twin. */
 export function buildAnalyzeMessages(payload = {}) {
@@ -35,10 +35,10 @@ export function buildAnalyzeMessages(payload = {}) {
     SAFETY,
     '',
     `ORGANS to score (use these exact keys): ${ORGAN_LIST}.`,
-    `Severity vocabulary: "calm", "watch", "caution", "urgent". Intensity is 0–100 and MUST fall in its severity band: ${BANDS}.`,
+    `Severity vocabulary: "calm", "watch", "caution", "urgent". Intensity is 0 to 100 and MUST fall in its severity band: ${BANDS}.`,
     '',
     'How to reason per organ: caffeine loads heart & brain (racing heart, poor sleep); paracetamol, alcohol and unregulated herbal tonics load the liver; NSAIDs (ibuprofen, aspirin) load the stomach and kidneys; opioids + sedatives and SSRIs load the brain/nervous system. Weigh dose × times-per-day and dangerous combinations, and let reported symptoms raise the matching organ.',
-    'body_index (0–100) = the whole-body stress, roughly the worst organ weighted with the average (worst*0.7 + average*0.3).',
+    'body_index (0 to 100) = the whole-body stress, roughly the worst organ weighted with the average (worst*0.7 + average*0.3).',
     'flags = the specific risky combinations or overuse patterns you actually find (0 or more). Each names the real logged substances involved and explains the mechanism in plain, warm, non-alarming language a student understands.',
     '',
     'Return ONLY a single JSON object, no prose, no markdown, matching EXACTLY:',
@@ -133,11 +133,11 @@ export function buildRecommendMessages(payload = {}) {
     '',
     'Choose a triage "level" from EXACTLY these four, matched to the real risk:',
     '- "all_clear": nothing risky logged.',
-    '- "monitor": mild/"watch" — small changes at home, keep logging.',
-    '- "clinic_soon": "caution" — real strain; make changes now and get a check-in within days.',
-    '- "seek_care": "urgent"/high-risk combos (e.g. opioid + sedative, serotonin stack, big overdose risk) — stop now and get seen today, or urgent care if unwell.',
+    '- "monitor": mild/"watch": small changes at home, keep logging.',
+    '- "clinic_soon": "caution": real strain; make changes now and get a check-in within days.',
+    '- "seek_care": "urgent"/high-risk combos (e.g. opioid + sedative, serotonin stack, big overdose risk): stop now and get seen today, or urgent care if unwell.',
     '',
-    'Write warm, plain, non-alarming language grounded in their ACTUAL logged items and flags. "action" is a short imperative headline. "subtext" is 1–2 sentences on why, naming the specific driver. "swaps" are 2–4 concrete, doable changes tied to what they take.',
+    'Write warm, plain, non-alarming language grounded in their ACTUAL logged items and flags. "action" is a short imperative headline. "subtext" is 1 to 2 sentences on why, naming the specific driver. "swaps" are 2 to 4 concrete, doable changes tied to what they take.',
     '',
     'Return ONLY a JSON object, no prose, matching EXACTLY:',
     `{
@@ -168,7 +168,7 @@ export function buildProjectMessages(payload = {}) {
     '  - "safer": they rest, hydrate, cut to one painkiller and reduce caffeine.',
     SAFETY,
     '',
-    `Score every organ (keys: ${ORGAN_KEYS.map((k) => `"${k}"`).join(', ')}) as intensity 0–100. On "continue", stressed organs drift UP over the weeks; on "safer" they recover DOWN toward calm. Keep changes realistic (a few points per week), never below 6 or above 100.`,
+    `Score every organ (keys: ${ORGAN_KEYS.map((k) => `"${k}"`).join(', ')}) as intensity 0 to 100. On "continue", stressed organs drift UP over the weeks; on "safer" they recover DOWN toward calm. Keep changes realistic (a few points per week), never below 6 or above 100.`,
     'body_index for each path = worst organ weighted with the average (worst*0.7 + average*0.3).',
     '',
     'Return ONLY a single JSON object, no prose, matching EXACTLY:',

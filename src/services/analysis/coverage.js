@@ -86,12 +86,12 @@ export function clearanceCopy(cov) {
   if (cov.checkedAll) {
     return {
       tag: 'Nothing flagged',
-      note: `Nothing risky among the ${cov.checked} item${cov.checked === 1 ? '' : 's'} we could check. This covers a limited set of known interactions — it is not a full medication review.`,
+      note: `Nothing risky among the ${cov.checked} item${cov.checked === 1 ? '' : 's'} we could check. This covers a limited set of known interactions. It is not a full medication review.`,
     }
   }
   const names = cov.unchecked.map(labelOf).join(', ')
   return {
     tag: 'Nothing flagged in what we could check',
-    note: `We could not check ${cov.unchecked.length} item${cov.unchecked.length === 1 ? '' : 's'} (${names}). Nothing here means "no flag found", not "safe" — ask a pharmacist about anything we could not check.`,
+    note: `We could not check ${cov.unchecked.length} item${cov.unchecked.length === 1 ? '' : 's'} (${names}). Nothing here means "no flag found", not "safe". Ask a pharmacist about anything we could not check.`,
   }
 }

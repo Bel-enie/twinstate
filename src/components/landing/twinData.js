@@ -26,7 +26,7 @@ export const STORY_PERSONA = 'cora'
 // physiological measurement. Naming it that way keeps the precision honest.
 export const LOAD_LABEL = 'Interaction load'
 export const LOAD_NOTE =
-  '0–100, from the rules that fired and how much you logged. For comparing days — not a clinical measurement.'
+  '0 to 100, from the rules that fired and how much you logged. For comparing days, not a clinical measurement.'
 export const ORGAN_KEYS = Object.keys(ORGANS)
 
 // Mirror the two threshold rules the story turns on (see INTERACTION_RULES).

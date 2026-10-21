@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Download, Lock, Flame, Moon, Trash2 } from 'lucide-react'
+import { ArrowUpRight, Download, Lock, Flame, Moon, Trash2 } from 'lucide-react'
 import { deleteAllData, exportAllData, hasStoredData, privacyLine } from '../../services/privacy.js'
 import { RISK } from '../../utils/risk.js'
 import { BentoGrid, BentoCard } from './ui/BentoCard.jsx'
@@ -31,7 +31,7 @@ export default function TwinBento({ story, demoBusy, onDemo }) {
         eyebrow="Live demo"
         title={`${firstName}'s week,`}
         gradientWord="in numbers."
-        sub={`What changed, the evidence behind each flag, and what the twin knows about ${firstName}'s sleep and symptoms — all computed by the app's rule engine from the log. Then open the real dashboard.`}
+        sub={`What changed, the evidence behind each flag, and what the twin knows about ${firstName}'s sleep and symptoms, all computed by the app's rule engine from the log. Then open the real dashboard.`}
       />
 
       <Reveal delay={0.1} className="mt-12">
@@ -100,7 +100,7 @@ export default function TwinBento({ story, demoBusy, onDemo }) {
               ))}
             </div>
             <p className="mt-3 text-xs text-slate-soft">
-              Total {fmt(today.caffeine)} mg against the ~{fmt(CAFFEINE_LINE)} mg/day line — this is the
+              Total {fmt(today.caffeine)} mg against the ~{fmt(CAFFEINE_LINE)} mg/day line. This is the
               evidence behind the heart flag, not a vibe.
             </p>
           </BentoCard>
@@ -164,7 +164,7 @@ export default function TwinBento({ story, demoBusy, onDemo }) {
               className="inline-flex items-center gap-2 rounded-full bg-frost px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-white disabled:opacity-60"
             >
               {demoBusy ? 'Opening…' : 'Open the live demo'}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </BentoCard>
         </BentoGrid>

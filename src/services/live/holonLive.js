@@ -132,7 +132,7 @@ export const holonLive = {
           sources: [
             {
               org: 'HOLON',
-              title: `${e.source || 'Clinical knowledge base'}${e.evidenceGrade ? ` — evidence grade ${e.evidenceGrade}` : ''}`,
+              title: `${e.source || 'Clinical knowledge base'}${e.evidenceGrade ? ` (evidence grade ${e.evidenceGrade})` : ''}`,
               url: 'https://developer.ontomorph.com/docs',
             },
           ],

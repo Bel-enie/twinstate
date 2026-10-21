@@ -18,7 +18,7 @@ const Summary = lazy(() => import('./pages/Summary.jsx'))
 const Limits = lazy(() => import('./pages/Limits.jsx'))
 
 const TITLES = {
-  '/': 'Twinstate — every pill, drink and dose, checked together',
+  '/': 'Twinstate: every pill, drink and dose, checked together',
   '/intake': 'Build your twin · Twinstate',
   '/dashboard': 'Your twin · Twinstate',
   '/history': 'Last 7 days · Twinstate',

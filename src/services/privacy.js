@@ -29,7 +29,7 @@ export function recipients() {
 
 /** One sentence for footers and hero lines. */
 export function privacyLine() {
-  if (!sendsData) return 'Everything you log stays in this browser — there is no Twinstate account server.'
+  if (!sendsData) return 'Everything you log stays in this browser. There is no Twinstate account server.'
   const r = recipients()
   return `Your log is saved in this browser. To work, it is also sent to ${r
     .map((x) => x.who)

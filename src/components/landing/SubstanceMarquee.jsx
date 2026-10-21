@@ -29,7 +29,7 @@ export default function SubstanceMarquee() {
   return (
     <section aria-label="Substances Twinstate screens" className="mx-auto max-w-[1200px] px-5 pb-6 sm:px-8">
       <p className="mb-4 text-center text-xs font-bold uppercase tracking-[0.2em] text-slate-soft">
-        Screens {SUBSTANCES.length} substances — and every combination of them
+        Screens {SUBSTANCES.length} substances, and every combination of them
       </p>
       <div className="space-y-3">
         <Marquee duration="46s">

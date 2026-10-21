@@ -78,7 +78,7 @@ export default function ProblemCard() {
       eyebrow="The problem"
       title="Your health data is fragmented."
       gradient="Your body isn't."
-      sub="Everything a student takes lives somewhere different — a prescription, a pharmacy receipt, a fridge, a memory. Twinstate puts it on one timeline and checks how it adds up across your week."
+      sub="Everything a student takes lives somewhere different: a prescription, a pharmacy receipt, a fridge, a memory. Twinstate puts it on one timeline and checks how it adds up across your week."
     >
       <div className="grid gap-4 border-y border-ink/10 py-5 sm:grid-cols-2">
         <div>

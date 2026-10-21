@@ -344,7 +344,7 @@ export default function Dashboard() {
                 </div>
                 <div className="mt-2">
                   <Gauge value={bodyIndex} max={100} color={r.hex} label={r.label} />
-                  <p className="mt-2 text-center text-[11px] text-slate-soft">For comparing your own days — not a medical measurement.</p>
+                  <p className="mt-2 text-center text-[11px] text-slate-soft">For comparing your own days, not a medical measurement.</p>
                 </div>
                 <div className="mt-4 grid grid-cols-3 gap-2 border-t border-ink/5 pt-3 text-center">
                   <div>
@@ -452,7 +452,7 @@ export default function Dashboard() {
               <div className="mt-4 space-y-2">
                 {shownFlags.length === 0 && (
                   <p className="rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-xs leading-relaxed text-emerald-900">
-                    {q || selected ? 'No flag matches.' : 'Nothing flagged among what we could check — not a clean bill of health, just no rule in our set fired.'}
+                    {q || selected ? 'No flag matches.' : 'Nothing flagged among what we could check. That is not a clean bill of health, just no rule in our set fired.'}
                   </p>
                 )}
                 {shownFlags.map((f) => (

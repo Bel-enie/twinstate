@@ -11,9 +11,9 @@ import { privacyLine, recipients } from '../services/privacy.js'
 const REPO = 'https://github.com/Bel-enie/twinstate'
 
 const CHECKS = [
-  `${SUBSTANCES.length} common substances students take — painkillers, energy drinks, coffee, a few prescriptions, supplements and herbal tonics.`,
+  `${SUBSTANCES.length} common substances students take: painkillers, energy drinks, coffee, a few prescriptions, supplements and herbal tonics.`,
   `${INTERACTION_RULES.length} interaction rules, each tied to public guidance (NHS, FDA and similar), such as paracetamol over the daily line or two NSAIDs together.`,
-  'How much you take in a day, added up across everything you logged — not one dose at a time.',
+  'How much you take in a day, added up across everything you logged, not one dose at a time.',
   'How your week built up, day by day.',
 ]
 
@@ -67,7 +67,7 @@ export default function Limits() {
           <Panel icon={Sparkles} title="The score and the AI">
             <div className="space-y-3 text-sm leading-relaxed">
               <p>
-                The <strong>interaction load</strong> (0–100) is worked out by fixed rules from what you logged, so the
+                The <strong>interaction load</strong> (0 to 100) is worked out by fixed rules from what you logged, so the
                 same log always gives the same number. It is for comparing your own days, not a medical measurement.
               </p>
               <p>

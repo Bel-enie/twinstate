@@ -181,12 +181,12 @@ export const INTERACTION_RULES = [
     test: (ctx) => ctx.tagSources('hepatotoxic').length >= 2,
     substancesFrom: (ctx) => ctx.tagSources('hepatotoxic'),
     reason:
-      'Paracetamol, alcohol and herbal mixes are all cleared by your liver. Stacking them makes the liver work overtime and raises the risk of damage — even at "normal" doses.',
+      'Paracetamol, alcohol and herbal mixes are all cleared by your liver. Stacking them makes the liver work overtime and raises the risk of damage, even at "normal" doses.',
     saferAlternative:
-      'Pick one pain reliever, skip alcohol and unregulated herbal tonics while dosing, and stay well hydrated. If pain needs daily dosing for more than 2–3 days, check with the clinic.',
-    reference: 'Hepatic clearance overlap — acetaminophen + ethanol + herbal hepatotoxins',
+      'Pick one pain reliever, skip alcohol and unregulated herbal tonics while dosing, and stay well hydrated. If pain needs daily dosing for more than 2 to 3 days, check with the clinic.',
+    reference: 'Hepatic clearance overlap: acetaminophen + ethanol + herbal hepatotoxins',
     sources: [
-      { org: 'NHS', title: 'Paracetamol for adults — cautions with alcohol', url: 'https://www.nhs.uk/medicines/paracetamol-for-adults/' },
+      { org: 'NHS', title: 'Paracetamol for adults: cautions with alcohol', url: 'https://www.nhs.uk/medicines/paracetamol-for-adults/' },
       { org: 'FDA', title: 'Acetaminophen and liver injury', url: 'https://www.fda.gov/drugs/information-drug-class/acetaminophen-information' },
     ],
   },
@@ -204,7 +204,7 @@ export const INTERACTION_RULES = [
     reference: 'Acetaminophen daily maximum threshold (≈4 g/day for most adults)',
     sources: [
       { org: 'NHS', title: 'Paracetamol dosage for adults', url: 'https://www.nhs.uk/medicines/paracetamol-for-adults/' },
-      { org: 'FDA', title: 'Know your dose — acetaminophen', url: 'https://www.fda.gov/drugs/information-drug-class/acetaminophen-information' },
+      { org: 'FDA', title: 'Know your dose: acetaminophen', url: 'https://www.fda.gov/drugs/information-drug-class/acetaminophen-information' },
     ],
   },
   {
@@ -215,7 +215,7 @@ export const INTERACTION_RULES = [
     test: (ctx) => ctx.totalCaffeine() >= 400,
     substancesFrom: (ctx) => ctx.tagSources('caffeine'),
     reason:
-      'Your combined caffeine from energy drinks, coffee and pills is above ~400 mg/day. That can cause a racing heart, higher blood pressure and the jittery-then-crash cycle — and it wrecks sleep, which is what the body actually needs during exams.',
+      'Your combined caffeine from energy drinks, coffee and pills is above ~400 mg/day. That can cause a racing heart, higher blood pressure and the jittery-then-crash cycle, and it wrecks sleep, which is what the body actually needs during exams.',
     saferAlternative:
       'Cap caffeine at ~2 servings before noon, swap the late one for water, and protect a real sleep window. The alertness you lose to poor sleep is bigger than what caffeine buys.',
     reference: 'Caffeine cardiovascular threshold (~400 mg/day for healthy adults)',
@@ -249,12 +249,12 @@ export const INTERACTION_RULES = [
       ctx.hasTag('nsaid') && (ctx.totalCaffeine() >= 200 || ctx.hasTag('dehydrating')),
     substancesFrom: (ctx) => [...ctx.tagSources('nsaid'), ...ctx.tagSources('caffeine')],
     reason:
-      'NSAIDs like ibuprofen reduce blood flow to the kidneys. Add caffeine or alcohol (both dehydrating) and skipped meals, and the kidneys take a real hit — common in exam crunch.',
+      'NSAIDs like ibuprofen reduce blood flow to the kidneys. Add caffeine or alcohol (both dehydrating) and skipped meals, and the kidneys take a real hit, which is common in exam crunch.',
     saferAlternative:
       'Hydrate before and while taking ibuprofen, take it with food, and avoid stacking it with lots of caffeine or alcohol.',
     reference: 'NSAID renal perfusion reduction + volume depletion',
     sources: [
-      { org: 'NHS', title: 'Ibuprofen — kidney cautions', url: 'https://www.nhs.uk/medicines/ibuprofen-for-adults/' },
+      { org: 'NHS', title: 'Ibuprofen: kidney cautions', url: 'https://www.nhs.uk/medicines/ibuprofen-for-adults/' },
     ],
   },
   {
@@ -265,12 +265,12 @@ export const INTERACTION_RULES = [
     test: (ctx) => ctx.tagSources('nsaid').length >= 2,
     substancesFrom: (ctx) => ctx.tagSources('nsaid'),
     reason:
-      'Ibuprofen and aspirin are both NSAIDs. Together they sharply raise the risk of stomach irritation, ulcers and bleeding — especially on an empty, stressed stomach.',
+      'Ibuprofen and aspirin are both NSAIDs. Together they sharply raise the risk of stomach irritation, ulcers and bleeding, especially on an empty, stressed stomach.',
     saferAlternative:
       'Use only one NSAID at a time, always with food. For simple pain, paracetamol is gentler on the stomach.',
     reference: 'Additive NSAID gastrointestinal toxicity (ulcers, bleeding)',
     sources: [
-      { org: 'NHS', title: 'Ibuprofen — side effects & stomach bleeding', url: 'https://www.nhs.uk/medicines/ibuprofen-for-adults/side-effects-of-ibuprofen/' },
+      { org: 'NHS', title: 'Ibuprofen: side effects & stomach bleeding', url: 'https://www.nhs.uk/medicines/ibuprofen-for-adults/side-effects-of-ibuprofen/' },
       { org: 'FDA', title: 'NSAIDs and gastrointestinal risks', url: 'https://www.fda.gov/drugs/postmarket-drug-safety-information-patients-and-providers/nonsteroidal-anti-inflammatory-drugs-nsaids' },
     ],
   },
@@ -301,9 +301,9 @@ export const INTERACTION_RULES = [
       'Tramadol plus an SSRI antidepressant can push serotonin too high (agitation, sweating, fast heart, tremor). Worth catching early.',
     saferAlternative:
       'Tell your prescriber you take both. A non-tramadol pain option is usually safer alongside an SSRI.',
-    reference: 'Serotonin syndrome risk — SSRI + tramadol',
+    reference: 'Serotonin syndrome risk: SSRI + tramadol',
     sources: [
-      { org: 'NHS', title: 'Tramadol — interactions with antidepressants', url: 'https://www.nhs.uk/medicines/tramadol/taking-tramadol-with-other-medicines-and-herbal-supplements/' },
+      { org: 'NHS', title: 'Tramadol: interactions with antidepressants', url: 'https://www.nhs.uk/medicines/tramadol/taking-tramadol-with-other-medicines-and-herbal-supplements/' },
     ],
   },
 ]

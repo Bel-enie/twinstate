@@ -89,7 +89,7 @@ export default function Summary() {
                     <td className="py-2">
                       {it.dose} {def.unit || ''}
                     </td>
-                    <td className="py-2">{String(it.frequency || '').replace('x', '') || '—'}</td>
+                    <td className="py-2">{String(it.frequency || '').replace('x', '') || 'Not set'}</td>
                     <td className="py-2 text-slate-soft">{CATEGORY_LABEL[def.category] || 'Tracked'}</td>
                   </tr>
                 )

@@ -29,8 +29,8 @@ export function EmergencyNote({ className = '' }) {
     <div
       className={`rounded-2xl border border-risk-urgent/30 bg-risk-urgent/5 px-4 py-3 text-xs leading-relaxed text-ink/80 ${className}`}
     >
-      <span className="font-bold text-risk-urgent">In an emergency</span> — chest pain, trouble
-      breathing, fainting, a suspected overdose, or thoughts of self-harm — don’t wait on an app.
+      <span className="font-bold text-risk-urgent">In an emergency</span> (chest pain, trouble
+      breathing, fainting, a suspected overdose, or thoughts of self-harm), don’t wait on an app.
       Call your local emergency number or go to the nearest emergency department now.
     </div>
   )
@@ -41,7 +41,7 @@ export function MedicalDisclaimer({ className = '' }) {
     <p className={`text-xs leading-relaxed text-slate-soft ${className}`}>
       Twinstate is an educational tool, <span className="font-semibold">not a medical device</span>,
       and does not provide diagnosis or personalised prescription advice. Interaction flags are
-      general information — always confirm anything about your own medicines with a pharmacist,
+      general information. Always confirm anything about your own medicines with a pharmacist,
       doctor, or your campus health centre.
     </p>
   )
@@ -116,7 +116,7 @@ export function ConsentGate({ children }) {
             <div id="consent-desc">
               <p className="mt-2 text-sm leading-relaxed text-ink/80">
                 Twinstate helps you <span className="font-semibold">understand</span> how your
-                medicines, supplements and energy drinks add up. It’s an educational tool — not a
+                medicines, supplements and energy drinks add up. It’s an educational tool, not a
                 doctor, and not a diagnosis.
               </p>
               <ul className="mt-3 space-y-1.5 text-sm text-ink/75">
@@ -136,7 +136,7 @@ export function ConsentGate({ children }) {
               onClick={accept}
               className="mt-5 w-full rounded-full bg-brand-grad py-3 text-sm font-bold text-white shadow-soft transition hover:brightness-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
             >
-              I understand — continue
+              I understand, continue
             </button>
           </div>
         </div>

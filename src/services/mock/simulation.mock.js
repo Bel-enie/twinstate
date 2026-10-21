@@ -78,7 +78,7 @@ export const simulationMock = {
       safer: {
         ...safe,
         headline: `The safer path pulls the load back down to ${safe.bodyIndex}/100`,
-        detail: `Switching to rest, hydration and cutting to one painkiller + less caffeine lets the organs recover. Same two weeks — very different twin.`,
+        detail: `Switching to rest, hydration and cutting to one painkiller + less caffeine lets the organs recover. Same two weeks, very different twin.`,
       },
     }
   },
