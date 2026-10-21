@@ -9,6 +9,7 @@
  * Also owns the "export everything" and "delete everything" actions.
  */
 import { hasAIChat, hasChatProxy, hasHolon } from './config.js'
+import { authEnabled } from './auth.js'
 
 const PREFIXES = ['ontomorph:', 'twinstate:']
 
@@ -24,16 +25,20 @@ export function recipients() {
     })
   }
   if (hasHolon) out.push({ who: 'Ontomorph HOLON', what: 'substance names, to look up interactions' })
+  if (authEnabled) out.push({ who: 'Google Firebase', what: 'only your name and email, to sign you in' })
   return out
 }
 
 /** One sentence for footers and hero lines. */
 export function privacyLine() {
-  if (!sendsData) return 'Everything you log stays in this browser. There is no Twinstate account server.'
-  const r = recipients()
-  return `Your log is saved in this browser. To work, it is also sent to ${r
-    .map((x) => x.who)
-    .join(' and ')}.`
+  const signIn = authEnabled ? ' Sign-in is handled by Google Firebase, which receives only your name and email.' : ''
+  if (!sendsData) {
+    return authEnabled
+      ? `Your health log stays in this browser.${signIn}`
+      : 'Everything you log stays in this browser. There is no Twinstate account server.'
+  }
+  const r = recipients().filter((x) => x.who !== 'Google Firebase')
+  return `Your log is saved in this browser. To work, it is also sent to ${r.map((x) => x.who).join(' and ')}.${signIn}`
 }
 
 function ourKeys() {
@@ -88,7 +93,7 @@ export function exportAllData() {
  * signups, then reload on the home page so nothing in memory can write any
  * of it back. Returns false if the user cancels the confirmation.
  */
-export function deleteAllData() {
+export async function deleteAllData({ beforeReload } = {}) {
   const ok = window.confirm(
     'Delete everything Twinstate saved in this browser? This removes every saved twin and cannot be undone.'
   )
@@ -98,6 +103,13 @@ export function deleteAllData() {
       localStorage.removeItem(k)
     } catch {
       /* ignore */
+    }
+  }
+  if (beforeReload) {
+    try {
+      await beforeReload()
+    } catch {
+      /* the data is gone either way */
     }
   }
   window.location.assign('/')

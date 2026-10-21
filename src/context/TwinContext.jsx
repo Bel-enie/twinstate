@@ -91,7 +91,7 @@ function readInitial() {
   const p = getProfile(key)
   if (!p) return { session: null, ...EMPTY }
 
-  const session = { key, name: p.name, personaId: p.personaId || null }
+  const session = { key, name: p.name, personaId: p.personaId || null, authUid: p.authUid || null, email: p.email || '' }
   if (p.twin) {
     const eff = effectiveProfile(p)
     return {
@@ -112,7 +112,7 @@ function readInitial() {
 export function TwinProvider({ children }) {
   const boot = useRef(readInitial()).current
 
-  const [session, setSession] = useState(boot.session) // { key, name, personaId } | null
+  const [session, setSession] = useState(boot.session) // { key, name, personaId, authUid, email } | null
   const [twin, setTwin] = useState(boot.twin)
   const [items, setItems] = useState(boot.items)
   const [symptoms, setSymptoms] = useState(boot.symptoms)
@@ -164,6 +164,8 @@ export function TwinProvider({ children }) {
       key: session.key,
       name: session.name,
       personaId: session.personaId || null,
+      authUid: session.authUid || null,
+      email: session.email || '',
       updatedAt: Date.now(),
       edited,
       twin,
@@ -338,13 +340,46 @@ export function TwinProvider({ children }) {
     [hydrateTwin, clearTwin]
   )
 
+  /**
+   * Sign in a Google / email account (Firebase user). Each account has its own
+   * saved twin under `auth:<uid>`. `carryFrom` (a first-name account key) moves
+   * an existing twin across on the account's first sign-in, so switching to real
+   * sign-in never loses what someone already logged.
+   */
+  const signInWithAccount = useCallback(
+    (user, { carryFrom } = {}) => {
+      const key = `auth:${user.uid}`
+      const base = { key, name: user.name, personaId: null, authUid: user.uid, email: user.email || '' }
+      let existing = getProfile(key)
+      if (!existing?.twin && carryFrom && carryFrom !== key) {
+        const old = getProfile(carryFrom)
+        if (old?.twin && !old.personaId) {
+          existing = { ...old, ...base, updatedAt: Date.now() }
+          saveProfile(key, existing)
+        }
+      }
+      setCurrentKey(key)
+      setError(null)
+      if (existing?.twin) {
+        setSession({ ...base, name: existing.name || user.name })
+        hydrateTwin(existing)
+        return { hasTwin: true }
+      }
+      setSession(base)
+      clearTwin()
+      saveProfile(key, { ...base, updatedAt: Date.now(), twin: null })
+      return { hasTwin: false }
+    },
+    [hydrateTwin, clearTwin]
+  )
+
   /** Resume a saved account by its storage key (used by the gate's quick-resume). */
   const resumeAccount = useCallback(
     (key) => {
       const p = getProfile(key)
       if (!p) return { ok: false, hasTwin: false }
       setCurrentKey(key)
-      setSession({ key, name: p.name, personaId: p.personaId || null })
+      setSession({ key, name: p.name, personaId: p.personaId || null, authUid: p.authUid || null, email: p.email || '' })
       hydrateTwin(p)
       return { ok: true, hasTwin: Boolean(p.twin) }
     },
@@ -402,6 +437,7 @@ export function TwinProvider({ children }) {
       isSignedIn: Boolean(session),
       hasTwin: status === 'ready' && Boolean(twin),
       signIn,
+      signInWithAccount,
       signOut,
       resumeAccount,
       buildTwin,
@@ -412,7 +448,7 @@ export function TwinProvider({ children }) {
     }),
     [
       session, twin, items, symptoms, notes, history, flags, organRisk, overall, status, error,
-      assessment, analyzing, signIn, signOut, resumeAccount, buildTwin, loadPersona, logDose, logDoses,
+      assessment, analyzing, signIn, signInWithAccount, signOut, resumeAccount, buildTwin, loadPersona, logDose, logDoses,
     ]
   )
 

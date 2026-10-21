@@ -8,6 +8,7 @@ import HeroTwin from './HeroTwin.jsx'
 import { privacyLine } from '../../services/privacy.js'
 import { useTwin } from '../../context/TwinContext.jsx'
 import { listProfiles, removeProfile } from '../../services/storage.js'
+import { authEnabled } from '../../services/auth.js'
 
 /**
  * Centered gradient hero. Carries the app's whole "auth": a first name is the
@@ -19,7 +20,8 @@ export default function Hero({ story, wantName, onBuild, demoBusy, onDemo }) {
   const navigate = useNavigate()
   const { signIn, resumeAccount, status } = useTwin()
   const [name, setName] = useState('')
-  const [accounts, setAccounts] = useState(() => listProfiles())
+  // With real sign-in, saved profiles are not listed: they open only after signing in.
+  const [accounts, setAccounts] = useState(() => (authEnabled ? [] : listProfiles()))
   const [confirmKey, setConfirmKey] = useState(null)
   const inputRef = useRef(null)
 

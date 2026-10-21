@@ -21,6 +21,7 @@ import { useTwin } from '../../context/TwinContext.jsx'
 import { dataSourceLabel } from '../../services/index.js'
 import { useStuck } from '../../utils/useStuck.js'
 import { deleteAllData, exportAllData } from '../../services/privacy.js'
+import { signOutUser } from '../../services/auth.js'
 import BrandMark from '../ui/BrandMark.jsx'
 import Wordmark from '../ui/Wordmark.jsx'
 
@@ -72,8 +73,17 @@ export default function Header() {
     }
   }, [menu])
 
-  const onSwitch = () => {
+  const isAccount = Boolean(session?.authUid)
+
+  const onSwitch = async () => {
     setMenu(false)
+    if (isAccount) {
+      try {
+        await signOutUser()
+      } catch {
+        /* still end the local session below */
+      }
+    }
     signOut()
     navigate('/')
   }
@@ -152,7 +162,7 @@ export default function Header() {
                 </span>
                 <span className="hidden text-left sm:block">
                   <span className="block max-w-[110px] truncate whitespace-nowrap text-sm font-semibold leading-tight">{firstName}</span>
-                  <span className="block whitespace-nowrap text-[11px] leading-tight text-slate-soft">{isPersona ? 'Demo persona' : 'Student'}</span>
+                  <span className="block whitespace-nowrap text-[11px] leading-tight text-slate-soft">{isPersona ? 'Demo persona' : isAccount && session.email ? session.email : 'Student'}</span>
                 </span>
                 <ChevronDown className="h-4 w-4 text-slate-soft" aria-hidden="true" />
               </button>
@@ -181,9 +191,9 @@ export default function Header() {
                     <Download className="h-4 w-4 text-violet-600" aria-hidden="true" /> Export my data
                   </button>
                   <button type="button" role="menuitem" onClick={onSwitch} className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold hover:bg-violet-50">
-                    <LogOut className="h-4 w-4 text-violet-600" aria-hidden="true" /> Switch user
+                    <LogOut className="h-4 w-4 text-violet-600" aria-hidden="true" /> {isAccount ? 'Sign out' : 'Switch user'}
                   </button>
-                  <button type="button" role="menuitem" onClick={() => { setMenu(false); deleteAllData() }} className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-rose-700 hover:bg-rose-50">
+                  <button type="button" role="menuitem" onClick={() => { setMenu(false); deleteAllData({ beforeReload: isAccount ? signOutUser : undefined }) }} className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-rose-700 hover:bg-rose-50">
                     <Trash2 className="h-4 w-4" aria-hidden="true" /> Delete all my data
                   </button>
                   <p className="border-t border-ink/5 px-3 pb-1 pt-2 text-[11px] text-slate-soft">

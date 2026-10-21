@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useTwin } from './context/TwinContext.jsx'
+import { useAuth } from './context/AuthContext.jsx'
 import { ConsentGate } from './components/safety/SafetyLayer.jsx'
 import { initSpecularButtons } from './utils/specular.js'
 
@@ -16,6 +17,7 @@ const WhatIf = lazy(() => import('./pages/WhatIf.jsx'))
 const Recommendation = lazy(() => import('./pages/Recommendation.jsx'))
 const Summary = lazy(() => import('./pages/Summary.jsx'))
 const Limits = lazy(() => import('./pages/Limits.jsx'))
+const SignIn = lazy(() => import('./pages/SignIn.jsx'))
 
 const TITLES = {
   '/': 'Twinstate: every pill, drink and dose, checked together',
@@ -27,6 +29,7 @@ const TITLES = {
   '/faq': 'FAQ · Twinstate',
   '/summary': 'Summary for your clinician · Twinstate',
   '/limits': 'How it works and its limits · Twinstate',
+  '/signin': 'Sign in · Twinstate',
 }
 
 /**
@@ -53,6 +56,48 @@ function PageFallback() {
 }
 
 /**
+ * Keeps the app's account in step with the Firebase sign-in (when sign-in is
+ * configured): a signed-in user gets their own twin account, and signing out
+ * elsewhere (another tab, an expired session) ends it here too. The Cora demo
+ * persona is left alone, so the demo works without an account.
+ */
+function AuthSessionSync() {
+  const auth = useAuth()
+  const { session, signInWithAccount, signOut } = useTwin()
+  useEffect(() => {
+    if (!auth.enabled || !auth.ready) return
+    if (auth.user) {
+      if (session?.authUid !== auth.user.uid && !session?.personaId) {
+        signInWithAccount(auth.user, { carryFrom: session?.key?.startsWith('user:') ? session.key : undefined })
+      }
+    } else if (session?.authUid) {
+      signOut()
+    }
+  }, [auth.enabled, auth.ready, auth.user, session, signInWithAccount, signOut])
+  return null
+}
+
+/**
+ * Whether the product may open: 'ok', 'loading' (sign-in state not known
+ * yet), or 'signin' (needs an account). Without Firebase configured, and for
+ * the demo persona, it is always 'ok'.
+ */
+function useAuthGate() {
+  const auth = useAuth()
+  const { session } = useTwin()
+  if (!auth.enabled || session?.personaId) return 'ok'
+  if (!auth.ready) return 'loading'
+  if (!auth.user) return 'signin'
+  if (session?.authUid !== auth.user.uid) return 'loading' // AuthSessionSync is switching accounts
+  return 'ok'
+}
+
+function SignInRedirect() {
+  const { pathname, search } = useLocation()
+  return <Navigate to={`/signin?next=${encodeURIComponent(pathname + search)}`} replace />
+}
+
+/**
  * Home decision. The landing page is the single front door — it carries both the
  * pitch and the sign-in form, so signed-out visitors see it directly rather than
  * being bounced to a separate gate. Returning users with a built twin skip
@@ -60,7 +105,8 @@ function PageFallback() {
  */
 function Boot() {
   const { hasTwin } = useTwin()
-  if (hasTwin) return <Navigate to="/dashboard" replace />
+  const gate = useAuthGate()
+  if (hasTwin && gate === 'ok') return <Navigate to="/dashboard" replace />
   return <Landing />
 }
 
@@ -72,12 +118,18 @@ function Boot() {
  */
 function RequireSession({ children }) {
   const { isSignedIn } = useTwin()
+  const gate = useAuthGate()
+  if (gate === 'loading') return <PageFallback />
+  if (gate === 'signin') return <SignInRedirect />
   return isSignedIn ? <ConsentGate>{children}</ConsentGate> : <Navigate to="/" replace />
 }
 
 /** Needs a fully built twin — otherwise route to the right earlier step. */
 function RequireTwin({ children }) {
   const { isSignedIn, hasTwin } = useTwin()
+  const gate = useAuthGate()
+  if (gate === 'loading') return <PageFallback />
+  if (gate === 'signin') return <SignInRedirect />
   if (!isSignedIn) return <Navigate to="/" replace />
   if (!hasTwin) return <Navigate to="/intake" replace />
   return <ConsentGate>{children}</ConsentGate>
@@ -91,10 +143,12 @@ export default function App() {
   return (
     <>
       <RouteEffects />
+      <AuthSessionSync />
       <Suspense fallback={<PageFallback />}>
         <Routes>
           <Route path="/faq" element={<FAQ />} />
           <Route path="/limits" element={<Limits />} />
+          <Route path="/signin" element={<SignIn />} />
           <Route
             path="/summary"
             element={

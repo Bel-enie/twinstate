@@ -40,6 +40,17 @@ export const config = {
   holonApiUrl: import.meta.env.VITE_HOLON_API_URL || 'https://holon-api.ontomorph.com',
   // DTP twin-core key (dtp_live_/dtp_test_) — optional, for future twin calls.
   dtpKey: import.meta.env.VITE_DTP_API_KEY || '',
+
+  // Firebase Authentication ("Continue with Google" + email sign-in). These
+  // web-app values are public by design: Firebase protects accounts through
+  // the Authorized domains list, not by hiding the key. When they are blank
+  // the app falls back to the first-name sign-in.
+  firebase: {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '',
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || '',
+    appId: import.meta.env.VITE_FIREBASE_APP_ID || '',
+  },
 }
 
 export const isLive = config.dataSource === 'live'

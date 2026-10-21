@@ -113,6 +113,17 @@ twin already at `urgent`) triggers a clear **seek-care** recommendation.
 > Security: the demo calls OpenAI directly from the browser. Fine for a hackathon;
 > proxy it through a small backend in production so the key never ships to clients.
 
+### Sign-in (Google + email)
+
+Opening the dashboard or building a twin asks people to sign in with
+**Continue with Google** or **email and password** (with password-reset emails),
+through Firebase Authentication. Each account gets its own saved twin; the Cora
+demo stays open without an account.
+
+Until the four `VITE_FIREBASE_*` values are set (steps in `.env.example`), the
+app keeps its first-name sign-in, so it works with no setup. Firebase receives
+only a person's name and email; the health log stays in the browser.
+
 ### Living log (log doses over time)
 
 The dashboard has a **"Log a dose taken today"** control. Logging a dose bumps

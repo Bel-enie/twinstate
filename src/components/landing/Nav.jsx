@@ -4,6 +4,7 @@ import { Menu, X } from 'lucide-react'
 import BrandMark from '../ui/BrandMark.jsx'
 import ShimmerButton from './ui/ShimmerButton.jsx'
 import { useStuck } from '../../utils/useStuck.js'
+import { authEnabled } from '../../services/auth.js'
 
 const LINKS = [
   ['#story', 'Why a twin'],
@@ -71,6 +72,14 @@ export default function Nav({ latest, onResume, onBuild }) {
         </nav>
 
         <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
+          {authEnabled && (
+            <Link
+              to="/signin"
+              className="hidden rounded-full px-3 py-2 text-sm font-semibold text-ink/70 transition hover:text-ink sm:block"
+            >
+              Sign in
+            </Link>
+          )}
           {latest && (
             <button
               onClick={() => onResume(latest.key)}
@@ -125,6 +134,15 @@ export default function Nav({ latest, onResume, onBuild }) {
           >
             FAQ
           </Link>
+          {authEnabled && (
+            <Link
+              to="/signin"
+              onClick={() => setOpen(false)}
+              className="block rounded-2xl px-4 py-3 text-sm font-semibold text-violet-700 transition hover:bg-violet-50"
+            >
+              Sign in
+            </Link>
+          )}
           {latest && (
             <button
               onClick={() => {

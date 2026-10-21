@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import ShimmerButton from './ui/ShimmerButton.jsx'
 import { useTwin } from '../../context/TwinContext.jsx'
+import { authEnabled } from '../../services/auth.js'
 
 /**
  * The hero's way in, reusable anywhere on the page: a gradient "Build my
@@ -63,7 +64,7 @@ export default function BuildTwinCta({ demoName, demoBusy, onDemo, align = 'star
 
   return (
     <div className={`flex flex-wrap items-center gap-3 ${justify} ${className}`}>
-      <ShimmerButton onClick={() => setOpen(true)} className="px-7 py-3.5">
+      <ShimmerButton onClick={() => (authEnabled ? navigate('/signin?next=/intake') : setOpen(true))} className="px-7 py-3.5">
         Build my twin
         <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </ShimmerButton>

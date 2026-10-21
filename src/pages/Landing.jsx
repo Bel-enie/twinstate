@@ -12,6 +12,7 @@ import Footer from '../components/landing/Footer.jsx'
 import { buildTwinStory } from '../components/landing/twinData.js'
 import { useTwin } from '../context/TwinContext.jsx'
 import { listProfiles } from '../services/storage.js'
+import { authEnabled } from '../services/auth.js'
 
 /**
  * The front door, in a bold gradient bento style (Magic UI-school primitives
@@ -29,12 +30,13 @@ export default function Landing() {
   const story = useMemo(() => buildTwinStory(), [])
   const [wantName, setWantName] = useState(false)
   const [demoBusy, setDemoBusy] = useState(false)
-  const latest = useMemo(() => listProfiles()[0] || null, [])
+  const latest = useMemo(() => (authEnabled ? null : listProfiles()[0] || null), [])
 
   const onBuild = useCallback(() => {
+    if (authEnabled) return navigate('/signin?next=/intake')
     setWantName(true)
     document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [])
+  }, [navigate])
 
   const onResume = useCallback(
     (key) => {
