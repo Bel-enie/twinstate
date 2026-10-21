@@ -341,8 +341,8 @@ export const PERSONAS = [
     ],
   },
   {
-    id: 'ada',
-    name: 'Ada, 20',
+    id: 'cora',
+    name: 'Cora, 20',
     blurb: 'Finals week. Pulling all-nighters on energy drinks and paracetamol for tension headaches.',
     avatarTone: 'from-amber-200 to-orange-300',
     profile: { sleepHours: 4, stress: 'high' },

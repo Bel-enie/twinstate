@@ -10,7 +10,11 @@ import {
   saveProfile,
   userKey,
   personaKeyOf,
+  migrateLegacyPersonas,
 } from '../services/storage.js'
+
+// Rename retired demo personas in saved data before anything reads it.
+migrateLegacyPersonas()
 
 const TwinContext = createContext(null)
 

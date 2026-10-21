@@ -11,7 +11,7 @@ import { listProfiles, removeProfile } from '../../services/storage.js'
 
 /**
  * Centered gradient hero. Carries the app's whole "auth": a first name is the
- * sign-in, saved profiles can be resumed, and the persona demo opens Ada.
+ * sign-in, saved profiles can be resumed, and the persona demo opens Cora.
  * Deleting a profile now takes two taps (the old single 20px ✕ was an audit
  * finding) and the targets meet the 24px minimum.
  */

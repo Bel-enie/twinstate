@@ -16,7 +16,7 @@ const ROLES = [
  * persist to localStorage and the confirmation says so honestly — there is no
  * server or mailing list behind it.
  */
-export default function EarlyAccess({ demoName, demoBusy, onDemo }) {
+export default function EarlyAccess() {
   const [email, setEmail] = useState('')
   const [role, setRole] = useState('student')
   const [state, setState] = useState({ status: 'idle', message: '' })
@@ -52,7 +52,7 @@ export default function EarlyAccess({ demoName, demoBusy, onDemo }) {
                 Build a twin right now — no signup needed. Or leave an email for when Twinstate
                 opens up beyond the demo.
               </p>
-              <BuildTwinCta demoName={demoName} demoBusy={demoBusy} onDemo={onDemo} className="mt-7" />
+              <BuildTwinCta className="mt-7" />
             </div>
 
             {state.status === 'done' ? (

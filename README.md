@@ -32,8 +32,8 @@ Open http://localhost:5173. **No API key needed** — the app runs on a mocked s
 
 Try it three ways from the landing page:
 - **Start my twin** → fill the 2-minute intake form.
-- **See a live demo** → loads "Ada" instantly.
-- **Open a persona** → Ada / Tunde / Zoe, each with a week of simulated history.
+- **See a live demo** → loads "Cora" instantly.
+- **Open a persona** → Cora / Tunde / Zoe, each with a week of simulated history.
 
 ---
 
@@ -161,7 +161,7 @@ src/
 ## Notes for the demo
 
 - **Beloved** — caffeine-overload story (energy drinks + coffee + pills); most dramatic heart + What-If.
-- **Ada** — high-risk liver + heart story from energy drinks + repeated paracetamol.
+- **Cora** — high-risk liver + heart story from energy drinks + repeated paracetamol.
 - **Tunde** shows the double-NSAID gut/kidney story.
 - **Zoe** shows a prescription-level interaction (SSRI + tramadol) + herbal liver load.
 - On the landing page, **Build my twin** reveals a name field (a first name is the whole sign-in), saved profiles can be resumed or removed, and any persona opens with one click — handy for a live demo.

@@ -4,7 +4,7 @@
  * rule or a persona's history changes, the hero, the timeline, the "what
  * changed" feed and the evidence panel all move with it.
  *
- * The story persona is Ada: her week carries two dated, causal events (a heart
+ * The story persona is Cora: her week carries two dated, causal events (a heart
  * flag when caffeine crossed the line, a liver flag when paracetamol did), which
  * is exactly what a "what changed, and why" page needs.
  */
@@ -18,7 +18,7 @@ import {
   SEVERITY_BASE,
 } from '../../services/mock/engine.js'
 
-export const STORY_PERSONA = 'ada'
+export const STORY_PERSONA = 'cora'
 
 // What the 0–100 number is, said the same way everywhere it appears. It is the
 // engine's interaction-load score — a severity baseline per organ plus

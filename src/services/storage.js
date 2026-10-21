@@ -55,6 +55,31 @@ export function removeProfile(key) {
   safe(() => localStorage.removeItem(profileKey(key)))
 }
 
+/**
+ * One-time rename of retired demo personas in this browser's saved data
+ * (the 'ada' persona became 'cora'), so a returning visitor sees the new
+ * name everywhere, including "Continue where you left off".
+ */
+const RENAMED_PERSONAS = { ada: { id: 'cora', name: 'Cora, 20' } }
+
+export function migrateLegacyPersonas() {
+  safe(() => {
+    for (const [oldId, next] of Object.entries(RENAMED_PERSONAS)) {
+      const oldKey = personaKeyOf(oldId)
+      const raw = localStorage.getItem(profileKey(oldKey))
+      if (!raw) continue
+      const rec = JSON.parse(raw)
+      const newKey = personaKeyOf(next.id)
+      localStorage.setItem(
+        profileKey(newKey),
+        JSON.stringify({ ...rec, key: rec.key === oldKey ? newKey : rec.key, personaId: next.id, name: next.name })
+      )
+      localStorage.removeItem(profileKey(oldKey))
+      if (localStorage.getItem(CURRENT_KEY) === oldKey) localStorage.setItem(CURRENT_KEY, newKey)
+    }
+  })
+}
+
 /** All saved accounts, newest-updated first — powers "resume" on the gate. */
 export function listProfiles() {
   return safe(() => {

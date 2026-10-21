@@ -18,7 +18,7 @@ import { listProfiles } from '../services/storage.js'
  * under components/landing/ui). The story runs as three sticky cards — the
  * problem, the living week, the questions — then real-week moments, a bento
  * summary of today with the way into the demo, and early access. Every product
- * number on the page is computed by the real rule engine from Ada's week.
+ * number on the page is computed by the real rule engine from Cora's week.
  *
  * `Boot` in App.jsx sends users who already have a built twin straight to
  * their dashboard. The consent gate lives on the product routes, not here.
@@ -61,7 +61,7 @@ export default function Landing() {
         <StoryStack story={story} />
         <Moments />
         <TwinBento story={story} demoBusy={demoBusy} onDemo={onDemo} />
-        <EarlyAccess demoName={story.firstName} demoBusy={demoBusy} onDemo={onDemo} />
+        <EarlyAccess />
         <Footer />
       </div>
     </div>
