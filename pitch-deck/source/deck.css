@@ -1,0 +1,58 @@
+body { font-family: 'DM Sans', Arial, sans-serif; color: #131a24; }
+
+section { background: #f6f7fb; padding: 128px; display: flex; flex-direction: column; gap: 40px; }
+section.dark { background: #131a24; }
+section.tone { background: #eceef5; }
+section.accent { background: #5b4bd6; }
+
+h1 { font-size: 112px; font-weight: 700; line-height: 1.05; letter-spacing: -3px; color: #131a24; }
+h2 { font-size: 72px; font-weight: 600; line-height: 1.1; letter-spacing: -1px; color: #131a24; }
+h3 { font-size: 36px; font-weight: 600; line-height: 1.25; color: #131a24; }
+p { font-size: 28px; line-height: 1.4; color: #4a5261; }
+
+.dark h1, .dark h2, .dark h3, .accent h1, .accent h2, .accent h3 { color: #f6f7fb; }
+.dark p { color: #b9c0cc; }
+.accent p { color: #e4defc; }
+
+.eyebrow { font-size: 24px; font-weight: 600; letter-spacing: 3px; color: #5b4bd6; }
+.dark .eyebrow { color: #a79bff; }
+.accent .eyebrow { color: #e4defc; }
+
+.lede { font-size: 36px; line-height: 1.35; color: #131a24; }
+.dark .lede { color: #f6f7fb; }
+.accent .lede { color: #f6f7fb; }
+
+.wordmark { font-size: 36px; font-weight: 700; color: #131a24; }
+.dark .wordmark { color: #f6f7fb; }
+
+.spacer { flex: 1; }
+.row { display: flex; gap: 32px; }
+.between { display: flex; justify-content: space-between; align-items: flex-end; }
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+
+.card { flex: 1; display: flex; flex-direction: column; gap: 12px; background: #fdfdff; border: 1px solid #dfe2ec; border-radius: 20px; padding: 36px; }
+.tone .card { background: #f6f7fb; }
+.dark .card { background: #1c2531; border-color: #2b3644; }
+
+.step { font-size: 24px; font-weight: 600; letter-spacing: 3px; color: #5b4bd6; }
+.dark .step { color: #a79bff; }
+
+.tile { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.num { font-size: 112px; font-weight: 700; line-height: 1; letter-spacing: -3px; color: #131a24; }
+.accent .num { color: #f6f7fb; }
+.dark .num { color: #f6f7fb; }
+
+.band { background: #eceef5; border-radius: 20px; padding: 36px 40px; }
+.tone .band { background: #fdfdff; border: 1px solid #dfe2ec; }
+
+.pill { font-size: 24px; font-weight: 600; letter-spacing: 2px; color: #5b4bd6; background: #e6e2fb; border-radius: 40px; padding: 8px 20px; }
+
+.arrow { width: 48px; height: 24px; background: #5b4bd6; align-self: center; }
+.icon { width: 40px; height: 40px; color: #5b4bd6; }
+
+.caption { font-size: 24px; line-height: 1.4; color: #6a7179; }
+.footnote { font-size: 24px; color: #8a92a0; }
+.dark .footnote { color: #8a92a0; }
+.accent .footnote { color: #e4defc; }
+.placeholder { color: #5b4bd6; font-weight: 600; }
+.dark .placeholder { color: #a79bff; }
